@@ -1,0 +1,54 @@
+﻿@model AsignacionArma
+@{
+    ViewData["Title"] = "Sistema de Registro Arma";
+}
+
+
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+<form asp-controller="Asignacion" asp-action="AsignacionCreate" method="post" enctype="multipart/form-data">
+
+    <div>
+        <label for="AsignacionNombre">Nombre:</label>
+        <select id="AsignacionNombre" name="AsignacionNombre" >
+            <option value="0">Selecciona Tipo</option>
+        </select>
+        <input type="hidden"  name="AsignacionNombre"  />
+    </div>
+    <div>
+        <label for="AsignacionDocumento">Documento:</label>
+        <input  id="AsignacionDocumento" name="AsignacionDocumento" readonly />
+    </div>
+    <div>
+        <label for="IdArma">Arma:</label>
+        <select id="IdArma" name="IdArma" asp-items="@ViewBag.Idarma" >
+            <option value="">Selecciona Tipo</option>
+        </select>
+        <input type="hidden"  name="IdArma"  />
+    </div>
+    <div>
+        <label for="AsignacionTipo">Tipo de Asignacion:</label>
+        <select id="AsignacionTipo" name="AsignacionTipo"  asp-items="@ViewBag.AsignacionTipo">
+            <option value="0">Selecciona Tipo</option>
+        </select>
+        <input type="hidden" name="AsignacionTipo" />
+    </div>
+     <div>
+        <label for="NotaAsignacion">Nota:</label>
+        <input type="text" id="NotaAsignacion" name="NotaAsignacion"  />
+    </div>
+     <div>
+        <label for="FechaAsignacion">Fecha Asignacion:</label>
+        <input type="date" id="FechaAsignacion" name="FechaAsignacion"  />
+    </div>
+    <div>
+        <label for="FechaDevolucion">Fecha Devolucion:</label>
+        <input type="date" id="FechaDevolucion" name="FechaDevolucion"  />
+    </div>    
+    <!-- Repeat the above pattern for the remaining fields -->
+    <div id="btnCrear"><input class="btn btn-primary btn-lg " type="submit" value="Crear" />
+</div>
+        
+</form>
+
+

@@ -1,0 +1,42 @@
+﻿@model List<Pertrecho>
+@{
+    ViewData["Title"] = "Listado Armas";
+}
+
+<h1>Listado de Armas Registrados</h1>
+
+<table class="tbl">
+    <thead>
+        <tr>
+            <th>Accion</th>
+            <th>Pertrecho ID</th>
+            <th>Descripcion</th>
+            <th>Cantidad</th>
+            <th>Almacen</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var Pertrechoitem in Model)
+        {
+            <tr>
+                <td>
+                    <a class="btn btn-primary" >Editar</a>
+                </td>
+                <td>
+                    @Pertrechoitem.IdPertrechos
+                </td>
+                <td>
+                    @Pertrechoitem.PertrechosDescripcion
+                </td>
+                <td>
+                    @Pertrechoitem.Cantidad
+                </td>
+                <td>
+                    @Pertrechoitem.IdAlmacen
+                </td>
+                
+               
+            </tr>
+        }
+    </tbody>
+</table>

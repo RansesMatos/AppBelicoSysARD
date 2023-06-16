@@ -1,0 +1,17 @@
+﻿@{
+    ViewData["Title"] = "Sistema Belico";
+}
+
+    @if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
+{
+    <div class="alert alert-success">
+        @ViewBag.SuccessMessage
+    </div>
+}
+<div class="text-center">
+    <button class="buttonMainMenu" onclick="location.href='@Url.Action("AsignacionCreate","Asignacion")'">Asignar Arma</button>
+    <button class="buttonMainMenu" onclick="location.href='@Url.Action("AsignacionReport","Asignacion")'">Reporte</button>
+    <button class="buttonMainManteinece">Actualizar</button>
+
+
+</div>
