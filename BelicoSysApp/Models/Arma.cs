@@ -18,13 +18,7 @@
 
         public bool ArmaStatus { get; set; }
 
-        public List<Arma> ListArma { get; set; }
-
-       
-
-        //public virtual ArmaMarca IdArmaMarcaNavigation { get; set; } = null!;
-
-        //public virtual TipoArma IdTipoArmaNavigation { get; set; } = null!;
+        public List<Arma>? ListArma { get; set; }
     }
 }
 

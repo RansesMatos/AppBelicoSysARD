@@ -25,8 +25,10 @@ namespace BelicoSysApp.Services
                 ICollection<Pertrecho> resultado = JsonConvert.DeserializeObject<ICollection<Pertrecho>>(json_respuesta);
                 PertrechoList = resultado;
             }
-           
+
+#pragma warning disable CS8603 // Possible null reference return.
             return PertrechoList;
+#pragma warning restore CS8603 // Possible null reference return.
 
         }
         public async Task<Pertrecho> Get(int IdPertrecho)
@@ -52,9 +54,9 @@ namespace BelicoSysApp.Services
         {
             throw new NotImplementedException();
         }
-        public async Task<Pertrecho> Save(Pertrecho objeto)
+        public async Task<Pertrecho?> Save(Pertrecho objeto)
         {
-            Pertrecho pertrcho = new Pertrecho();
+            _ = new Pertrecho();
             var client = new HttpClient();
             client.BaseAddress = new Uri(_baseUrl);
 
@@ -63,7 +65,7 @@ namespace BelicoSysApp.Services
             var response = await client.PostAsync("api/Pertrecho", content);
             var json_respuesta = await response.Content.ReadAsStringAsync();
             var resultado = JsonConvert.DeserializeObject<Pertrecho>(json_respuesta);
-            pertrcho = resultado;          
+            Pertrecho pertrcho = resultado;
             if (response.IsSuccessStatusCode)
             {
                

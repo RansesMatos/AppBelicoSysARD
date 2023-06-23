@@ -1,6 +1,7 @@
 ﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 // for details on configuring this project to bundle and minify static web assets.
 
+
 // Write your JavaScript code.
 
 const button = document.querySelector('#Mant');
@@ -29,11 +30,69 @@ button3.addEventListener('click', disableButton3);
 
 $(document).ready(function () {
     $('#IdArma').on('change', function () {
-        var selectedItem = $(this).find(':selected');
-        var selectedItemName = selectedItem.text();
+        let selectedItem = $(this).find(':selected');
+        let selectedItemName = selectedItem.text();
         $('#IdArma').val(selectedItemName);
         $(this).attr('data-placeholder', selectedItemName);
     });
-});
+})
+
+
+function searchName() {
+    let name = document.getElementById("searchInput").value;
+
+    // Update the field in the main view with the selected name
+    document.getElementById("nameField").value = name;
+
+    // Close the modal
+    let modal = new bootstrap.Modal(document.getElementById("searchModal"));
+    modal.hide();
+}
+
+
+function loadDropdownData() {
+    let nombrefilter =  document.getElementById("searchInput").value;
+    $.ajax({
+        url: 'SearchPeople',
+        type: 'GET',
+        data: {
+            nombre: nombrefilter},
+        success: function (data) {
+            let dropdown = $('#MilitarNo');
+            dropdown.empty(); // Clear existing options
+            
+            // Add options to the dropdown
+            $.each(data, function (index, item) {
+                dropdown.append($('<option></option>').text(item.text).val(item.value));                
+            });
+
+
+            console.log(data)
+        },
+        error: function (xhr, status, error) {
+            console.error('Error loading dropdown data: ' + error);
+        }
+    });
+}
+
+function loadDocData() {
+    let idfilter = document.getElementById("AsignacionNombre").value;
+    $.ajax({
+        url: 'PeronaId/'+ idfilter,
+        type: 'GET',        
+        success: function (data) {
+            console.log(data)
+            let documentId = $('#AsignacionDocumento');
+            documentId.empty(); // Clear existing options
+            documentId.val(data)
+            console.log(data)
+        },
+        error: function (xhr, status, error) {
+            console.error('Error Cargando Cedula data: ' + error);
+        }
+    });
+}
+
+
 
 

@@ -10,9 +10,9 @@ namespace BelicoSysApp.Controllers
 
             private readonly IApiServiceAsignacion _apiServiceAsignacion;
         public AsignacionController(IApiServiceAsignacion apiServiceAsignacion)
-            {
-                _apiServiceAsignacion = apiServiceAsignacion;
-            }
+         {
+            _apiServiceAsignacion = apiServiceAsignacion;
+        }
             public async Task<IActionResult> AsignacionReport()
             {
                 ICollection<AsignacionArma> lista = await _apiServiceAsignacion.GetAsignaciones();
@@ -20,9 +20,95 @@ namespace BelicoSysApp.Controllers
                 return View(lista);
             }
 
+        [HttpGet]
+        public async Task<IActionResult> SearchPeople(string nombre)
+        {
+            string status = "A";
+            IEnumerable<VPersonal> lista = await _apiServiceAsignacion.GetVPersonal(nombre, status);
+            var listaDto = new List<VPersonal>();
+            
+            foreach (var personal in lista)
+            {
+                listaDto.Add(personal);
+            }
 
-            [HttpGet]
-            public async Task<IActionResult> AsignacionCreate()
+             var data = new SelectList(listaDto, "MilitarNo", "Nombres");
+            ViewBag.Personal = new SelectList(listaDto, "MilitarNo", "Nombres");
+
+
+            return Ok(data);
+        }
+        [HttpGet]
+        public async Task<IActionResult> SearchPeopleDoc(string nombre)
+        {
+            string status = "A";
+            IEnumerable<VPersonal> lista = await _apiServiceAsignacion.GetVPersonal(nombre, status);
+            var listaDto = new List<VPersonal>();
+
+            foreach (var personal in lista)
+            {
+                listaDto.Add(personal);
+            }
+
+            var data = new SelectList(listaDto, "MilitarNo", "Doc");
+            ViewBag.Personal = new SelectList(listaDto, "MilitarNo", "Nombres");
+
+
+            return Ok(data);
+        }
+        [HttpGet]
+        public async Task<IActionResult> DescargoArma()
+        {
+
+            ViewBag.count = 0;
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DescargoArma(VPersonal codigo)
+        {
+            var obtasig = codigo.MilitarNo.ToString();
+            IEnumerable<AsignacionArma> lisAsig =  _apiServiceAsignacion.GetAsignaciones().Result.Where(e => e.AsignacionNombre == obtasig);
+            IEnumerable<VArma> lista = await _apiServiceAsignacion.GetVArmas();
+            var listaDto = new List<VArma>();
+            var listaasigDto = new List<AsignacionArma>();
+            int? valorarma = 0;
+           
+                foreach (var asig in lisAsig)
+                {
+                    listaasigDto.Add(asig);
+                    valorarma = asig.IdArma;
+                    foreach (var arma in lista.Where(e => e.IdArma == valorarma))
+                    {
+                    listaDto.Add(arma);
+                    }
+                }
+                
+
+                //foreach (var arma in lista.Where(e => e.IdArma == nuevoC))
+                //{
+                //    listaDto.Add(arma);
+                //}
+            ViewBag.count = listaasigDto.Count;
+                ViewBag.Arma = listaDto;
+
+                VPersonal listaP = await _apiServiceAsignacion.GetVPersonaId(codigo.MilitarNo);
+
+                ViewBag.Nombres = listaP.Nombres;
+                ViewBag.desc_rango = listaP.desc_rango;
+                ViewBag.Cedula = listaP.Cedula;
+            
+
+            
+
+
+            return View();
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> AsignacionCreate()
             {
                 IEnumerable<VArma> lista = await _apiServiceAsignacion.GetVArmas();
                 IEnumerable<AsignarEstado> listaAsigEst = await _apiServiceAsignacion.GetAsigEstado();
@@ -36,15 +122,16 @@ namespace BelicoSysApp.Controllers
             {
                 listaEstDto.Add(asignarEstado);
             }
-
+            
             ViewBag.IdArma = new SelectList(listaDto, "IdArma", "ArmaSerie");
+            ViewBag.AsignacionEstado = new SelectList(listaEstDto, "IdAsignacionEstado", "AsignacionEstadoDescripcion");
             ViewBag.AsignacionTipo = new SelectList(listaEstDto, "IdAsignacionEstado", "AsignacionEstadoDescripcion");
 
 
             return View();
             }
-            [HttpPost]
-            public async Task<IActionResult> AsignacionCreate(AsignacionArma model)
+        [HttpPost]
+        public async Task<IActionResult> AsignacionCreate(AsignacionArma model)
             {
 
                 if (model.IdAsignacion == 0)
@@ -64,9 +151,29 @@ namespace BelicoSysApp.Controllers
                 return View("MenuAsignacion");
             }
 
+        [HttpGet]
+        public async Task<IActionResult> PeronaId(decimal id) {
+            var itemPersona =  await _apiServiceAsignacion.GetVPersonaId(id);
+
+            if (itemPersona != null) {
+
+                var itemPDto = new ApiResult();
+
+                itemPDto.vPersonal = itemPersona;
+
+                return Ok(itemPDto.vPersonal.Cedula);
+            }
+            
+           
+
+            
 
 
-            public IActionResult MenuAsignacion()
+
+            return NotFound();
+        }
+
+       public IActionResult MenuAsignacion()
 
             {
                 string successMessage = TempData["SuccessMessage"] as string;

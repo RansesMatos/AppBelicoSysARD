@@ -113,5 +113,41 @@ namespace BelicoSysApp.Services
             return asigEstadoList;
 
         }
+
+        public async Task<IEnumerable<VPersonal>> GetVPersonal(string nombre, string status)
+        {
+            IEnumerable<VPersonal> vArmaList = new List<VPersonal>();
+            var client = new HttpClient();
+            client.BaseAddress = new Uri(_baseUrl);
+            var response = await client.GetAsync($"/api/AsignarArma/Personal?nombre={nombre}&status={status}");
+            if (response != null && response.IsSuccessStatusCode)
+            {
+
+                var json_respuesta = await response.Content.ReadAsStringAsync();
+                ICollection<VPersonal> resultado = JsonConvert.DeserializeObject<ICollection<VPersonal>>(json_respuesta);
+                vArmaList = resultado;
+            }
+
+            return vArmaList;
+        }
+
+        public async Task<VPersonal> GetVPersonaId(decimal documentId)
+        {
+            VPersonal objeto = new VPersonal();
+
+            var client = new HttpClient();
+            client.BaseAddress = new Uri(_baseUrl);
+
+            var response = await client.GetAsync($"api/AsignarArma/PeronalInd/{documentId}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var json_respuesta = await response.Content.ReadAsStringAsync();
+                var resultado = JsonConvert.DeserializeObject<VPersonal>(json_respuesta);
+                objeto = resultado;
+            }
+
+            return objeto; 
+        }
     }
 }

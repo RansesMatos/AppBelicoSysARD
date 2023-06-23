@@ -11,12 +11,17 @@ namespace BelicoSysApp.Controllers
         {
             _apiArma = apiArma;
         }
+       
         public async Task<IActionResult> ArmaReport()
         {
             ICollection<VArma> lista = await _apiArma.GetVArmas();
             ViewBag.Arma = lista;
+            
+
             return View(lista);
         }
+
+        
 
 
         [HttpGet]
