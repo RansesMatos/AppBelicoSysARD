@@ -1,9 +1,11 @@
 ﻿@model List<Pertrecho>
 @{
-    ViewData["Title"] = "Listado Armas";
+    ViewData["Title"] = "Listado Pertrechos";
 }
 
-<h1>Listado de Armas Registrados</h1>
+<h1>Listado de Pertrechos Registrados</h1>
+
+<h3>Cantidad de Equipo Registrado: @Model.Sum(e => e.Cantidad)</h3>
 
 <table class="tbl">
     <thead>

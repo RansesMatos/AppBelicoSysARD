@@ -74,12 +74,40 @@ function loadDropdownData() {
         }
     });
 }
+function loadDropdownData2() {
+    let nombrefilter = document.getElementById("searchInput").value;
+    $.ajax({
+        url: 'SearchPeople',
+        type: 'GET',
+        data: {
+            nombre: nombrefilter
+        },
+        success: function (data) {
+            let dropdown = $('#AsignacionNombre');
+            dropdown.empty(); // Clear existing options
+
+            // Add options to the dropdown
+            $.each(data, function (index, item) {
+                dropdown.append($('<option></option>').text(item.text).val(item.value));
+            });
+
+
+            console.log(data)
+        },
+        error: function (xhr, status, error) {
+            console.error('Error loading dropdown data: ' + error);
+        }
+    });
+}
 
 function loadDocData() {
     let idfilter = document.getElementById("AsignacionNombre").value;
     $.ajax({
-        url: 'PeronaId/'+ idfilter,
-        type: 'GET',        
+        url: 'PeronaId',
+        type: 'GET',  
+        data: {
+            id: idfilter
+        },
         success: function (data) {
             console.log(data)
             let documentId = $('#AsignacionDocumento');

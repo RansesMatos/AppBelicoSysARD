@@ -4,6 +4,7 @@
     {
         public int IdAsignacion { get; set; }
 
+        public Decimal? AsignacionNoRango { get; set; }
         public string? AsignacionNombre { get; set; }
         public string? Asignacion_rango { get; set; }
 

@@ -16,6 +16,7 @@ namespace BelicoSysApp.Controllers
         {
             ICollection<Pertrecho> lista = await _apiServicePertrecho.GetPertrecho();
             ViewBag.Pertrecho = lista;
+            
             return View(lista);
         }
 

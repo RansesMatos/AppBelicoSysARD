@@ -68,8 +68,8 @@ namespace BelicoSysApp.Controllers
         [HttpPost]
         public async Task<IActionResult> DescargoArma(VPersonal codigo)
         {
-            var obtasig = codigo.MilitarNo.ToString();
-            IEnumerable<AsignacionArma> lisAsig =  _apiServiceAsignacion.GetAsignaciones().Result.Where(e => e.AsignacionNombre == obtasig);
+            var obtasig = codigo.MilitarNo;
+            IEnumerable<AsignacionArma> lisAsig =  _apiServiceAsignacion.GetAsignaciones().Result.Where(e => e.AsignacionNoRango == obtasig);
             IEnumerable<VArma> lista = await _apiServiceAsignacion.GetVArmas();
             var listaDto = new List<VArma>();
             var listaasigDto = new List<AsignacionArma>();
@@ -90,7 +90,7 @@ namespace BelicoSysApp.Controllers
                 //{
                 //    listaDto.Add(arma);
                 //}
-            ViewBag.count = listaasigDto.Count;
+                ViewBag.count = listaasigDto.Count;
                 ViewBag.Arma = listaDto;
 
                 VPersonal listaP = await _apiServiceAsignacion.GetVPersonaId(codigo.MilitarNo);
