@@ -7,9 +7,6 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IApiServiceArma, ApiServiceArma>();
 builder.Services.AddScoped<IApiServicePertrecho, ApiServicePertrecho>();
 builder.Services.AddScoped<IApiServiceAsignacion, ApiServiceAsingacion>();
-
-
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

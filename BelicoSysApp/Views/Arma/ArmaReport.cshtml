@@ -4,8 +4,9 @@
 }
 
 <h1>Listado de Armas Registrados</h1>
-
-<table class="tbl">
+<a asp-controller="Arma" asp-action="Export" class="btn btn-success">Export to Excel</a>
+<a asp-controller="Arma" asp-action="ExportPDf" class="btn btn-success" style="background-color:red">Export to PDF</a>
+<table class="tbl" id="TablaArmas">
     <thead>
         <tr>
             <th>Accion</th>

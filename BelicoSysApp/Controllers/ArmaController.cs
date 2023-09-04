@@ -1,6 +1,10 @@
 ﻿using BelicoSysApp.Models;
 using BelicoSysApp.Services;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 using Microsoft.AspNetCore.Mvc;
+using OfficeOpenXml;
+using System.Net.Http;
 
 namespace BelicoSysApp.Controllers
 {
@@ -11,7 +15,83 @@ namespace BelicoSysApp.Controllers
         {
             _apiArma = apiArma;
         }
-       
+        public async Task<IActionResult> ExportPDf()
+        {
+            ICollection<VArma> lista = await _apiArma.GetVArmas();
+            var valuesList = lista.ToList();
+
+            string fileName = "values.pdf";
+
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                Document document = new Document();
+                PdfWriter writer = PdfWriter.GetInstance(document, memoryStream);
+
+                document.Open();
+                PdfPTable table = new PdfPTable(2);
+
+               // table.AddCell("Index");
+               // table.AddCell("Value");
+
+                //for (int i = 0; i < valueslist.count; i++)
+                //{
+                //    table.addcell((i + 1).tostring());
+                //    table.addcell(valueslist[i].armaserie);
+                //}
+                foreach (var item in valuesList)
+                {
+                    table.AddCell(item.TaNombre);
+                    table.AddCell(item.FechaRegistro.ToShortTimeString());
+                    table.AddCell(item.AlmacenDescripcion);
+                    table.AddCell(item.ArmaCalibre);
+                    table.AddCell(item.ArmaStatus.ToString());
+                    table.AddCell(item.ArmaSerie);
+                    table.CompleteRow();
+
+
+                }
+
+                document.Add(table);
+                document.Close();
+
+                return File(memoryStream.ToArray(), "application/pdf", fileName);
+            }
+        }
+        public async Task<IActionResult> Export()
+        {
+            ICollection<VArma> lista = await _apiArma.GetVArmas();
+
+            if (lista.Count != 0)
+            {
+                
+
+               var valuesList = lista.ToList();
+                
+
+                using (var package = new ExcelPackage())
+                {
+                    var worksheet = package.Workbook.Worksheets.Add("Sheet1");
+
+                    // Add headers
+                    worksheet.Cells[1, 1].Value = "Index";
+                    worksheet.Cells[1, 2].Value = "Value";
+
+                    // Add data
+                    for (int i = 0; i < valuesList.Count; i++)
+                    {
+                        worksheet.Cells[i + 2, 1].Value = i + 1;
+                        worksheet.Cells[i + 2, 2].Value = valuesList[i];
+                    }
+
+                    var stream = new MemoryStream(package.GetAsByteArray());
+
+                    return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "values.xlsx");
+                }
+            }
+
+            return BadRequest("Unable to fetch API data.");
+        }
+
         public async Task<IActionResult> ArmaReport()
         {
             ICollection<VArma> lista = await _apiArma.GetVArmas();
@@ -19,9 +99,7 @@ namespace BelicoSysApp.Controllers
             
 
             return View(lista);
-        }
-
-        
+        }       
 
 
         [HttpGet]

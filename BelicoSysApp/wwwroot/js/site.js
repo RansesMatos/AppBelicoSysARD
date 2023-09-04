@@ -3,7 +3,7 @@
 
 
 // Write your JavaScript code.
-
+const valuesList = [];
 const button = document.querySelector('#Mant');
 const disableButton = () => {
     console.log("va");
@@ -119,6 +119,61 @@ function loadDocData() {
             console.error('Error Cargando Cedula data: ' + error);
         }
     });
+    
+}
+
+
+function addValue() {    
+    const enteredValue = document.getElementById('IdPertrechos').value;
+    valuesList.push(enteredValue);
+    updateValuesTable();
+};
+function removeValue(index) {
+    valuesList.splice(index, 1);
+    updateValuesTable();
+};
+
+function updateValuesTable() {
+    
+    const valuesTableContainer = document.getElementById('valuesTable');
+    valuesTableContainer.innerHTML = '<h3>Pertrechos asignados:</h3>';
+
+    if (valuesList.length === 0) {
+        valuesTableContainer.innerHTML += '<p>No values added yet.</p>';
+    } else {
+        const table = document.createElement('table');
+        table.className = 'table table-bordered';
+        const tbody = document.createElement('tbody');
+
+        valuesList.forEach((value, index) => {
+            const row = document.createElement('tr');
+            const indexCell = document.createElement('td');
+            indexCell.textContent = index + 1;
+            const valueCell = document.createElement('td');
+            valueCell.textContent = value;
+            const inputVal = document.createElement('input');
+            inputVal.type = 'number';
+            const removeCell = document.createElement('td');
+            const btnRemove = document.createElement('button');
+            btnRemove.textContent = 'Remover';
+            btnRemove.className = 'btn btn-danger btn-sm';
+            btnRemove.style.color = 'Black';
+            btnRemove.onclick = () => removeValue(index);
+            removeCell.appendChild(btnRemove);
+
+
+            row.appendChild(btnRemove);
+            row.appendChild(valueCell);
+            row.appendChild(inputVal);
+            
+            tbody.appendChild(row);
+        });
+
+        table.appendChild(tbody);
+        valuesTableContainer.appendChild(table);
+    }
+
+   
 }
 
 

@@ -46,6 +46,23 @@ namespace BelicoSysApp.Services
             return vArmaList;
 
         }
+        public async Task<ICollection<Pertrecho>> Getpertrechos()
+        {
+            ICollection<Pertrecho> pertrechoList = new List<Pertrecho>();
+            var client = new HttpClient();
+            client.BaseAddress = new Uri(_baseUrl);
+            var response = await client.GetAsync("api/Pertrecho");
+            if (response != null && response.IsSuccessStatusCode)
+            {
+
+                var json_respuesta = await response.Content.ReadAsStringAsync();
+                ICollection<Pertrecho> resultado = JsonConvert.DeserializeObject<ICollection<Pertrecho>>(json_respuesta);
+                pertrechoList = resultado;
+            }
+
+            return pertrechoList;
+
+        }
         public async Task<AsignacionArma> Get(int idAsig)
         {
             AsignacionArma objeto = new AsignacionArma();
@@ -149,5 +166,7 @@ namespace BelicoSysApp.Services
 
             return objeto; 
         }
+
+      
     }
 }

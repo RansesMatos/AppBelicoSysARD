@@ -6,6 +6,7 @@ namespace BelicoSysApp.Services
     {
         Task<ICollection<AsignacionArma>> GetAsignaciones();
         Task<ICollection<VArma>> GetVArmas();
+        Task<ICollection<Pertrecho>> Getpertrechos();
         Task<IEnumerable<VPersonal>> GetVPersonal(String nombre, String Status);
         Task<VPersonal> GetVPersonaId(decimal documentId);
 

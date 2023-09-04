@@ -44,11 +44,22 @@
     </div>
     <div>
         <label for="IdArma">Arma:</label>
-        <select id="IdArma" name="IdArma" asp-items="@ViewBag.Idarma" >
+        <select id="IdArma" name="IdArma" asp-items="@ViewBag.idarma" >
             <option value="">Selecciona Tipo</option>
         </select>
         <input type="hidden"  name="IdArma"  />
     </div>
+    <div>
+        <label for="IdPertrechos">pertrecho:</label>
+        <select id="IdPertrechos" name="IdPertrechos" asp-items="@ViewBag.pertrecho">
+            <option value="">Selecciona Tipo</option>            
+        </select>
+        <input type="hidden" name="IdPertrechos" />
+        <button type="button" class="btn btn-primary" onclick="addValue();">Agregar</button>
+        
+        <div id="valuesTable" class="mt-3"></div>
+    </div>    
+    
     <div>
         <label for="AsignacionEstado">Estado de Asignacion:</label>
         <select id="AsignacionEstado" name="AsignacionEstado"  asp-items="@ViewBag.AsignacionEstado">

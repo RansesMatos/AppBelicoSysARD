@@ -2,6 +2,7 @@
 using BelicoSysApp.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Collections.Generic;
 
 namespace BelicoSysApp.Controllers
 {
@@ -33,11 +34,12 @@ namespace BelicoSysApp.Controllers
             }
 
              var data = new SelectList(listaDto, "MilitarNo", "Nombres");
-            ViewBag.Personal = new SelectList(listaDto, "MilitarNo", "Nombres");
+            ViewBag.Pertrecho = new SelectList(listaDto, "MilitarNo", "Nombres");
 
 
             return Ok(data);
         }
+       
         [HttpGet]
         public async Task<IActionResult> SearchPeopleDoc(string nombre)
         {
@@ -57,7 +59,7 @@ namespace BelicoSysApp.Controllers
             return Ok(data);
         }
         [HttpGet]
-        public async Task<IActionResult> DescargoArma()
+        public IActionResult DescargoArma()
         {
 
             ViewBag.count = 0;
@@ -110,11 +112,20 @@ namespace BelicoSysApp.Controllers
         [HttpGet]
         public async Task<IActionResult> AsignacionCreate()
             {
-                IEnumerable<VArma> lista = await _apiServiceAsignacion.GetVArmas();
+            IEnumerable<Pertrecho> listaP = await _apiServiceAsignacion.Getpertrechos();
+            IEnumerable<VArma> lista = await _apiServiceAsignacion.GetVArmas();
                 IEnumerable<AsignarEstado> listaAsigEst = await _apiServiceAsignacion.GetAsigEstado();
                 var listaDto = new List<VArma>();
                 var listaEstDto = new List<AsignarEstado>();
-            foreach(var arma in lista)
+            var listaDtop = new List<Pertrecho>();
+            foreach (var pertrecho in listaP)
+            {
+                listaDtop.Add(pertrecho);
+            }
+
+            var data = new SelectList(listaDto);
+            // ViewBag.pertrecho = new SelectList(listaDto, "PertrechosDescripcion", "Cantidad");
+            foreach (var arma in lista)
             {
                 listaDto.Add(arma);              
             }
@@ -124,6 +135,7 @@ namespace BelicoSysApp.Controllers
             }
             
             ViewBag.IdArma = new SelectList(listaDto, "IdArma", "ArmaSerie");
+            ViewBag.pertrecho = new SelectList(listaDtop, "PertrechosDescripcion", "PertrechosDescripcion");
             ViewBag.AsignacionEstado = new SelectList(listaEstDto, "IdAsignacionEstado", "AsignacionEstadoDescripcion");
             ViewBag.AsignacionTipo = new SelectList(listaEstDto, "IdAsignacionEstado", "AsignacionEstadoDescripcion");
 

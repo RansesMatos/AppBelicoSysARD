@@ -3,20 +3,20 @@
     ViewData["Title"] = "Listado Armas";
 }
 
-<h1>Listado de Armas Registrados</h1>
 
+<h1>Listado de Armas Registrados</h1> 
+<button class="btn btn-success mt-2" onclick="exportToExcel()">Export to Excel</button>
 <table class="tbl">
     <thead>
         <tr>
             <th>Accion</th>
             <th>Arma ID</th>
             <th>MilitarID</th>
-            <th>Tipo Arma</th>
-            <th>Marca</th>
-            <th>Calibre</th>
-            <th>Serie</th>
-            <th>Almacen</th>
-            <th>Estado</th>
+            <th>Nombres</th>
+            <th>Documento</th>
+            <th>Fecha Asignacion</th>
+            <th>Documento</th>
+            <th>Nota</th>
             <th>Estatus</th>
         </tr>
     </thead>
@@ -31,19 +31,19 @@
                     @armaitem.IdArma
                 </td>
                 <td>
+                    @armaitem.AsignacionNoRango
+                </td>
+                <td>
+                    @armaitem.Asignacion_rango
+                </td>
+                <td>
                     @armaitem.AsignacionNombre
                 </td>
                 <td>
                     @armaitem.AsignacionDocumento
                 </td>
                 <td>
-                    @armaitem.AsignacionTipo
-                </td>
-                <td>
                     @armaitem.FechaAsignacion
-                </td>
-                <td>
-                    @armaitem.FechaDevolucion
                 </td>
                 <td>
                     @armaitem.NotaAsignacion
@@ -60,3 +60,4 @@
         }
     </tbody>
 </table>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.13/dist/xlsx.full.min.js"></script>

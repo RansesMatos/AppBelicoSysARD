@@ -15,7 +15,12 @@ namespace BelicoSysApp.Services
         public async Task<ICollection<Pertrecho>> GetPertrecho()
         {
             ICollection<Pertrecho> PertrechoList = new List<Pertrecho>();
-            var client = new HttpClient();
+            HttpClientHandler clientHandler = new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; }
+            };
+
+            var client = new HttpClient(clientHandler);
             client.BaseAddress = new Uri(_baseUrl);
             var response = await client.GetAsync("api/Pertrecho");
             if(response != null && response.IsSuccessStatusCode) 
