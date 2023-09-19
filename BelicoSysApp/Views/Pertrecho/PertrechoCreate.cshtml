@@ -8,17 +8,19 @@
 
 <form asp-controller="Pertrecho" asp-action="PertrechoCreate" method="post" enctype="multipart/form-data">
 
-    <div>
-        <label for="PertrechosDescripcion">Descripcion:</label>
-        <input type="text" id="PertrechosDescripcion" name="PertrechosDescripcion"  />
+    <h5 class="text-muted mb-3">Asignar Pertrechos</h5>
+
+    <div class="mb-3">
+        <label class="form-label" for="PertrechosDescripcion">Descripcion:</label>
+        <input class="form-control" type="text" id="PertrechosDescripcion" name="PertrechosDescripcion" />
     </div>
-    <div>
-        <label for="Cantidad">Cantidad:</label>
-        <input type="text" id="Cantidad" name="Cantidad" />
+    <div class="mb-3">
+        <label class="form-label" for="Cantidad">Cantidad:</label>
+        <input class="form-control" type="text" id="Cantidad" name="Cantidad" />
     </div>
-     <div>
-        <label for="IdAlmacen">Almacen:</label>
-        <select id="IdAlmacen" name="IdAlmacen" >
+    <div class="mb-3">
+        <label class="form-label" for="IdAlmacen">Almacen:</label>
+        <select class="form-select" id="IdAlmacen" name="IdAlmacen">
             <option value="0">Selecciona Almacen</option>
         </select>
         <input type="hidden" name="Almacen" />
@@ -26,7 +28,7 @@
        
     <!-- Repeat the above pattern for the remaining fields -->
 
-        <input class="btn btn-primary btn-lg" type="submit" value="Crear" />
+        <input class="btn btn-primary" type="submit" value="Crear" />
 
 </form>
 
