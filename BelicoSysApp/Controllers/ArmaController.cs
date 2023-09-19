@@ -1,5 +1,6 @@
 ﻿using BelicoSysApp.Models;
 using BelicoSysApp.Services;
+using ClosedXML.Excel;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using Microsoft.AspNetCore.Mvc;
@@ -68,24 +69,25 @@ namespace BelicoSysApp.Controllers
                var valuesList = lista.ToList();
                 
 
-                using (var package = new ExcelPackage())
+                using (var package = new XLWorkbook())
                 {
-                    var worksheet = package.Workbook.Worksheets.Add("Sheet1");
+                    var worksheet = package.Worksheets.Add("Sheet1");
 
                     // Add headers
-                    worksheet.Cells[1, 1].Value = "Index";
-                    worksheet.Cells[1, 2].Value = "Value";
+                    worksheet.Cell(1,1).Value = "Index";
+                    worksheet.Cell(1, 2).Value = "Value";
 
                     // Add data
                     for (int i = 0; i < valuesList.Count; i++)
                     {
-                        worksheet.Cells[i + 2, 1].Value = i + 1;
-                        worksheet.Cells[i + 2, 2].Value = valuesList[i];
+                        worksheet.Cell(i + 2, 1).Value = i + 1;
+                        worksheet.Cell(i + 2, 2).Value = valuesList[i].ToString();
                     }
 
-                    var stream = new MemoryStream(package.GetAsByteArray());
+                    var stream = new MemoryStream();
+                    package.SaveAs(stream);
 
-                    return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "values.xlsx");
+                    return File(stream, "application/xml", "values.xlsx");
                 }
             }
 
