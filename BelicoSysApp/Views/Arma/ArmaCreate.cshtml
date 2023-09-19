@@ -8,39 +8,41 @@
 
 <form asp-controller="Arma" asp-action="ArmaCreate" method="post" enctype="multipart/form-data">
 
-    <div>
-        <label for="IdTipoArma">TipoArma:</label>
-        <select id="IdTipoArma" name="IdTipoArma" >
+    <h5 class="text-muted mb-3">Registar Arma</h5>
+
+    <div class="mb-3">
+        <label class="form-label" for="IdTipoArma">Tipo del Arma:</label>
+        <select class="form-select" id="IdTipoArma" name="IdTipoArma">
             <option value="0">Selecciona Tipo</option>
         </select>
         <input type="hidden"  name="TipoArma"  />
     </div>
-    <div>
-        <label for="IdArmaMarca">ArmaMarca:</label>
-        <select id="IdArmaMarca" name="idArmaMarca" >
+    <div class="mb-3">
+        <label class="form-label" for="IdArmaMarca">Marca del Arma:</label>
+        <select class="form-select" id="IdArmaMarca" name="idArmaMarca">
             <option value="0">Selecciona Marca</option>
         </select>
         <input type="hidden" name="ArmaMarca" />
     </div>
-    <div>
-        <label for="ArmaCalibre">ArmaCalibre:</label>
-        <input type="text" id="ArmaCalibre" name="ArmaCalibre" />
+    <div class="mb-3">
+        <label class="form-label" for="ArmaCalibre">Calibre del Arma:</label>
+        <input class="form-control" type="text" id="ArmaCalibre" name="ArmaCalibre" />
     </div>
-    <div>
-        <label for="ArmaSerie">ArmaSerie:</label>
-        <input type="text" id="ArmaSerie" name="ArmaSerie"  />
+    <div class="mb-3">
+        <label class="form-label" for="ArmaSerie">Serie del Arma:</label>
+        <input class="form-control" type="text" id="ArmaSerie" name="ArmaSerie" />
     </div>
-    <div>
-        <label for="IdAlmacen">Almacen:</label>
-        <select id="IdAlmacen" name="IdAlmacen" >
-            <option value="0">Selecciona Almacen</option>
+    <div class="mb-3">
+        <label class="form-label" for="IdAlmacen">Almacén:</label>
+        <select class="form-select" id="IdAlmacen" name="IdAlmacen">
+            <option value="0">Selecciona Almacén</option>
         </select>
         <input type="hidden" name="Almacen" />
     </div>
 
     
     <!-- Repeat the above pattern for the remaining fields -->
-    <div id="btnCrear"><input class="btn btn-primary btn-lg " type="submit" value="Crear" />
+    <div id="btnCrear"><input class="btn btn-primary" type="submit" value="Crear" />
 </div>
         
 </form>
