@@ -32,26 +32,26 @@
 
 <form asp-controller="Asignacion" asp-action="AsignacionCreate" method="post" enctype="multipart/form-data">
 
-    <div>
-        <label for="AsignacionNombre">Nombre:</label>
-        <select id="AsignacionNombre" name="AsignacionNombre" >
+    <div class="mb-3">
+        <label class="form-label" for="AsignacionNombre">Nombre:</label>
+        <select class="form-select" id="AsignacionNombre" name="AsignacionNombre">
         </select>
         <input type="hidden"  name="AsignacionNombre"  />
     </div>
-    <div>
-        <label for="AsignacionDocumento">Documento:</label>
-        <input id="AsignacionDocumento" name="AsignacionDocumento" ondblclick="loadDocData()" readonly />
+    <div class="mb-3">
+        <label class="form-label" for="AsignacionDocumento">Documento:</label>
+        <input class="form-control" id="AsignacionDocumento" name="AsignacionDocumento" ondblclick="loadDocData()" readonly />
     </div>
-    <div>
-        <label for="IdArma">Arma:</label>
-        <select id="IdArma" name="IdArma" asp-items="@ViewBag.idarma" >
+    <div class="mb-3">
+        <label class="form-label" for="IdArma">Arma:</label>
+        <select class="form-control" id="IdArma" name="IdArma" asp-items="@ViewBag.idarma">
             <option value="">Selecciona Tipo</option>
         </select>
         <input type="hidden"  name="IdArma"  />
     </div>
-    <div>
-        <label for="IdPertrechos">pertrecho:</label>
-        <select id="IdPertrechos" name="IdPertrechos" asp-items="@ViewBag.pertrecho">
+    <div class="mb-3">
+        <label class="form-label" for="IdPertrechos">pertrecho:</label>
+        <select class="form-control" id="IdPertrechos" name="IdPertrechos" asp-items="@ViewBag.pertrecho">
             <option value="">Selecciona Tipo</option>            
         </select>
         <input type="hidden" name="IdPertrechos" />
@@ -60,34 +60,34 @@
         <div id="valuesTable" class="mt-3"></div>
     </div>    
     
-    <div>
-        <label for="AsignacionEstado">Estado de Asignacion:</label>
-        <select id="AsignacionEstado" name="AsignacionEstado"  asp-items="@ViewBag.AsignacionEstado">
+    <div class="mb-3">
+        <label class="form-label" for="AsignacionEstado">Estado de Asignacion:</label>
+        <select class="form-control" id="AsignacionEstado" name="AsignacionEstado" asp-items="@ViewBag.AsignacionEstado">
             <option value="0">Selecciona Tipo</option>
         </select>
         <input type="hidden" name="AsignacionEstado" />
     </div>
-     <div>
-        <label for="AsignacionTipo">Tipo de Asignacion:</label>
-        <select id="AsignacionTipo" name="AsignacionTipo"  asp-items="@ViewBag.AsignacionTipo">
+    <div class="mb-3">
+        <label class="form-label" for="AsignacionTipo">Tipo de Asignacion:</label>
+        <select class="form-control" id="AsignacionTipo" name="AsignacionTipo" asp-items="@ViewBag.AsignacionTipo">
             <option value="0">Selecciona Tipo</option>
         </select>
         <input type="hidden" name="AsignacionTipo" />
     </div>
-     <div>
-        <label for="NotaAsignacion">Nota:</label>
-        <input type="text" id="NotaAsignacion" name="NotaAsignacion"  />
+    <div class="mb-3">
+        <label class="form-label" for="NotaAsignacion">Nota:</label>
+        <input class="form-control" type="text" id="NotaAsignacion" name="NotaAsignacion" />
     </div>
-     <div>
-        <label for="FechaAsignacion">Fecha Asignacion:</label>
-        <input type="date" id="FechaAsignacion" name="FechaAsignacion"  />
+    <div class="mb-3">
+        <label class="form-label" for="FechaAsignacion">Fecha Asignacion:</label>
+        <input class="form-control" type="date" id="FechaAsignacion" name="FechaAsignacion" />
     </div>
-    <div>
-        <label for="FechaDevolucion">Fecha Devolucion:</label>
-        <input type="date" id="FechaDevolucion" name="FechaDevolucion"  />
+    <div class="mb-3">
+        <label class="form-label" for="FechaDevolucion">Fecha Devolucion:</label>
+        <input class="form-control" type="date" id="FechaDevolucion" name="FechaDevolucion" />
     </div>    
     <!-- Repeat the above pattern for the remaining fields -->
-    <div id="btnCrear"><input class="btn btn-primary btn-lg " type="submit" value="Crear" />
+    <div id="btnCrear"><input class="btn btn-primary" type="submit" value="Crear" />
 </div>
         
 </form>

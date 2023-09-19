@@ -9,12 +9,12 @@
 {
     @Html.AntiForgeryToken()
 
-    <div class="form-group">
+    <div class="form-group mb-3">
         @Html.LabelFor(m => m.Username)
         @Html.TextBoxFor(m => m.Username, new { @class = "form-control", placeholder = "Enter your username" })
     </div>
 
-    <div class="form-group">
+    <div class="form-group mb-3">
         @Html.LabelFor(m => m.Password)
         @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Enter your password" })
     </div>

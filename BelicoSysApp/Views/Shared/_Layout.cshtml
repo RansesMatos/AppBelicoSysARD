@@ -1,14 +1,77 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html id="html" lang="en">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@ViewData["Title"] - BelicoSysApp</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/bootstrap.min.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/BelicoSysApp.styles.css" asp-append-version="true" />
 </head>
-<body>
+
+<body id="body">
+    <div style="width: 100%; height: auto; text-align: center;"> 
+        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+        <img src="~/img/logo.png" width="100" />
+        </a>
+    </div>
+    <div style="width: 100%; height: auto; text-align: center;">
+        <h6>ARMADA DE REPÚBLICA DOMINICANA</h6>
+        <h6>INTENDENCIA DEL MATERIAL BÉLICO</h6>
+        <h6>Sistema de Inventario, Cargo y Descargo de Armas</h6>
+    </div>
+    <nav class="navbar bg-primary navbar-expand-lg bg-body-tertiary">
+        <div class="container">
+            <!--
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ARD</a>
+                    -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Armas
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="@Url.Action("ArmaCreate","Arma")">Registrar</a></li>
+                            <li><a class="dropdown-item" href="@Url.Action("ArmaReport","Arma")">Reportes</a></li>
+                            <li><a class="dropdown-item" href="#">Actualizar</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Pertrechos
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="@Url.Action("PertrechoCreate","Pertrecho")">Asignar</a></li>
+                            <li><a class="dropdown-item" href="@Url.Action("PertrechoReport","Pertrecho")">Reportes</a></li>
+                            <li><a class="dropdown-item" href="#">Actualizar</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Asignaciones
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="@Url.Action("AsignacionCreate","Asignacion")">Asignar Arma</a></li>
+                            <li><a class="dropdown-item" href="@Url.Action("AsignacionReport","Asignacion")">Reportes</a></li>
+                            <li><a class="dropdown-item" href="#">Asignar Arma a Departamento</a></li>
+                            <li><a class="dropdown-item" href="@Url.Action("DescargoArma","Asignacion")">Descargo de Arma</a></li>
+                            <li><a class="dropdown-item" href="@Url.Action("DescargoArma","Asignacion")">Descargo de Civil</a></li>
+                            <li><a class="dropdown-item" href="@Url.Action("DescargoArma","Asignacion")">Descargo de Asignación Temporal</a></li>
+                            <li><a class="dropdown-item" href="#">Actualizar</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <a class="nav-link active" onclick="location.href='@Url.Action("Logout","Account")'">Salir</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 
     <header>
         <nav class=" navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div id="menucontainer" class="container-fluid">
@@ -22,15 +85,15 @@
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+    -->
+
+    <div class="container mt-5 p-3 border rounded" style="background: white;">
+       @RenderBody()
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2023 - BelicoSysApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <footer id="footer" class="border-top footer text-muted bg-primary">
+        <div class="container text-white">
+            &copy; 2023 - INTENDENCIA DEL MATERIAL BÉLICO ARMADA DE REPUBLICA DOMINICANA. Sistema de Inventario, Cargo y Descargo de Armas
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
