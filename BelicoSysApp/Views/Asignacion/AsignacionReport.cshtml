@@ -3,19 +3,120 @@
     ViewData["Title"] = "Listado Armas";
 }
 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var ddlRango = document.querySelector('#ddlRango');
+        var txtNombres = document.querySelector('#txtNombres');
+        var txtDocumento = document.querySelector('#txtDocumento');
 
-<h1>Listado de Armas Registrados</h1> 
-<button class="btn btn-success mt-2" onclick="exportToExcel()">Export to Excel</button>
-<table class="table table-striped table-hover">
+        ddlRango.addEventListener('change', function () {
+            filterData();
+        });
+
+        txtNombres.addEventListener('input', function () {
+            filterData();
+        });
+
+        txtDocumento.addEventListener('input', function () {
+            filterData();
+        });
+
+        function filterData() {
+            var rango = ddlRango.value;
+            var nombre = txtNombres.value.trim();
+            var documento = txtDocumento.value.trim();
+
+            // For simplicity, filtering the data on the client side using JavaScript and update the table accordingly
+            var filteredData = @Html.Raw(Json.Serialize(Model)); // Convert Model to a JavaScript object
+
+            if (rango !== "") {
+                filteredData = filteredData.filter(function (item) {
+                    return item.asignacion_rango === rango;
+                });
+            }
+
+            if (nombre !== "" && nombre.length > 2) {
+                filteredData = filteredData.filter(function (item) {
+                    return item.asignacionNombre.toLowerCase().includes(nombre.toLowerCase());
+                });
+            }
+
+            if (documento !== "" && documento.length > 2) {
+                filteredData = filteredData.filter(function (item) {
+                    return item.asignacionDocumento.toLowerCase().includes(documento.toLowerCase());
+                });
+            }
+
+            // Render the filtered data in the table
+            renderTable(filteredData);
+        }
+
+        function renderTable(data) {
+            var tbody = document.querySelector('#TablaAsignaciones tbody');
+            while (tbody.firstChild) {
+                tbody.removeChild(tbody.firstChild); // Clear the table body
+            }
+
+            data.forEach(function (item) {
+                // Render table rows based on the filtered data
+                var row = document.createElement('tr');
+                row.innerHTML = '<td><a class="btn btn-primary">Editar</a></td>' +
+                    '<td>' + item.idArma + '</td>' +
+                    '<td>' + item.asignacionNoRango + '</td>' +
+                    '<td>' + (item.asignacion_rango || '') + '</td>' +
+                    '<td>' + item.asignacionNombre + '</td>' +
+                    '<td>' + item.asignacionDocumento + '</td>' +
+                    '<td>' + (item.fechaAsignacion || '') + '</td>' +
+                    '<td>' + item.notaAsignacion + '</td>' +
+                    '<td><b>' + item.asignacionStatus + '</b></td>';
+
+                tbody.appendChild(row); // Append the row to the table
+            });
+        }
+    });
+</script>
+
+<div class="row">
+    <div class="col-6">
+        <h1>Listado de Armas Asignadas</h1> 
+    </div>
+    <div class="col d-flex justify-content-end align-items-center">
+        <a asp-controller="Asignacion" asp-action="Export" class="btn btn-success me-2">Export to Excel</a>
+        <a asp-controller="Asignacion" asp-action="ExportPDf" class="btn btn-success" style="background-color:red">Export to PDF</a>
+    </div>
+</div>
+
+<div class="row mt-3 mb-2">
+    <div class="col-md-3">
+        <label for="ddlRango">Rango:</label>
+        <select id="ddlRango" class="form-control">
+            <option value="">Todos</option>
+            @foreach (var rango in ViewBag.ddRangoOptions)
+            {
+                <option value="@rango">@rango</option>
+            }
+        </select>
+    </div>
+    <div class="col-md-3">
+        <label for="txtNombres">Nombres:</label>
+        <input type="text" id="txtNombres" class="form-control" placeholder="Nombre">
+    </div>
+    <div class="col-md-3">
+        <label for="txtDocumento">Documento:</label>
+        <input type="text" id="txtDocumento" class="form-control" placeholder="Documento de identidad">
+    </div>
+</div>
+
+<table class="table table-striped table-hover" id="TablaAsignaciones">
     <thead>
         <tr>
             <th>Accion</th>
             <th>Arma ID</th>
             <th>MilitarID</th>
+            <th>Rango</th>
             <th>Nombres</th>
             <th>Documento</th>
             <th>Fecha Asignacion</th>
-            <th>Documento</th>
             <th>Nota</th>
             <th>Estatus</th>
         </tr>

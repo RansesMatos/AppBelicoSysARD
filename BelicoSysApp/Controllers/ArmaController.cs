@@ -97,12 +97,31 @@ namespace BelicoSysApp.Controllers
         public async Task<IActionResult> ArmaReport()
         {
             ICollection<VArma> lista = await _apiArma.GetVArmas();
+
+            // Get filter options
+            // TODO: Get options from API
+            // NOTE: When pagination added, filtering should be performed on the backend
+            var ddTipoArmaOptions = lista.Select(x => x.TaNombre).ToList().Distinct();
+            var ddMarcaOptions = lista.Select(x => x.ArmaMarcaDescripcion).ToList().Distinct();
+            var ddCalibreOptions = lista.Select(x => x.ArmaCalibre).ToList().Distinct();
+            var ddAlmacenOptions = lista.Select(x => x.AlmacenDescripcion).ToList().Distinct();
+            var ddEstadoOptions = lista.Select(x => x.ArmaEstadoDescripcion).ToList().Distinct();
+            var ddEstatusOptions = new List<string>() { "Activado", "Desactivado" };
+
+            //lista = lista.Take(20).ToList();
+
             ViewBag.Arma = lista;
-            
+
+            ViewBag.ddTipoArmaOptions = ddTipoArmaOptions;
+            ViewBag.ddMarcaOptions = ddMarcaOptions;
+            ViewBag.ddCalibreOptions = ddCalibreOptions;
+            ViewBag.ddAlmacenOptions = ddAlmacenOptions;
+            ViewBag.ddEstadoOptions = ddEstadoOptions;
+            ViewBag.ddEstatusOptions = ddEstatusOptions;
+
 
             return View(lista);
-        }       
-
+        }
 
         [HttpGet]
         public IActionResult ArmaCreate()
