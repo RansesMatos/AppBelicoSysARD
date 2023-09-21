@@ -14,12 +14,21 @@ namespace BelicoSysApp.Controllers
          {
             _apiServiceAsignacion = apiServiceAsignacion;
         }
-            public async Task<IActionResult> AsignacionReport()
-            {
-                ICollection<AsignacionArma> lista = await _apiServiceAsignacion.GetAsignaciones();
-                ViewBag.Arma = lista;
-                return View(lista);
-            }
+        public async Task<IActionResult> AsignacionReport()
+        {
+            ICollection<AsignacionArma> lista = await _apiServiceAsignacion.GetAsignaciones();
+
+            // TODO: Get options from API
+            // NOTE: When pagination added, filtering should be performed on the backend
+            var ddRangoOptions = lista.Select(x => x.Asignacion_rango).ToList().Distinct();
+
+            //lista = lista.Take(30).ToList();
+
+            ViewBag.Arma = lista;
+            ViewBag.ddRangoOptions = ddRangoOptions;
+
+            return View(lista);
+        }
 
         [HttpGet]
         public async Task<IActionResult> SearchPeople(string nombre)
