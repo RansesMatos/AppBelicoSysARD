@@ -3,11 +3,99 @@
     ViewData["Title"] = "Listado Pertrechos";
 }
 
-<h1>Listado de Pertrechos Registrados</h1>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var ddlPertrecho = document.querySelector('#ddlPertrecho');
+        var ddlAlmacen = document.querySelector('#ddlAlmacen');
+
+        ddlPertrecho.addEventListener('change', function () {
+            filterData();
+        });
+
+        ddlAlmacen.addEventListener('change', function () {
+            filterData();
+        });
+
+        function filterData() {
+            var pertrecho = ddlPertrecho.value;
+            var almacen = ddlAlmacen.value;
+
+            // For simplicity, filtering the data on the client side using JavaScript and update the table accordingly
+            var filteredData = @Html.Raw(Json.Serialize(Model)); // Convert Model to a JavaScript object
+
+            if (pertrecho !== "") {
+                filteredData = filteredData.filter(function (item) {
+                    return item.pertrechosDescripcion === pertrecho;
+                });
+            }
+
+            if (almacen !== "") {
+                filteredData = filteredData.filter(function (item) {
+                    return item.idAlmacen === +almacen;
+                });
+            }
+
+            // Render the filtered data in the table
+            renderTable(filteredData);
+        }
+
+        function renderTable(data) {
+            var tbody = document.querySelector('#TablaPertrechos tbody');
+            while (tbody.firstChild) {
+                tbody.removeChild(tbody.firstChild); // Clear the table body
+            }
+
+            data.forEach(function (item) {
+                // Render table rows based on the filtered data
+                var row = document.createElement('tr');
+                row.innerHTML = '<td><a class="btn btn-primary">Editar</a></td>' +
+                    '<td>' + item.idPertrechos + '</td>' +
+                    '<td>' + item.pertrechosDescripcion + '</td>' +
+                    '<td>' + item.cantidad + '</td>' +
+                    '<td>' + item.idAlmacen + '</td>';
+
+                tbody.appendChild(row); // Append the row to the table
+            });
+        }
+    });
+</script>
+
+<div class="row">
+    <div class="col-6">
+        <h1>Listado de Pertrechos Registrados</h1>
+    </div>
+    <div class="col d-flex justify-content-end align-items-center">
+        <a asp-controller="Pertrecho" asp-action="Export" class="btn btn-success me-2">Export to Excel</a>
+        <a asp-controller="Pertrecho" asp-action="ExportPDf" class="btn btn-success" style="background-color:red">Export to PDF</a>
+    </div>
+</div>
 
 <h3>Cantidad de Equipo Registrado: @Model.Sum(e => e.Cantidad)</h3>
 
-<table class="table table-striped table-hover">
+<div class="row mt-3 mb-2">
+    <div class="col-md-3">
+        <label for="ddlPertrecho">Pertrecho:</label>
+        <select id="ddlPertrecho" class="form-control">
+            <option value="">Todos</option>
+            @foreach (var pertrecho in ViewBag.ddPertrechoOptions)
+            {
+                <option value="@pertrecho">@pertrecho</option>
+            }
+        </select>
+    </div>
+    <div class="col-md-3">
+        <label for="ddlAlmacen">Almacen:</label>
+        <select id="ddlAlmacen" class="form-control">
+            <option value="">Todos</option>
+            @foreach (var almacen in ViewBag.ddAlmacenOptions)
+            {
+                <option value="@almacen">@almacen</option>
+            }
+        </select>
+    </div>
+</div>
+
+<table class="table table-striped table-hover" id="TablaPertrechos">
     <thead>
         <tr>
             <th>Accion</th>
