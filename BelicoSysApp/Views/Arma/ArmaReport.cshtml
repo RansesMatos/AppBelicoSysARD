@@ -3,9 +3,144 @@
     ViewData["Title"] = "Listado Armas";
 }
 
-<h1>Listado de Armas Registrados</h1>
-<a asp-controller="Arma" asp-action="Export" class="btn btn-success">Export to Excel</a>
-<a asp-controller="Arma" asp-action="ExportPDf" class="btn btn-success" style="background-color:red">Export to PDF</a>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var ddlTipoArma = document.querySelector('#ddlTipoArma');
+        var ddlMarca = document.querySelector('#ddlMarca');
+        var ddlCalibre = document.querySelector('#ddlCalibre');
+        var ddlAlmacen = document.querySelector('#ddlAlmacen');
+
+        ddlTipoArma.addEventListener('change', function () {
+            filterData();
+        });
+
+        ddlMarca.addEventListener('change', function () {
+            filterData();
+        });
+
+        ddlCalibre.addEventListener('change', function () {
+            filterData();
+        });
+
+        ddlAlmacen.addEventListener('change', function () {
+            filterData();
+        });
+
+        function filterData() {
+            var tipoArma = ddlTipoArma.value;
+            var marca = ddlMarca.value;
+            var calibre = ddlCalibre.value;
+            var almacen = ddlAlmacen.value;
+
+            // For simplicity, filtering the data on the client side using JavaScript and update the table accordingly
+            var filteredData = @Html.Raw(Json.Serialize(Model)); // Convert Model to a JavaScript object
+
+            if (tipoArma !== "") {
+                filteredData = filteredData.filter(function (item) {
+                    return item.taNombre === tipoArma;
+                });
+            }
+
+            if (marca !== "") {
+                filteredData = filteredData.filter(function (item) {
+                    return item.armaMarcaDescripcion === marca;
+                });
+            }
+
+            if (calibre !== "") {
+                filteredData = filteredData.filter(function (item) {
+                    return item.armaCalibre === calibre;
+                });
+            }
+
+            if (almacen !== "") {
+                filteredData = filteredData.filter(function (item) {
+                    return item.almacenDescripcion === almacen;
+                });
+            }
+
+            // Render the filtered data in the table
+            renderTable(filteredData);
+        }
+
+        function renderTable(data) {
+            var tbody = document.querySelector('#TablaArmas tbody');
+            while (tbody.firstChild) {
+                tbody.removeChild(tbody.firstChild); // Clear the table body
+            }
+
+            data.forEach(function (item) {
+                // Render table rows based on the filtered data
+                var row = document.createElement('tr');
+                row.innerHTML = '<td><a class="btn btn-primary">Editar</a></td>' +
+                    '<td>' + item.idArma + '</td>' +
+                    '<td>' + item.taNombre + '</td>' +
+                    '<td>' + item.armaMarcaDescripcion + '</td>' +
+                    '<td>' + item.armaCalibre + '</td>' +
+                    '<td>' + item.armaSerie + '</td>' +
+                    '<td>' + item.almacenDescripcion + '</td>' +
+                    '<td>' + item.armaEstadoDescripcion + '</td>' +
+                    '<td><b>' + (item.armaStatus ? 'Activo' : 'Desactivado') + '</b></td>';
+
+                tbody.appendChild(row); // Append the row to the table
+            });
+        }
+    });
+</script>
+
+<div class="row">
+    <div class="col-6">
+        <h1>Listado de Armas Registrados</h1>
+    </div>
+    <div class="col d-flex justify-content-end align-items-center">
+        <a asp-controller="Arma" asp-action="Export" class="btn btn-success me-2">Export to Excel</a>
+        <a asp-controller="Arma" asp-action="ExportPDf" class="btn btn-success" style="background-color:red">Export to PDF</a>
+    </div>
+</div>
+
+<div class="row mt-3 mb-2">
+    <div class="col-md-3">
+        <label for="ddlTipoArma">Tipo de Arma:</label>
+        <select id="ddlTipoArma" class="form-control">
+            <option value="">Todos</option>
+            @foreach (var tipoArma in ViewBag.ddTipoArmaOptions)
+            {
+                <option value="@tipoArma">@tipoArma</option>
+            }
+        </select>
+    </div>
+    <div class="col-md-3">
+        <label for="ddlMarca">Marca:</label>
+        <select id="ddlMarca" class="form-control">
+            <option value="">Todos</option>
+            @foreach (var marca in ViewBag.ddMarcaOptions)
+            {
+                <option value="@marca">@marca</option>
+            }
+        </select>
+    </div>
+    <div class="col-md-3">
+        <label for="ddlCalibre">Calibre:</label>
+        <select id="ddlCalibre" class="form-control">
+            <option value="">Todos</option>
+            @foreach (var calibre in ViewBag.ddCalibreOptions)
+            {
+                <option value="@calibre">@calibre</option>
+            }
+        </select>
+    </div>
+    <div class="col-md-3">
+        <label for="ddlAlmacen">Almacen:</label>
+        <select id="ddlAlmacen" class="form-control">
+            <option value="">Todos</option>
+            @foreach (var almacen in ViewBag.ddAlmacenOptions)
+            {
+                <option value="@almacen">@almacen</option>
+            }
+        </select>
+    </div>
+</div>
+
 <table class="table table-striped table-hover" id="TablaArmas">
     <thead>
         <tr>
