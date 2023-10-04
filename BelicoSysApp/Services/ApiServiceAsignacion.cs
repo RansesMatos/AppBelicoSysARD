@@ -46,6 +46,40 @@ namespace BelicoSysApp.Services
             return vArmaList;
 
         }
+        public async Task<VArma> GetVArmaSerial(string armaSerial)
+        {
+            VArma vArmaList = new VArma();
+            var client = new HttpClient();
+            client.BaseAddress = new Uri(_baseUrl);
+            var response = await client.GetAsync($"api/VArmas/{armaSerial}");
+            if (response != null && response.IsSuccessStatusCode)
+            {
+
+                var json_respuesta = await response.Content.ReadAsStringAsync();
+                VArma resultado = JsonConvert.DeserializeObject<VArma>(json_respuesta);
+                vArmaList = resultado;
+            }
+
+            return vArmaList;
+
+        }
+        public async Task<ICollection<VArma>> GetVArmasF()
+        {
+            ICollection<VArma> vArmaList = new List<VArma>();
+            var client = new HttpClient();
+            client.BaseAddress = new Uri(_baseUrl);
+            var response = await client.GetAsync("api/VArmas");
+            if (response != null && response.IsSuccessStatusCode)
+            {
+
+                var json_respuesta = await response.Content.ReadAsStringAsync();
+                ICollection<VArma> resultado = JsonConvert.DeserializeObject<ICollection<VArma>>(json_respuesta);
+                vArmaList = resultado;
+            }
+
+            return vArmaList;
+
+        }
         public async Task<ICollection<Pertrecho>> Getpertrechos()
         {
             ICollection<Pertrecho> pertrechoList = new List<Pertrecho>();
@@ -108,9 +142,18 @@ namespace BelicoSysApp.Services
             return null;
         }
 
-        public Task<bool> Delete(int idProducto)
+        public async Task<bool> Delete(int idProducto)
         {
-            throw new NotImplementedException();
+            var client = new HttpClient();
+            client.BaseAddress = new Uri(_baseUrl);
+            var response = await client.DeleteAsync($"api/AsignarArma/{idProducto}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         public async Task<ICollection<AsignarEstado>> GetAsigEstado()
@@ -131,21 +174,38 @@ namespace BelicoSysApp.Services
 
         }
 
-        public async Task<IEnumerable<VPersonal>> GetVPersonal(string nombre, string status)
+        public async Task<IEnumerable<VPersonal>> GetVPersonal(string? nombre, string? cedula, string status)
         {
             IEnumerable<VPersonal> vArmaList = new List<VPersonal>();
             var client = new HttpClient();
             client.BaseAddress = new Uri(_baseUrl);
-            var response = await client.GetAsync($"/api/AsignarArma/Personal?nombre={nombre}&status={status}");
-            if (response != null && response.IsSuccessStatusCode)
-            {
+            if (nombre != null) 
+            { 
+                var response = await client.GetAsync($"/api/AsignarArma/Personal?nombre={nombre}&status={status}");
+                if (response != null && response.IsSuccessStatusCode)
+                {
 
-                var json_respuesta = await response.Content.ReadAsStringAsync();
-                ICollection<VPersonal> resultado = JsonConvert.DeserializeObject<ICollection<VPersonal>>(json_respuesta);
-                vArmaList = resultado;
+                    var json_respuesta = await response.Content.ReadAsStringAsync();
+                    ICollection<VPersonal> resultado = JsonConvert.DeserializeObject<ICollection<VPersonal>>(json_respuesta);
+                    vArmaList = resultado;
+                }
+
+                return vArmaList;
             }
+            else
+            {
+                var response = await client.GetAsync($"/api/AsignarArma/Personal?status={status}&cedula={cedula}");
+                if (response != null && response.IsSuccessStatusCode)
+                {
 
-            return vArmaList;
+                    var json_respuesta = await response.Content.ReadAsStringAsync();
+                    ICollection<VPersonal> resultado = JsonConvert.DeserializeObject<ICollection<VPersonal>>(json_respuesta);
+                    vArmaList = resultado;
+                }
+
+                return vArmaList;
+            }
+           
         }
 
         public async Task<VPersonal> GetVPersonaId(decimal documentId)

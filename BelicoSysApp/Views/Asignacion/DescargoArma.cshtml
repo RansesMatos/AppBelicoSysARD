@@ -1,10 +1,10 @@
-﻿<h2>Informacion de Usuario</h2>
+﻿<h2>Consulta de Arma Asignada y Descargo</h2>
 
-   <!-- Button to trigger the modal -->
+ @*   <!-- Button to trigger the modal -->
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#searchModal">
-  Cargar Nombres
+  Consulta Miembros
 </button>
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <!-- The modal dialog -->
 <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true"> 
   <div class="modal-dialog modal-dialog-centered">
@@ -22,7 +22,26 @@
       </div>
     </div>
   </div>
+</div> *@
+
+@if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
+{
+    <script>
+        // Call the JavaScript function to display the notification
+        showNotification('@Html.Raw(ViewBag.DeleteMessage)');
+    </script>
+}
+<div style="display:inline-block; align-content:center; align-items:center; text-align: center">
+    <h5 class="modal-title" id="searchModalLabel">Buscar Miembro</h5>
+    <input type="text" id="searchInput" name="nombre" class="form-control" placeholder="Enter a name" />
+                                          O
+    <input type="text" id="searchInput2" name="cedula" class="form-control" placeholder="Enter a Cedula" />   
+    <button type="button" class="btn btn-primary" onclick="loadDropdownData()">Buscar</button>
 </div>
+
+
+<div id="notification" class="notification"></div>
+
 
 <div>
     <form asp-controller="Asignacion" asp-action="DescargoArma" method="post" enctype="multipart/form-data">
@@ -36,8 +55,10 @@
     <button type="submit" class="btn btn-primary" >Elegir</button>
     </form>
     <p>Rango: @ViewBag.desc_rango</p>
-   <p>Name: @ViewBag.Nombres</p>
+    <p>Name: @ViewBag.Nombres</p>
     <p>Cedula: @ViewBag.Cedula</p>
+    <p>Departamento: @ViewBag.Dept</p>
+    <p>Celular: @ViewBag.Tel</p>
     <!-- Add any other person information fields you have -->
 
     <h3>Armas Asignadas</h3>
@@ -61,7 +82,7 @@
         {
             <tr>
                 <td>
-                    <a class="btn btn-primary" >Descargar</a>
+                            <a class="btn btn-primary" id="descargo" onclick="borrarAsignacion(@armaitem.IdAsignacion)">Descargar</a>
                 </td>
                 <td>
                     @armaitem.IdArma
@@ -107,4 +128,46 @@
 
 
     }
+
+
+    <h3>Pertrechos Asignadas</h3>
+    @if (ViewBag.count != 0)
+    {
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Accion</th>
+                    <th>Pretrecho ID</th>
+                    <th>Descripcion</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var armaitemP in ViewBag.Pertrecho)
+                {
+                    <tr>
+                        <td>
+                            <a class="btn btn-primary">Descargar</a>
+                        </td>
+                        <td>
+                            @armaitemP.IdArma
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <table>
+            <tbody>
+                <tr>
+                    <td>No se encuentran Pertrechos Para este usuario</td>
+                </tr>
+            </tbody>
+        </table>
+
+
+    }
+    
 </div>
+

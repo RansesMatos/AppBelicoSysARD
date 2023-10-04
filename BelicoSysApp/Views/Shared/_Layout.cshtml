@@ -21,7 +21,7 @@
         <h6>INTENDENCIA DEL MATERIAL BÉLICO</h6>
         <h6>Sistema de Inventario, Cargo y Descargo de Armas</h6>
     </div>
-    <nav class="navbar bg-primary navbar-expand-lg bg-body-tertiary">
+     <nav class="navbar bg-primary navbar-expand-lg bg-body-tertiary">
         <div class="container">
             <!--
                     <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ARD</a>
@@ -36,9 +36,10 @@
                             Armas
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="@Url.Action("ArmaCreate","Arma")">Registrar</a></li>
+                            <li><a class="dropdown-item" href="@Url.Action("ArmaCreate","Arma")">Registro de Arma</a></li>
                             <li><a class="dropdown-item" href="@Url.Action("ArmaReport","Arma")">Reportes</a></li>
-                            <li><a class="dropdown-item" href="#">Actualizar</a></li>
+                            <li><a style="color:gray" class="dropdown-item" href="@Url.Action("ArmaUpdate","Arma")">Actualizacion</a></li>
+                            <li><a style="color:gray" class="dropdown-item" href="@Url.Action("ArmaUpdate","Arma")">Guardar Arma</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
@@ -46,9 +47,10 @@
                             Pertrechos
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="@Url.Action("PertrechoCreate","Pertrecho")">Asignar</a></li>
+                            <li><a class="dropdown-item" href="@Url.Action("PertrechoCreate","Pertrecho")">Registro de Pertrecho</a></li>
                             <li><a class="dropdown-item" href="@Url.Action("PertrechoReport","Pertrecho")">Reportes</a></li>
-                            <li><a class="dropdown-item" href="#">Actualizar</a></li>
+                            <li><a style="color:gray" class="dropdown-item" href="#">Actualizacion</a></li>
+                            <li><a style="color:gray" class="dropdown-item" href="#">Petrechos para Descargo</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
@@ -56,20 +58,36 @@
                             Asignaciones
                         </a>
                         <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="@Url.Action("DescargoArma","Asignacion")">Consulta Arma Militar</a></li>
                             <li><a class="dropdown-item" href="@Url.Action("AsignacionCreate","Asignacion")">Asignar Arma</a></li>
+                            <li><a style="color:gray"  class="dropdown-item" href="#">Asignar Arma a Departamentos</a></li>
+                            <li><a style="color:gray"  class="dropdown-item" href="@Url.Action("DescargoArma","Asignacion")">Consulta Arma Asig.Temporal</a></li>
+                            <li><a style="color:gray"  class="dropdown-item" href="@Url.Action("DescargoArma","Asignacion")">Consulta Arma Civiles</a></li>
                             <li><a class="dropdown-item" href="@Url.Action("AsignacionReport","Asignacion")">Reportes</a></li>
-                            <li><a class="dropdown-item" href="#">Asignar Arma a Departamento</a></li>
-                            <li><a class="dropdown-item" href="@Url.Action("DescargoArma","Asignacion")">Descargo de Arma</a></li>
-                            <li><a class="dropdown-item" href="@Url.Action("DescargoArma","Asignacion")">Descargo de Civil</a></li>
-                            <li><a class="dropdown-item" href="@Url.Action("DescargoArma","Asignacion")">Descargo de Asignación Temporal</a></li>
-                            <li><a class="dropdown-item" href="#">Actualizar</a></li>
+                            <li><a style ="color:gray" class="dropdown-item" href="#">Actualizacion</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Certificaciones
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="@Url.Action("CertificationS","Certification")">Certificacion Posesion de Arma</a></li>
+                            <li><a class="dropdown-item" href="@Url.Action("xCert","Certification")">Certificacion No Arma</a></li>
+                            <li><a class="dropdown-item" href="@Url.Action("CertPos","Certification")">Form.25</a></li>
                         </ul>
                     </li>
                 </ul>
                 <a class="nav-link active" onclick="location.href='@Url.Action("Logout","Account")'">Salir</a>
             </div>
         </div>
-    </nav>
+    </nav> 
+    @if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
+    {
+        <div class="alert alert-success">
+            @ViewBag.SuccessMessage
+        </div>
+    }
 
     <!-- 
     <header>
@@ -92,8 +110,8 @@
     </div>
 
     <footer id="footer" class="border-top footer text-muted bg-primary">
-        <div class="container text-white">
-            &copy; 2023 - INTENDENCIA DEL MATERIAL BÉLICO ARMADA DE REPUBLICA DOMINICANA. Sistema de Inventario, Cargo y Descargo de Armas
+        <div class="container text-white" style="text-align:center">
+            &copy; 2023 - Dirreción de Tecnología (TIC), ARD.
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

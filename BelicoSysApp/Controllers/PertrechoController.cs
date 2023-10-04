@@ -1,6 +1,7 @@
 ﻿using BelicoSysApp.Models;
 using BelicoSysApp.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace BelicoSysApp.Controllers
 {
@@ -32,8 +33,16 @@ namespace BelicoSysApp.Controllers
         }
 
         [HttpGet]
-        public IActionResult PertrechoCreate()
+        public async Task<IActionResult> PertrechoCreate()
         {
+            IEnumerable<Pertrecho> listaA = await _apiServicePertrecho.GetPertrecho();
+            var listaPDto = new List<Pertrecho>();
+
+            foreach (var pertrecho in listaA)
+            {
+                listaPDto.Add(pertrecho);
+            }
+            ViewBag.DPertrecho = new SelectList(listaPDto, "IdPertrechos", "PertrechosDescripcion");
 
             return View();
         }

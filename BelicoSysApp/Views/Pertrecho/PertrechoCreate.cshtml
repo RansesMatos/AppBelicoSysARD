@@ -8,12 +8,19 @@
 
 <form asp-controller="Pertrecho" asp-action="PertrechoCreate" method="post" enctype="multipart/form-data">
 
-    <h5 class="text-muted mb-3">Asignar Pertrechos</h5>
+    <h5 class="text-muted mb-3">Regitrar Pertrechos</h5>
 
     <div class="mb-3">
         <label class="form-label" for="PertrechosDescripcion">Descripcion:</label>
-        <input class="form-control" type="text" id="PertrechosDescripcion" name="PertrechosDescripcion" />
+        <select class="form-select" id="PertrechosDescripcion" name="PertrechosDescripcion" asp-items="@ViewBag.DPertrecho">
+            <option value="">Selecciona Pertrecho</option>
+        </select>
+        <input type="hidden" name="PertrechosDescripcion" />
     </div>
+@*     <div class="mb-3">
+        <label class="form-label" for="PertrechosDescripcion">Descripcion:</label>
+        <input class="form-control" type="text" id="PertrechosDescripcion" name="PertrechosDescripcion" />
+    </div> *@
     <div class="mb-3">
         <label class="form-label" for="Cantidad">Cantidad:</label>
         <input class="form-control" type="text" id="Cantidad" name="Cantidad" />

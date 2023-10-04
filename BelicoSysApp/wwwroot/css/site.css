@@ -1,3 +1,28 @@
+.notification {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #4CAF50; /* Green background color */
+    color: white; /* Text color */
+    padding: 10px 20px; /* Padding for content */
+    display: none; /* Initially hidden */
+    z-index: 1000; /* Ensure it's above other elements */
+}
+.notification {
+    /* ... */
+    animation: fadeOut 5s ease-in-out; /* Add a fade-out animation */
+}
+
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
 body {
     background-color: #f3f3f3 !important;
 }

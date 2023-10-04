@@ -1,0 +1,35 @@
+﻿@{
+    ViewData["Title"] = "Sistema de Registro Arma";
+}
+
+<!-- Button to trigger the modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#searchModal">
+    Cargar Nombres
+</button>
+
+<!-- The modal dialog -->
+<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="searchModalLabel">Buscar Nombre</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="searchInput" name="nombre" class="form-control" placeholder="Enter a name" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="loadDropdownData2()">Buscar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="mb-3">
+    <label class="form-label" for="AsignacionNombre">Nombre:</label>
+    <select class="form-select" id="AsignacionNombre" name="AsignacionNoRango">
+    </select>
+    <input type="hidden" name="AsignacionNoRango" />
+</div>

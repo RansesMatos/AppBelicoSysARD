@@ -6,7 +6,7 @@
 
         public Decimal? AsignacionNoRango { get; set; }
         public string? AsignacionNombre { get; set; }
-        public string? Asignacion_rango { get; set; }
+        public string? AsignacionRango { get; set; }
 
         public string? AsignacionDocumento { get; set; }
 

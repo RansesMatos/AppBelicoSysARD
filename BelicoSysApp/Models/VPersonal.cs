@@ -18,5 +18,7 @@
         public decimal orden_rango { get; set; }
         public decimal codigo_especialidad { get; set; }
         public string desc_especialidad { get; set; } = null!;
+        public string num_celular { get; set; } = null!;
+        public string desc_departamento { get; set; } = null!;
     }
 }

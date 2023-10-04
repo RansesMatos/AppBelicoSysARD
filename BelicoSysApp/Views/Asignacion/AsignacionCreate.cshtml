@@ -5,8 +5,8 @@
 
 
     <!-- Button to trigger the modal -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#searchModal">
-  Cargar Nombres
+@* <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#searchModal">
+  Consultar Miembros
 </button>
 
 <!-- The modal dialog -->
@@ -26,7 +26,24 @@
       </div>
     </div>
   </div>
+</div> *@
+@if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
+{
+    <script>
+        // Call the JavaScript function to display the notification
+        showNotification('@Html.Raw(ViewBag.SuccessMessage)');
+    </script>
+}    
+ @*    <div class="alert alert-success">
+        @ViewBag.SuccessMessage
+    </div> *@
+<div>
+<h5 class="modal-title" id="searchModalLabel">Buscar Miembro</h5>
+<input type="text" id="searchInput" name="nombre" class="form-control" placeholder="Enter a name" />
+    <input type="text" id="searchInput2" name="cedula" class="form-control" placeholder="Enter a Cedula" />
+<button type="button" class="btn btn-primary" onclick="loadDropdownData2()">Buscar</button>
 </div>
+<div id="notification" class="notification"></div>
 
 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
@@ -34,23 +51,36 @@
 
     <div class="mb-3">
         <label class="form-label" for="AsignacionNombre">Nombre:</label>
-        <select class="form-select" id="AsignacionNombre" name="AsignacionNombre">
+        <select class="form-select" id="AsignacionNombre" name="AsignacionNoRango" onclick="loadDocData()">
         </select>
-        <input type="hidden"  name="AsignacionNombre"  />
+        <input type="hidden" name="AsignacionNoRango"  />
     </div>
     <div class="mb-3">
-        <label class="form-label" for="AsignacionDocumento">Documento:</label>
-        <input class="form-control" id="AsignacionDocumento" name="AsignacionDocumento" ondblclick="loadDocData()" readonly />
+        <label class="form-label" for="AsignacionDocumento" id="AsignacionDocumento" >Documento:</label>
+        <input type="hidden"  class="form-control" id="AsignacionDocumento1" name="AsignacionDocumento"  />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label" id="Asignacionrango" for="Asignacion_rango">Rango:</label>
+        <input type="hidden" id="Asignacionrango1" name="AsignacionRango" readonly />
+     </div>
+
+    <div class="mb-3">
+        <label class="form-label" id="AsignacionNoRango" for="AsignacionNoRango">NoMilitar:</label><br />
+        <input type="hidden" id="AsignacionNoRango1" name="AsignacionNombre" readonly />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label" >Arma serial:</label>
+        <input type="text" id="searchArmaInput" class="form-control" placeholder="Entra el serial del arma" /><br />
+        <button type="button" class="btn btn-primary" onclick="loadDropdownArma()">Buscar</button><br />    
+        <input type="hidden" id="IdArma1" name="IdArma" /><br />
+        <label class="form-label" id="calibre">Calibre:</label> 
+        <label class="form-label" id="armaTipo">Tipo:</label> 
+        <label class="form-label" id="armaMarca">Marca:</label>        
     </div>
     <div class="mb-3">
-        <label class="form-label" for="IdArma">Arma:</label>
-        <select class="form-control" id="IdArma" name="IdArma" asp-items="@ViewBag.idarma">
-            <option value="">Selecciona Tipo</option>
-        </select>
-        <input type="hidden"  name="IdArma"  />
-    </div>
-    <div class="mb-3">
-        <label class="form-label" for="IdPertrechos">pertrecho:</label>
+        <label class="form-label" for="IdPertrechos">Pertrecho:</label>
         <select class="form-control" id="IdPertrechos" name="IdPertrechos" asp-items="@ViewBag.pertrecho">
             <option value="">Selecciona Tipo</option>            
         </select>
@@ -60,13 +90,13 @@
         <div id="valuesTable" class="mt-3"></div>
     </div>    
     
-    <div class="mb-3">
+@*     <div class="mb-3">
         <label class="form-label" for="AsignacionEstado">Estado de Asignacion:</label>
         <select class="form-control" id="AsignacionEstado" name="AsignacionEstado" asp-items="@ViewBag.AsignacionEstado">
             <option value="0">Selecciona Tipo</option>
         </select>
         <input type="hidden" name="AsignacionEstado" />
-    </div>
+    </div> *@
     <div class="mb-3">
         <label class="form-label" for="AsignacionTipo">Tipo de Asignacion:</label>
         <select class="form-control" id="AsignacionTipo" name="AsignacionTipo" asp-items="@ViewBag.AsignacionTipo">
@@ -78,10 +108,10 @@
         <label class="form-label" for="NotaAsignacion">Nota:</label>
         <input class="form-control" type="text" id="NotaAsignacion" name="NotaAsignacion" />
     </div>
-    <div class="mb-3">
+@*     <div class="mb-3">
         <label class="form-label" for="FechaAsignacion">Fecha Asignacion:</label>
         <input class="form-control" type="date" id="FechaAsignacion" name="FechaAsignacion" />
-    </div>
+    </div> *@
     <div class="mb-3">
         <label class="form-label" for="FechaDevolucion">Fecha Devolucion:</label>
         <input class="form-control" type="date" id="FechaDevolucion" name="FechaDevolucion" />

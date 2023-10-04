@@ -17,6 +17,7 @@
         public int ArmaEstado { get; set; }
 
         public bool ArmaStatus { get; set; }
+        public string ImagePath { get; set; }
 
         public List<Arma>? ListArma { get; set; }
     }

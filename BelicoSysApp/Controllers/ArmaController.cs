@@ -4,6 +4,7 @@ using ClosedXML.Excel;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using OfficeOpenXml;
 using System.Net.Http;
 
@@ -124,15 +125,54 @@ namespace BelicoSysApp.Controllers
         }
 
         [HttpGet]
-        public IActionResult ArmaCreate()
+        public async Task<IActionResult> ArmaCreate()
         {
+            IEnumerable<Almacen> listaA = await _apiArma.GetAlmacenes();
+            IEnumerable<ArmaMarca> listaM = await _apiArma.GetArmasMarcas();
+            IEnumerable<TipoArma> listaAT = await _apiArma.GetArmasTipos();
+            var listaADto = new List<Almacen>();
+            var listaMarcaDto = new List<ArmaMarca>();
+            var listaTipoDto = new List<TipoArma>();
+            foreach (var Almacen in listaA)
+            {
+                listaADto.Add(Almacen);
+            }
+
+            var data = new SelectList(listaADto);
+            // ViewBag.pertrecho = new SelectList(listaDto, "PertrechosDescripcion", "Cantidad");
+            foreach (var marca in listaM)
+            {
+                listaMarcaDto.Add(marca);
+            }
+            foreach (var tipoArma in listaAT)
+            {
+                listaTipoDto.Add(tipoArma);
+            }
+
+            ViewBag.Almacen = new SelectList(listaADto, "IdAlmacen", "AlmacenDescripcion");
+            ViewBag.Marca = new SelectList(listaMarcaDto, "IdArmaMarca", "ArmaMarcaDescripcion");
+            ViewBag.ArmaTipo = new SelectList(listaTipoDto, "IdTipoArma", "TaNombre");
+            
+
 
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> ArmaCreate(Arma model)
+        public async Task<IActionResult> ArmaCreate(Arma model, IFormFile imageFile)
         {
-
+            if (imageFile != null && imageFile.Length > 0)
+            {
+                // Generate a unique file name to avoid conflicts
+                var fileName = Guid.NewGuid().ToString() + model.ArmaSerie.ToString() + Path.GetExtension(imageFile.FileName);
+                model.ImagePath = fileName;
+                // Set the path where you want to save the image on the server
+                var imagePath = Path.Combine("wwwroot", "Images", fileName);
+                // Save the image file to the server
+                using (var fileStream = new FileStream(imagePath, FileMode.Create))
+                {
+                    imageFile.CopyTo(fileStream);
+                }                
+            }
             if (model.IdArma == 0)
             {
                 var respuesta = await _apiArma.Save(model);
@@ -141,17 +181,18 @@ namespace BelicoSysApp.Controllers
                     ModelState.AddModelError("", "Error el Numero de Serie ya esta registrado");
                 }
                 TempData["SuccessMessage"] = $"Registro Creado Con el ID {respuesta.IdArma}";
+                ViewBag.SuccessMessage = $"Arma Registrada Con el ID {respuesta.IdArma}";
             }
             else
             {
                 ModelState.AddModelError("", "Error Contacatar el Administrador");
             }
 
-            return View("MenuArma");
+            return View();
         }
 
 
-
+        [HttpGet]
         public IActionResult MenuArma()
 
         {

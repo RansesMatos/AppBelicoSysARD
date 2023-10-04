@@ -19,6 +19,7 @@
         public bool ArmaStatus { get; set; }
 
         public DateTime FechaRegistro { get; set; }
+        public int IdAsignacion { get; set; }
 
     }
 }

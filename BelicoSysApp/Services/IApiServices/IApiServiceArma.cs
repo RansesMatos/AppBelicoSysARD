@@ -13,5 +13,11 @@ namespace BelicoSysApp.Services
         Task<bool> Edit(Arma objeto);
 
         Task<bool> Delete(int idProducto);
+        Task<ICollection<Almacen>> GetAlmacenes();
+        Task<ICollection<ArmaMarca>> GetArmasMarcas();
+        Task<ICollection<TipoArma>> GetArmasTipos();
+
+
+
     }
 }

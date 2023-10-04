@@ -48,22 +48,21 @@ function searchName() {
     let modal = new bootstrap.Modal(document.getElementById("searchModal"));
     modal.hide();
 }
-
-
-function loadDropdownData() {
-    let nombrefilter =  document.getElementById("searchInput").value;
+function deleteAsignacion(id) {
+    
     $.ajax({
-        url: 'SearchPeople',
-        type: 'GET',
+        url: 'Delete',
+        type: 'delete',
         data: {
-            nombre: nombrefilter},
+            id: id
+        },
         success: function (data) {
             let dropdown = $('#MilitarNo');
             dropdown.empty(); // Clear existing options
-            
+
             // Add options to the dropdown
             $.each(data, function (index, item) {
-                dropdown.append($('<option></option>').text(item.text).val(item.value));                
+                dropdown.append($('<option></option>').text(item.rangos + " " + item.nombres + " " + item.cedula).val(item.militarNo));
             });
 
 
@@ -74,13 +73,45 @@ function loadDropdownData() {
         }
     });
 }
-function loadDropdownData2() {
-    let nombrefilter = document.getElementById("searchInput").value;
+
+
+function loadDropdownData() {
+    let nombrefilter =  document.getElementById("searchInput").value;
+    let nombrefilter2 =  document.getElementById("searchInput2").value;
     $.ajax({
         url: 'SearchPeople',
         type: 'GET',
         data: {
-            nombre: nombrefilter
+            nombre: nombrefilter,
+            cedula: nombrefilter2
+            },
+        success: function (data) {
+            let dropdown = $('#MilitarNo');
+            dropdown.empty(); // Clear existing options
+
+            // Add options to the dropdown
+            $.each(data, function (index, item) {
+                dropdown.append($('<option></option>').text(item.rangos + "  " + item.nombres + " - ( " + item.cedula + " )").val(item.militarNo));
+            });
+
+
+            console.log(data)
+        },
+        error: function (xhr, status, error) {
+            console.error('Error loading dropdown data: ' + error);
+        }
+    });
+}
+
+function loadDropdownData2() {
+    let nombrefilter = document.getElementById("searchInput").value;
+    let nombrefilter2 = document.getElementById("searchInput2").value;
+    $.ajax({
+        url: 'SearchPeople',
+        type: 'GET',
+        data: {
+            nombre: nombrefilter,
+            cedula: nombrefilter2
         },
         success: function (data) {
             let dropdown = $('#AsignacionNombre');
@@ -88,7 +119,7 @@ function loadDropdownData2() {
 
             // Add options to the dropdown
             $.each(data, function (index, item) {
-                dropdown.append($('<option></option>').text(item.text).val(item.value));
+                dropdown.append($('<option></option>').text(item.rangos + " " + item.nombres + " - ( " + item.cedula + " )").val(item.militarNo));
             });
 
 
@@ -110,10 +141,43 @@ function loadDocData() {
         },
         success: function (data) {
             console.log(data)
-            let documentId = $('#AsignacionDocumento');
+            let documentId = $('#AsignacionDocumento1');
             documentId.empty(); // Clear existing options
-            documentId.val(data)
-            console.log(data)
+            document.getElementById("AsignacionDocumento").textContent = 'Documento: ' + data;
+        },
+        error: function (xhr, status, error) {
+            console.error('Error Cargando Cedula data: ' + error);
+        }
+    });
+    $.ajax({
+        url: 'PeronaIdrango',
+        type: 'GET',
+        data: {
+            id: idfilter
+        },
+        success: function (datar) {
+            console.log(datar)
+            let rango = $('#Asignacionrango1');
+            rango.empty(); // Clear existing options
+            document.getElementById("Asignacionrango").textContent = 'Rango: ' + datar;
+            rango.val(datar)
+        },
+        error: function (xhr, status, error) {
+            console.error('Error Cargando Cedula data: ' + error);
+        }
+    });
+    $.ajax({
+        url: 'PeronaIdNoMilitar',
+        type: 'GET',
+        data: {
+            id: idfilter
+        },
+        success: function (datan) {
+            console.log(datan)
+            let noMilitar = $('#AsignacionNoRango1');
+            noMilitar.empty(); // Clear existing options
+            document.getElementById("AsignacionNoRango").textContent = 'NoMilitar: ' + datan.militarNo;
+            noMilitar.val(datan.nombres)
         },
         error: function (xhr, status, error) {
             console.error('Error Cargando Cedula data: ' + error);
@@ -122,6 +186,39 @@ function loadDocData() {
     
 }
 
+function showNotification(message) {
+    const notification = document.getElementById('notification');
+    notification.innerHTML = message;
+    notification.style.display = 'block';
+
+    // Automatically hide the notification after a few seconds (optional)
+    setTimeout(() => {
+        notification.style.display = 'none';
+    }, 5000); // Hide after 5 seconds (adjust as needed)
+}
+
+function loadDropdownArma() {
+    let nombrefilter = document.getElementById("searchArmaInput").value;
+    $.ajax({
+        url: 'SearchArma',
+        type: 'GET',
+        data: {
+            armaserial: nombrefilter
+        },
+        success: function (data) {
+            console.log(data)
+            let idarma = $('#IdArma1');
+            idarma.empty(); // Clear existing options            
+            document.getElementById("calibre").textContent = 'Calibre: ' + data.armaCalibre;
+            document.getElementById("armaTipo").textContent = 'Tipo: ' + data.taNombre;
+            document.getElementById("armaMarca").textContent = 'Marca: ' + data.armaMarcaDescripcion;
+            idarma.val(data.idArma)
+        },
+        error: function (xhr, status, error) {
+            console.error('Error loading dropdown data: ' + error);
+        }
+    });
+}
 
 function addValue() {    
     const enteredValue = document.getElementById('IdPertrechos').value;
@@ -175,6 +272,42 @@ function updateValuesTable() {
 
    
 }
+
+
+function confirmarAccion({ callBackAceptar, callbackCancelar, titulo })
+{
+    Swal.fire({
+        tittle: titulo || 'Confirmas que esta es la Accion que deseas Realizar.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor:'#3085d6',
+        cancelButtonColor: '#d33',
+        focusConfirm: true,
+    }).then((resultado) => {
+        if (resultado.isConfirmed) {
+            callBackAceptar();
+        } else if (callbackCancelar) {
+            callbackCancelar();
+        }
+    })
+
+}
+
+function borrarAsignacion(asignacion)
+{
+    confirmarAccion({
+        callBackAceptar: () => {
+            deleteAsignacion(asignacion);
+        },
+        callbackCancelar: () => { },
+        titulo: 'Desea Eliminar la Asignacion?'
+    })
+
+}
+
+
+
+
 
 
 

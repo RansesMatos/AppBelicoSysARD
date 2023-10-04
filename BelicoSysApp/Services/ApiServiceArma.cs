@@ -1,5 +1,6 @@
 ﻿using BelicoSysApp.Models;
 using Newtonsoft.Json;
+using System;
 using System.Text;
 
 namespace BelicoSysApp.Services
@@ -30,6 +31,23 @@ namespace BelicoSysApp.Services
 
         }
         public async Task<ICollection<VArma>> GetVArmas()
+        {
+            ICollection<VArma> vArmaList = new List<VArma>();
+            var client = new HttpClient();
+            client.BaseAddress = new Uri(_baseUrl);
+            var response = await client.GetAsync("api/VArmas");
+            if (response != null && response.IsSuccessStatusCode)
+            {
+
+                var json_respuesta = await response.Content.ReadAsStringAsync();
+                ICollection<VArma> resultado = JsonConvert.DeserializeObject<ICollection<VArma>>(json_respuesta);
+                vArmaList = resultado;
+            }
+
+            return vArmaList;
+
+        }
+        public async Task<ICollection<VArma>> GetVArmasF()
         {
             ICollection<VArma> vArmaList = new List<VArma>();
             var client = new HttpClient();
@@ -91,9 +109,70 @@ namespace BelicoSysApp.Services
             return null;
         }
 
-        public Task<bool> Delete(int idProducto)
+        public async Task<bool> Delete(int idProducto)
         {
-            throw new NotImplementedException();
-        }      
+            var client = new HttpClient();
+            client.BaseAddress = new Uri(_baseUrl);
+            var response = await client.DeleteAsync($"api/Arma{idProducto}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                return true;
+            }
+
+            return false;
+
+        }
+
+        public async Task<ICollection<Almacen>> GetAlmacenes()
+        {
+            ICollection<Almacen> almacenList = new List<Almacen>();
+            var client = new HttpClient();
+            client.BaseAddress = new Uri(_baseUrl);
+            var response = await client.GetAsync("api/Almacen");
+            if (response != null && response.IsSuccessStatusCode)
+            {
+
+                var json_respuesta = await response.Content.ReadAsStringAsync();
+                ICollection<Almacen> resultado = JsonConvert.DeserializeObject<ICollection<Almacen>>(json_respuesta);
+                almacenList = resultado;
+            }
+
+            return almacenList;
+        }
+
+        public async Task<ICollection<ArmaMarca>> GetArmasMarcas()
+        {
+            ICollection<ArmaMarca> armaMarcaList = new List<ArmaMarca>();
+            var client = new HttpClient();
+            client.BaseAddress = new Uri(_baseUrl);
+            var response = await client.GetAsync("api/ArmaMarca");
+            if (response != null && response.IsSuccessStatusCode)
+            {
+
+                var json_respuesta = await response.Content.ReadAsStringAsync();
+                ICollection<ArmaMarca> resultado = JsonConvert.DeserializeObject<ICollection<ArmaMarca>>(json_respuesta);
+                armaMarcaList = resultado;
+            }
+
+            return armaMarcaList;
+        }
+
+        public async Task<ICollection<TipoArma>> GetArmasTipos()
+        {
+            ICollection<TipoArma> armaTipoList = new List<TipoArma>();
+            var client = new HttpClient();
+            client.BaseAddress = new Uri(_baseUrl);
+            var response = await client.GetAsync("api/ArmaTipo");
+            if (response != null && response.IsSuccessStatusCode)
+            {
+
+                var json_respuesta = await response.Content.ReadAsStringAsync();
+                ICollection<TipoArma> resultado = JsonConvert.DeserializeObject<ICollection<TipoArma>>(json_respuesta);
+                armaTipoList = resultado;
+            }
+
+            return armaTipoList;
+        }
     }
 }
