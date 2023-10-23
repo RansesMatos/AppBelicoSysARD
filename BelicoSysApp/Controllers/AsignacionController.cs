@@ -125,6 +125,9 @@ namespace BelicoSysApp.Controllers
                 ViewBag.Cedula = listaP.Cedula;
                 ViewBag.Tel = listaP.num_celular;
                 ViewBag.Dept = listaP.desc_departamento;
+                ViewBag.noM = listaP.MilitarNo;
+                
+                
                 
 
             ViewBag.DeleteMessage = "Registro Eliminado";
