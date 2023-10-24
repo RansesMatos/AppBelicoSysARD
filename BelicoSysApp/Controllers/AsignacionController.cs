@@ -53,12 +53,7 @@ namespace BelicoSysApp.Controllers
         public async Task<IActionResult> SearchArma(string armaSerial)
         {
             VArma lista = await _apiServiceAsignacion.GetVArmaSerial(armaSerial);
-            //var listaDto = new List<VArma>();
-
             
-            //var data = new SelectList(listaDto);
-            //ViewBag.Pertrecho = new SelectList(listaDto, "MilitarNo", "Nombres");
-
             return Ok(lista);
         }
 

@@ -7,6 +7,7 @@ namespace BelicoSysApp.Services
         Task<ICollection<Arma>> GetArmas();
         Task<ICollection<VArma>> GetVArmas();
         Task<Arma> Get(int IdArma);
+        Task<VArma> GetVArmaSerial(string armaSerial);
 
         Task<Arma> Save(Arma objeto);
 

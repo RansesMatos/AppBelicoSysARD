@@ -10,6 +10,6 @@
 
         public int? IdAlmacen { get; set; }
 
-        public List<Pertrecho> ListPertrecho { get; set; }
+        public List<Pertrecho>? ListPertrecho { get; set; }
     }
 }

@@ -6,6 +6,7 @@ using iTextSharp.text.pdf;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using OfficeOpenXml;
+using System.Collections;
 using System.Net.Http;
 
 namespace BelicoSysApp.Controllers
@@ -13,10 +14,13 @@ namespace BelicoSysApp.Controllers
     public class ArmaController : Controller
     {
         private readonly IApiServiceArma _apiArma;
+        ArrayList multiimagename = new ArrayList();
         public ArmaController(IApiServiceArma apiArma)
         {
             _apiArma = apiArma;
         }
+
+        
         public async Task<IActionResult> ExportPDf()
         {
             ICollection<VArma> lista = await _apiArma.GetVArmas();
@@ -58,6 +62,14 @@ namespace BelicoSysApp.Controllers
 
                 return File(memoryStream.ToArray(), "application/pdf", fileName);
             }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> SearchArma(string armaSerial)
+        {
+            VArma lista = await _apiArma.GetVArmaSerial(armaSerial);
+
+            return Ok(lista);
         }
         public async Task<IActionResult> Export()
         {
@@ -155,26 +167,33 @@ namespace BelicoSysApp.Controllers
             
 
 
-            return View();
+            return View("ArmaCreate");
         }
         [HttpPost]
-        public async Task<IActionResult> ArmaCreate(Arma model, IFormFile imageFile)
+        public async Task<IActionResult> ArmaCreate(Arma model, IList<IFormFile> imageFile)
         {
-            if (imageFile != null && imageFile.Length > 0)
+            multiimagename.Clear();
+            if (imageFile != null && imageFile.Count > 0 || imageFile.Count < 4)
             {
-                // Generate a unique file name to avoid conflicts
-                var fileName = Guid.NewGuid().ToString() + model.ArmaSerie.ToString() + Path.GetExtension(imageFile.FileName);
-                model.ImagePath = fileName;
-                // Set the path where you want to save the image on the server
-                var imagePath = Path.Combine("wwwroot", "Images", fileName);
-                // Save the image file to the server
-                using (var fileStream = new FileStream(imagePath, FileMode.Create))
+                foreach (var file in imageFile)
                 {
-                    imageFile.CopyTo(fileStream);
-                }                
+                    // Generate a unique file name to avoid conflicts
+                    var fileName = Guid.NewGuid().ToString() + model.ArmaSerie.ToString() + Path.GetExtension(file.FileName);
+                    model.ImagePath = fileName;
+                    // Set the path where you want to save the image on the server
+                    var imagePath = Path.Combine("wwwroot", "Images", fileName);
+                    multiimagename.Add(imagePath.ToString());
+                    // Save the image file to the server
+                    using (var fileStream = new FileStream(imagePath, FileMode.Create))
+                    {
+                        file.CopyTo(fileStream);
+                    }
+                }
             }
+
             if (model.IdArma == 0)
             {
+                model.ImagePath = multiimagename[0] + ";" + multiimagename[1] + ";" + multiimagename[2] + ";" + multiimagename[3];
                 var respuesta = await _apiArma.Save(model);
                 if (respuesta.IdArma == 0)
                 {
@@ -187,6 +206,41 @@ namespace BelicoSysApp.Controllers
             {
                 ModelState.AddModelError("", "Error Contacatar el Administrador");
             }
+
+            return View("ArmaCreate");
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> ArmaUpdate()
+        {
+            IEnumerable<Almacen> listaA = await _apiArma.GetAlmacenes();
+            IEnumerable<ArmaMarca> listaM = await _apiArma.GetArmasMarcas();
+            IEnumerable<TipoArma> listaAT = await _apiArma.GetArmasTipos();
+            var listaADto = new List<Almacen>();
+            var listaMarcaDto = new List<ArmaMarca>();
+            var listaTipoDto = new List<TipoArma>();
+            foreach (var Almacen in listaA)
+            {
+                listaADto.Add(Almacen);
+            }
+
+            var data = new SelectList(listaADto);
+            // ViewBag.pertrecho = new SelectList(listaDto, "PertrechosDescripcion", "Cantidad");
+            foreach (var marca in listaM)
+            {
+                listaMarcaDto.Add(marca);
+            }
+            foreach (var tipoArma in listaAT)
+            {
+                listaTipoDto.Add(tipoArma);
+            }
+
+            ViewBag.Almacen = new SelectList(listaADto, "IdAlmacen", "AlmacenDescripcion");
+            ViewBag.Marca = new SelectList(listaMarcaDto, "IdArmaMarca", "ArmaMarcaDescripcion");
+            ViewBag.ArmaTipo = new SelectList(listaTipoDto, "IdTipoArma", "TaNombre");
+
+
 
             return View();
         }

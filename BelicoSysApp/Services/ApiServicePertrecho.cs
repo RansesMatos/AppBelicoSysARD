@@ -43,7 +43,7 @@ namespace BelicoSysApp.Services
             var client = new HttpClient();
             client.BaseAddress = new Uri(_baseUrl);
           
-            var response = await client.GetAsync($"api/Pertrecho{IdPertrecho}");
+            var response = await client.GetAsync($"api/Pertrecho/{IdPertrecho}");
 
             if (response.IsSuccessStatusCode)
             {
@@ -55,9 +55,41 @@ namespace BelicoSysApp.Services
             return objeto;
         
         }
-        public Task<bool> Edit(Pertrecho objeto)
+        public async Task<ICollection<Almacen>> GetAlmacenes()
         {
-            throw new NotImplementedException();
+            ICollection<Almacen> almacenList = new List<Almacen>();
+            var client = new HttpClient();
+            client.BaseAddress = new Uri(_baseUrl);
+            var response = await client.GetAsync("api/Almacen");
+            if (response != null && response.IsSuccessStatusCode)
+            {
+
+                var json_respuesta = await response.Content.ReadAsStringAsync();
+                ICollection<Almacen> resultado = JsonConvert.DeserializeObject<ICollection<Almacen>>(json_respuesta);
+                almacenList = resultado;
+            }
+
+            return almacenList;
+        }
+        public async Task<bool> Edit(int idpertrecho, Pertrecho objeto)
+        {
+            _ = new Pertrecho();
+            var client = new HttpClient();
+            client.BaseAddress = new Uri(_baseUrl);
+
+            var content = new StringContent(JsonConvert.SerializeObject(objeto), Encoding.UTF8, "application/json");
+
+            var response = await client.PatchAsync($"api/Pertrecho/{idpertrecho}", content);
+            var json_respuesta = await response.Content.ReadAsStringAsync();
+            var resultado = JsonConvert.DeserializeObject<Pertrecho>(json_respuesta);
+            Pertrecho pertrcho = resultado;
+            if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+            {
+
+                return response.IsSuccessStatusCode;
+            }
+
+            return false;
         }
         public async Task<Pertrecho?> Save(Pertrecho objeto)
         {

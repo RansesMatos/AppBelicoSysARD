@@ -27,7 +27,7 @@
     </div>
     <div class="mb-3">
         <label class="form-label" for="IdAlmacen">Almacen:</label>
-        <select class="form-select" id="IdAlmacen" name="IdAlmacen">
+        <select class="form-select" id="IdAlmacen" name="IdAlmacen" asp-items="@ViewBag.Almacen">
             <option value="0">Selecciona Almacen</option>
         </select>
         <input type="hidden" name="Almacen" />

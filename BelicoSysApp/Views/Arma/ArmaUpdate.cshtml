@@ -1,5 +1,126 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model Arma
 @{
+    ViewData["Title"] = "Sistema de Registro Arma";
 }
+@if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
+{
+    <script>
+        // Call the JavaScript function to display the notification
+        showNotification('@Html.Raw(ViewBag.SuccessMessage)');
+    </script>
+}
+
+<div id="notification" class="notification"></div>
+
+
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<div>
+    <form asp-controller="Arma" asp-action="ArmaUpdate" method="Get" enctype="multipart/form-data">
+
+        <h5 class="text-muted mb-3">Actualizar Arma</h5>
+
+
+        <div class="mb-3">
+            <label class="form-label">Arma serial:</label>
+            <input type="text" id="searchArmaInput" class="form-control" placeholder="Entra el serial del arma" /><br />
+            <button type="button" class="btn btn-primary" onclick="loadDropdownArmaupdated()">Buscar</button><br />
+            <input type="hidden" id="IdArma1" name="IdArma" /><br />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="IdTipoArmaU">Tipo del Arma:</label>
+            <select class="form-select" id="IdTipoArmaU" name="IdTipoArmaU" asp-items="@ViewBag.ArmaTipo">
+                <option value=""></option>
+            </select>
+            <input type="hidden" name="TipoArma" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="IdArmaMarca">Marca del Arma:</label>
+            <select class="form-select" id="IdArmaMarca" name="idArmaMarca" asp-items="@ViewBag.Marca">
+                <option value="">Selecciona Marca</option>
+            </select>
+            <input type="hidden" name="ArmaMarca" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="IdArmaMarca">Modelo:</label>
+            <select class="form-select" id="IdArmaMarca" name="idArmaMarca" asp-items="@ViewBag.Marca">
+                <option value="">Selecciona Marca</option>
+            </select>
+            <input type="hidden" name="ArmaMarca" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="IdArmaMarca">Estado:</label>
+            <select class="form-select" id="IdArmaMarca" name="idArmaMarca" >               
+                <option value="1"> Asignada</option>
+                <option value="1"> Perdida </option>
+                <option value="2"> Proceso Judicial</option>
+                <option value="3">Bajo Invetigacion </option>
+                <option value="4"> Perdida e Informada</option>
+                <option value="5"> No Asignada</option>
+                <option value="6"> Arma Custodia</option>
+            </select>
+            <input type="hidden" name="ArmaMarca" />
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="ArmaCalibre">Calibre del Arma:</label>
+            @*         <input class="form-control" type="text" id="ArmaCalibre" name="ArmaCalibre" /> *@
+            <select class="form-select" id="ArmaCalibre" name="ArmaCalibre">
+                <option value="1"> Seleciona el calibre</option>
+                <option value="1"> 9mm</option>
+                <option value="2"> 25mm</option>
+                <option value="3"> 12mm</option>
+                <option value="4"> 20mm</option>
+                <option value="5"> 7mm</option>
+                <option value="6"> 22mm</option>
+                <option value="7"> 357mm</option>
+                <option value="8"> 38mm</option>
+                <option value="9"> 762mm</option>
+                <option value="10">556mm</option>
+                <option value="11">32mm</option>
+                <option value="12">45mm</option>
+                <option value="13">380mm</option>
+                <option value="14">012mm</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="IdAlmacen">Almacén:</label>
+            <select class="form-select" id="IdAlmacen" name="IdAlmacen" asp-items="@ViewBag.Almacen">
+                <option value="">Selecciona Almacén</option>
+            </select>
+            <input type="hidden" name="Almacen" />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="NotaAsignacion">Observaciones:</label>
+            <input class="form-control" type="text" id="NotaAsignacion" name="NotaAsignacion" />
+        </div>
+
+        <div>
+            <label for="imageFile">Image:</label>
+            <input type="file" name="imageFile" />
+        </div>
+        <div>
+            <label for="imageFile">Image2:</label>
+            <input type="file" name="imageFile" />
+        </div>
+        <div>
+            <label for="imageFile">Image3:</label>
+            <input type="file" name="imageFile" />
+        </div>
+        <div>
+            <label for="imageFile">Image4:</label>
+            <input type="file" name="imageFile" />
+        </div>
+
+        <!-- Repeat the above pattern for the remaining fields -->
+        <div id="btnCrear">
+            <input class="btn btn-primary" type="submit" value="Actualizar" />
+
+
+        </div>
+
+    </form>
+</div>
+
+
+

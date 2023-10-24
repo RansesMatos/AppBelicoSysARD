@@ -74,6 +74,29 @@ function deleteAsignacion(id) {
     });
 }
 
+function UpdatePertrecho() {
+    let description = document.getElementById("PertrechosDescripcion").value;
+    //let description = document.getElementById("PertrechosDescripcion").;
+    let cantidad = document.getElementById("Cantidad").value;
+    let almacen = document.getElementById("IdAlmacen").value;
+    
+    $.ajax({
+        url: 'PertrechoUpdate',
+        type: 'PATCH',
+        data: {
+            idPertrechos: description,
+            pertrechosDescripcion: description,
+            cantidad: cantidad,
+            idAlmacen: almacen            
+        },
+        success: function (data) {
+            console.log(data)
+        },
+        error: function (xhr, status, error) {
+            console.error('Error loading dropdown data: ' + error);
+        }
+    });
+}
 
 function loadDropdownData() {
     let nombrefilter =  document.getElementById("searchInput").value;
@@ -115,6 +138,33 @@ function loadDropdownData2() {
         },
         success: function (data) {
             let dropdown = $('#AsignacionNombre');
+            dropdown.empty(); // Clear existing options
+
+            // Add options to the dropdown
+            $.each(data, function (index, item) {
+                dropdown.append($('<option></option>').text(item.rangos + " " + item.nombres + " - ( " + item.cedula + " )").val(item.militarNo));
+            });
+
+
+            console.log(data)
+        },
+        error: function (xhr, status, error) {
+            console.error('Error loading dropdown data: ' + error);
+        }
+    });
+}
+function loadDropdownData3() {
+    let nombrefilter = document.getElementById("searchInput").value;
+    let nombrefilter2 = document.getElementById("searchInput2").value;
+    $.ajax({
+        url: 'SearchPeople',
+        type: 'GET',
+        data: {
+            nombre: nombrefilter,
+            cedula: nombrefilter2
+        },
+        success: function (data) {
+            let dropdown = $('#AsignacionNombreCert');
             dropdown.empty(); // Clear existing options
 
             // Add options to the dropdown
@@ -185,6 +235,60 @@ function loadDocData() {
     });
     
 }
+function loadDocDataAsigCert() {
+    let idfilter = document.getElementById("AsignacionNombreCert").value;
+    $.ajax({
+        url: 'PeronaId',
+        type: 'GET',
+        data: {
+            id: idfilter
+        },
+        success: function (data) {
+            console.log(data)
+            let documentId = $('#AsignacionNombreCert');
+            documentId.empty(); // Clear existing options
+            document.getElementById("AsignacionDocumento").textContent = 'Documento: ' + data;
+        },
+        error: function (xhr, status, error) {
+            console.error('Error Cargando Cedula data: ' + error);
+        }
+    });
+    $.ajax({
+        url: 'PeronaIdrango',
+        type: 'GET',
+        data: {
+            id: idfilter
+        },
+        success: function (datar) {
+            console.log(datar)
+            let rango = $('#Asignacionrango1');
+            rango.empty(); // Clear existing options
+            document.getElementById("Asignacionrango").textContent = 'Rango: ' + datar;
+            rango.val(datar)
+        },
+        error: function (xhr, status, error) {
+            console.error('Error Cargando Cedula data: ' + error);
+        }
+    });
+    $.ajax({
+        url: 'PeronaIdNoMilitar',
+        type: 'GET',
+        data: {
+            id: idfilter
+        },
+        success: function (datan) {
+            console.log(datan)
+            let noMilitar = $('#AsignacionNoRango1');
+            noMilitar.empty(); // Clear existing options
+            document.getElementById("AsignacionNoRango").textContent = 'NoMilitar: ' + datan.militarNo;
+            noMilitar.val(datan.nombres)
+        },
+        error: function (xhr, status, error) {
+            console.error('Error Cargando Cedula data: ' + error);
+        }
+    });
+
+}
 
 function showNotification(message) {
     const notification = document.getElementById('notification');
@@ -208,11 +312,43 @@ function loadDropdownArma() {
         success: function (data) {
             console.log(data)
             let idarma = $('#IdArma1');
-            idarma.empty(); // Clear existing options            
-            document.getElementById("calibre").textContent = 'Calibre: ' + data.armaCalibre;
-            document.getElementById("armaTipo").textContent = 'Tipo: ' + data.taNombre;
-            document.getElementById("armaMarca").textContent = 'Marca: ' + data.armaMarcaDescripcion;
-            idarma.val(data.idArma)
+            idarma.empty(); // Clear existing options    
+            if (data.armaCalibre == null) {
+                document.getElementById("calibre").textContent = 'Calibre:  Arma no Existe';
+                document.getElementById("armaTipo").textContent = 'Tipo: Arma no Existe';
+                document.getElementById("armaMarca").textContent = 'Marca: Arma no Existe';
+
+            } else {
+                document.getElementById("calibre").textContent = 'Calibre: ' + data.armaCalibre;
+                document.getElementById("armaTipo").textContent = 'Tipo: ' + data.taNombre;
+                document.getElementById("armaMarca").textContent = 'Marca: ' + data.armaMarcaDescripcion;
+                idarma.val(data.idArma)
+            }
+        },
+        error: function (xhr, status, error) {
+            document.getElementById("calibre").textContent = 'Calibre:  Arma no Existe';
+            document.getElementById("armaTipo").textContent = 'Tipo: Arma no Existe';
+            document.getElementById("armaMarca").textContent = 'Marca: Arma no Existe';
+            console.error('Error loading dropdown data: ' + error);
+        }
+    });
+}
+function loadDropdownArmaupdated() {
+    let nombrefilter = document.getElementById("searchArmaInput").value;
+    $.ajax({
+        url: 'SearchArma',
+        type: 'GET',
+        data: {
+            armaserial: nombrefilter
+        },
+        success: function (data) {
+            console.log(data)
+            let idarma = $('#IdArma1');
+            let dropdown = document.getElementById('IdTipoArmaU');
+            idarma.empty(); // Clear existing options     
+            dropdown.append($('<option></option>').text('aguas').val(data.idarma));
+           idarma.val(data.idArma)
+            
         },
         error: function (xhr, status, error) {
             console.error('Error loading dropdown data: ' + error);

@@ -36,12 +36,19 @@ namespace BelicoSysApp.Controllers
         public async Task<IActionResult> PertrechoCreate()
         {
             IEnumerable<Pertrecho> listaA = await _apiServicePertrecho.GetPertrecho();
+            IEnumerable<Almacen> listaAl = await _apiServicePertrecho.GetAlmacenes();
             var listaPDto = new List<Pertrecho>();
+            var listaADto = new List<Almacen>();
 
+            foreach (var Almacen in listaAl)
+            {
+                listaADto.Add(Almacen);
+            }
             foreach (var pertrecho in listaA)
             {
                 listaPDto.Add(pertrecho);
             }
+            ViewBag.Almacen = new SelectList(listaADto, "IdAlmacen", "AlmacenDescripcion");
             ViewBag.DPertrecho = new SelectList(listaPDto, "IdPertrechos", "PertrechosDescripcion");
 
             return View();
@@ -58,6 +65,61 @@ namespace BelicoSysApp.Controllers
                     ModelState.AddModelError("", "Error el Numero de Serie ya esta registrado");
                 }
                 TempData["SuccessMessage"] = $"Registro Creado Con el ID {respuesta.IdPertrechos}";
+            }
+            else
+            {
+                ModelState.AddModelError("", "Error Contacatar el Administrador");
+            }
+
+            return View("MenuPertrecho");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> PertrechoUpdate()
+        {
+            IEnumerable<Pertrecho> listaA = await _apiServicePertrecho.GetPertrecho();
+            IEnumerable<Almacen> listaAl = await _apiServicePertrecho.GetAlmacenes();
+            var listaPDto = new List<Pertrecho>();
+            var listaADto = new List<Almacen>();
+
+            foreach (var Almacen in listaAl)
+            {
+                listaADto.Add(Almacen);
+            }
+            foreach (var pertrecho in listaA)
+            {
+                listaPDto.Add(pertrecho);
+            }
+            ViewBag.Almacen = new SelectList(listaADto, "IdAlmacen", "AlmacenDescripcion");
+            ViewBag.DPertrecho = new SelectList(listaPDto, "IdPertrechos", "PertrechosDescripcion");
+
+            return View();
+        }
+
+        [HttpPatch]
+        public async Task<IActionResult> PertrechoUpdate(Pertrecho model)
+        {
+            int idPertrecho = model.IdPertrechos;
+            var listaA = await _apiServicePertrecho.GetPertrecho();
+            var listaPDto = new List<Pertrecho>();
+            foreach (var pertrecho in listaA)
+            {
+                listaPDto.Add(pertrecho);
+            }
+            
+            var Pdesc = listaPDto.Find(x => x.IdPertrechos.Equals(idPertrecho));
+
+            model.PertrechosDescripcion = Pdesc.PertrechosDescripcion;
+            model.Cantidad = Pdesc.Cantidad + model.Cantidad;
+
+            
+            if (model.IdPertrechos != 0 && idPertrecho == model.IdPertrechos)
+            {
+                var respuesta = await _apiServicePertrecho.Edit(idPertrecho,model);
+                if (respuesta is false){
+                    ModelState.AddModelError("", "No se pudo actualizar el registro");
+                }
+                TempData["SuccessMessage"] = $"Actualizado Creado  el ID {model.IdPertrechos}";
             }
             else
             {

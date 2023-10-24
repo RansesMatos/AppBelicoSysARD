@@ -31,6 +31,13 @@
         </select>
         <input type="hidden" name="ArmaMarca" />
     </div>
+        <div class="mb-3">
+            <label class="form-label" for="IdArmaMarca">Modelo:</label>
+            <select class="form-select" id="IdArmaMarca" name="idArmaMarca" asp-items="@ViewBag.Marca">
+                <option value="">Selecciona Marca</option>
+            </select>
+            <input type="hidden" name="ArmaMarca" />
+        </div>
     <div class="mb-3">
         <label class="form-label" for="ArmaCalibre">Calibre del Arma:</label>
 @*         <input class="form-control" type="text" id="ArmaCalibre" name="ArmaCalibre" /> *@
@@ -73,6 +80,18 @@
         <label for="imageFile">Image:</label>
         <input type="file" name="imageFile" />
     </div>
+        <div>
+            <label for="imageFile">Image2:</label>
+            <input type="file" name="imageFile" />
+        </div>
+        <div>
+            <label for="imageFile">Image3:</label>
+            <input type="file" name="imageFile" />
+        </div>
+        <div>
+            <label for="imageFile">Image4:</label>
+            <input type="file" name="imageFile" />
+        </div>
     
     <!-- Repeat the above pattern for the remaining fields -->
     <div id="btnCrear"><input class="btn btn-primary" type="submit" value="Crear" />

@@ -1,5 +1,40 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model Pertrecho
 @{
+    ViewData["Title"] = "Sistema de Registro Arma";
 }
+
+
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+<form>
+
+    <h5 class="text-muted mb-3">Actualizar Pertrechos</h5>
+
+    <div class="mb-3">
+        <label class="form-label" for="PertrechosDescripcion">Descripcion:</label>
+        <select class="form-select" id="PertrechosDescripcion" name="PertrechosDescripcion" asp-items="@ViewBag.DPertrecho">
+            <option value="">Selecciona Pertrecho</option>
+        </select>
+        <input type="hidden" name="PertrechosDescripcion" />
+    </div>
+    @*     <div class="mb-3">
+    <label class="form-label" for="PertrechosDescripcion">Descripcion:</label>
+    <input class="form-control" type="text" id="PertrechosDescripcion" name="PertrechosDescripcion" />
+    </div> *@
+    <div class="mb-3">
+        <label class="form-label" for="Cantidad">Cantidad:</label>
+        <input class="form-control" type="text" id="Cantidad" name="Cantidad" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label" for="IdAlmacen">Almacen:</label>
+        <select class="form-select" id="IdAlmacen" name="IdAlmacen" asp-items="@ViewBag.Almacen">
+            <option value="0">Selecciona Almacen</option>
+        </select>
+        <input type="hidden" name="Almacen" />
+    </div>
+
+    <!-- Repeat the above pattern for the remaining fields -->
+
+    <input class="btn btn-primary" onclick="UpdatePertrecho()" value="Actualizar" />
+
+</form>
