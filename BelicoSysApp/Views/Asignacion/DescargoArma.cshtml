@@ -31,11 +31,12 @@
         showNotification('@Html.Raw(ViewBag.DeleteMessage)');
     </script>
 }
-<div style="display:inline-block; align-content:center; align-items:center; text-align: center">
+<div style="display:block; align-content:center; align-items:center; text-align: center">
     <h5 class="modal-title" id="searchModalLabel">Buscar Miembro</h5>
-    <input type="text" id="searchInput" name="nombre" class="form-control" placeholder="Enter a name" />
+    <input type="text" id="searchInput" name="No Carnet" class="form-control" placeholder="Entrar No Carnet" />
                                           O
-    <input type="text" id="searchInput2" name="cedula" class="form-control" placeholder="Enter a Cedula" />   
+    <input type="text" id="searchInput2" name="cedula" class="form-control" placeholder="Entrar No Cedula Sin guiones" />
+    <br />
     <button type="button" class="btn btn-primary" onclick="loadDropdownData()">Buscar</button>
 </div>
 

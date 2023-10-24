@@ -24,6 +24,14 @@
 
 @if (ViewBag.name != null)
 {
+    <div class="row">
+        <div class="col-6">
+            <h1>Listado de Armas Registrados</h1>
+        </div>
+        <div class="col d-flex justify-content-end align-items-center">
+            <a asp-controller="Arma" asp-action="ExportPDf" class="btn btn-success" style="background-color:red">Export to PDF</a>
+        </div>
+    </div>
     <body>
         <h1>INTENDENCIA MATERIAL BÉLICO</h1>
         <h2>ARMADA DE REPÚBLICA DOMINICANA</h2>

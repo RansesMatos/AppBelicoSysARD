@@ -14,7 +14,7 @@ namespace BelicoSysApp.Controllers
             
             CertificationReport reportData = new CertificationReport();
             ViewBag.CertifierName = "YAN LIRIOY VARGAS CAMINERO";
-            ViewBag.name = null;
+            ViewBag.name = "prueba";
             ViewBag.CertifierTitle = "Capitán de Navio, ARD";
             ViewBag.CertificationDate = DateTime.Now.Day +" de " + DateTime.Now.ToString().AsDateTime().Month + " de " + DateTime.Now.Year;
             ViewBag.WeaponDetails = new List<string>
