@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using OfficeOpenXml;
 using System.Collections;
+using System.Drawing;
 using System.Net.Http;
 
 namespace BelicoSysApp.Controllers
@@ -199,6 +200,14 @@ namespace BelicoSysApp.Controllers
                 {
                     ModelState.AddModelError("", "Error el Numero de Serie ya esta registrado");
                 }
+                Zen.Barcode.Code128BarcodeDraw armaBarcode = Zen.Barcode.BarcodeDrawFactory.Code128WithChecksum;
+                var codigoB = armaBarcode.Draw(respuesta.ArmaSerie,60);
+
+                //var imagePath = Path.Combine("wwwroot", "Images", );
+                //using (var fileStream = new Bitmap(imagePath, FileMode.Create))
+                //{
+                //    file.CopyTo(fileStream);
+                //}
                 TempData["SuccessMessage"] = $"Registro Creado Con el ID {respuesta.IdArma}";
                 ViewBag.SuccessMessage = $"Arma Registrada Con el ID {respuesta.IdArma}";
             }

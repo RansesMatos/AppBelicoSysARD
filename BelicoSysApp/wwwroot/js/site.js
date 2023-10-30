@@ -355,7 +355,28 @@ function loadDropdownArmaupdated() {
         }
     });
 }
+function ExportPDFCertificate() {
+    let nombrefilter = document.getElementById("searchArmaInput").value;
+    $.ajax({
+        url: 'ExportPDf',
+        type: 'GET',
+        data: {
+            armaserial: nombrefilter
+        },
+        success: function (data) {
+            console.log(data)
+            let idarma = $('#IdArma1');
+            let dropdown = document.getElementById('IdTipoArmaU');
+            idarma.empty(); // Clear existing options     
+            dropdown.append($('<option></option>').text('aguas').val(data.idarma));
+            idarma.val(data.idArma)
 
+        },
+        error: function (xhr, status, error) {
+            console.error('Error loading dropdown data: ' + error);
+        }
+    });
+}
 function addValue() {    
     const enteredValue = document.getElementById('IdPertrechos').value;
     valuesList.push(enteredValue);

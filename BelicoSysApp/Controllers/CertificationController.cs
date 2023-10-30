@@ -1,6 +1,9 @@
 ﻿using BelicoSysApp.Models;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Web.Razor.Text;
 using System.Web.WebPages;
 
 namespace BelicoSysApp.Controllers
@@ -24,8 +27,33 @@ namespace BelicoSysApp.Controllers
             // Add other weapon details
         };
 
+
             return View("CertificationS", reportData);
-        } 
+        }
+
+
+        public async Task<IActionResult> ExportPDf(PdfBody cuerpoRepo)
+        {
+            //ICollection<VArma> lista = await _apiArma.GetVArmas();
+            //var valuesList = lista.ToList();
+
+            string fileName = "values.pdf";
+
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                Document document = new Document();
+                PdfWriter writer = PdfWriter.GetInstance(document, memoryStream);
+
+                document.Open();
+
+                document.Add(cuerpoRepo);
+
+                
+                document.Close();
+
+                return File(memoryStream.ToArray(), "application/pdf", fileName);
+            }
+        }
         public ActionResult xCert()
         {
             return View();
