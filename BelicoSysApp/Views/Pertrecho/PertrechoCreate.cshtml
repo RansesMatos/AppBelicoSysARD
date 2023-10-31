@@ -10,27 +10,29 @@
 
     <h5 class="text-muted mb-3">Regitrar Pertrechos</h5>
 
-    <div class="mb-3">
-        <label class="form-label" for="PertrechosDescripcion">Descripcion:</label>
-        <select class="form-select" id="PertrechosDescripcion" name="PertrechosDescripcion" asp-items="@ViewBag.DPertrecho">
-            <option value="">Selecciona Pertrecho</option>
-        </select>
-        <input type="hidden" name="PertrechosDescripcion" />
-    </div>
-@*     <div class="mb-3">
+    <div class="row">
+        <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
+            <label class="form-label" for="PertrechosDescripcion">Descripcion:</label>
+            <select class="form-select" id="PertrechosDescripcion" name="PertrechosDescripcion" asp-items="@ViewBag.DPertrecho">
+                <option value="">Selecciona Pertrecho</option>
+            </select>
+            <input type="hidden" name="PertrechosDescripcion" />
+        </div>
+        @*     <div class="mb-3">
         <label class="form-label" for="PertrechosDescripcion">Descripcion:</label>
         <input class="form-control" type="text" id="PertrechosDescripcion" name="PertrechosDescripcion" />
-    </div> *@
-    <div class="mb-3">
-        <label class="form-label" for="Cantidad">Cantidad:</label>
-        <input class="form-control" type="text" id="Cantidad" name="Cantidad" />
-    </div>
-    <div class="mb-3">
-        <label class="form-label" for="IdAlmacen">Almacen:</label>
-        <select class="form-select" id="IdAlmacen" name="IdAlmacen" asp-items="@ViewBag.Almacen">
-            <option value="0">Selecciona Almacen</option>
-        </select>
-        <input type="hidden" name="Almacen" />
+        </div> *@
+        <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
+            <label class="form-label" for="Cantidad">Cantidad:</label>
+            <input class="form-control" type="text" id="Cantidad" name="Cantidad" />
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
+            <label class="form-label" for="IdAlmacen">Almacen:</label>
+            <select class="form-select" id="IdAlmacen" name="IdAlmacen" asp-items="@ViewBag.Almacen">
+                <option value="0">Selecciona Almacen</option>
+            </select>
+            <input type="hidden" name="Almacen" />
+        </div>
     </div>
        
     <!-- Repeat the above pattern for the remaining fields -->
