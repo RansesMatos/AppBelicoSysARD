@@ -56,9 +56,30 @@ namespace BelicoSysApp.Controllers
         }
         public ActionResult xCert()
         {
+            ViewBag.CertifierName = "YAN LIRIOY VARGAS CAMINERO";
+            ViewBag.name = "prueba";
+            ViewBag.CertifierTitle = "Capitán de Navio, ARD";
+            ViewBag.CertificationDate = DateTime.Now.Day + " de " + DateTime.Now.ToString().AsDateTime().Month + " de " + DateTime.Now.Year;
+            ViewBag.WeaponDetails = new List<string>
+{
+    "PISTOLA MARCA FM HI POWER CALIBRE 9MM NO. 404067",
+    "CAPSULAS PISTOLA CALIBRE 9MM"
+    // Add other weapon details
+};
             return View();
         }  public ActionResult CertPos()
+
         {
+            ViewBag.CertifierName = "YAN LIRIOY VARGAS CAMINERO";
+            ViewBag.name = "prueba";
+            ViewBag.CertifierTitle = "Capitán de Navio, ARD";
+            ViewBag.CertificationDate = DateTime.Now.Day + " de " + DateTime.Now.ToString().AsDateTime().Month + " de " + DateTime.Now.Year;
+            ViewBag.WeaponDetails = new List<string>
+        {
+            "PISTOLA MARCA FM HI POWER CALIBRE 9MM NO. 404067",
+            "CAPSULAS PISTOLA CALIBRE 9MM"
+            // Add other weapon details
+        };
             return View();
         } 
         public ActionResult Index()

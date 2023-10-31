@@ -32,36 +32,20 @@
     </script>
 }
 
-<h5 class="modal-title" id="searchModalLabel">Buscar Miembro</h5>
+<div>
+    <h5 class="modal-title" id="searchModalLabel">Buscar Miembro</h5>
 
-<div class="row">
-    <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
-        <input type="text" id="searchInput" name="No Carnet" class="form-control" placeholder="Entrar No Carnet" />
+    <div class="row">
+        <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
+            <input type="text" id="searchInput" name="No Carnert" class="form-control" placeholder="Enter a name" />
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
+            <input type="text" id="searchInput2" name="cedula" class="form-control" placeholder="Enter a Cedula" />
+        </div>
     </div>
-</div>
 
-<div class="row">
-<div class="col-sm-12 col-md-1 col-lg-1 mb-3">
-    O
-    </div>
-</div>
+    <button type="button" class="btn btn-primary" onclick="loadDropdownData2()">Buscar</button>
 
-<div class="row">
-
-
-    <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
-
-    <input type="text" id="searchInput2" name="cedula" class="form-control" placeholder="Entrar No Cedula Sin guiones" />
-    </div>
-</div>
-
-
-<div class="row">
-
-<div class="col-sm-12 col-md-6 col-lg-4 mb-3">
-
-    <button type="button" class="btn btn-primary" onclick="loadDropdownData()">Buscar</button>
-    </div>
 </div>
 
 
@@ -76,7 +60,7 @@
 
             <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
             <label class="form-label" for="MilitarNo">Nombre:</label>
-            <select class="form-control" id="MilitarNo" name="MilitarNo">
+                <select class="form-select" id="MilitarNo" name="MilitarNo">
         </select>
         <input type="hidden"  name="MilitarNo"  />
             </div>

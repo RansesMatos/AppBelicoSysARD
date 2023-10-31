@@ -3,32 +3,75 @@
 *@
 @{
 }
-<!-- Button to trigger the modal -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#searchModal">
-    Cargar Nombres
-</button>
-
-<!-- The modal dialog -->
-<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="searchModalLabel">Buscar Nombre</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <input type="text" id="searchInput" name="nombre" class="form-control" placeholder="Enter a name" />
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="loadDropdownData2()">Buscar</button>
-            </div>
-        </div>
-    </div>
+<div>
+    <h5 class="modal-title" id="searchModalLabel">Buscar Miembro Para Certificacion de No Posesión</h5>
+    <input type="text" id="searchInput" name="nombre" class="form-control" placeholder="Enter a name" />
+    <input type="text" id="searchInput2" name="cedula" class="form-control" placeholder="Enter a Cedula" />
+    <button type="button" class="btn btn-primary" onclick="loadDropdownData3()">Buscar</button>
 </div>
+<div id="notification" class="notification"></div>
+
 <div class="mb-3">
-    <label class="form-label" for="AsignacionNombre">Nombre:</label>
-    <select class="form-select" id="AsignacionNombre" name="AsignacionNoRango">
+    <label class="form-label" for="AsignacionNombreCert">Nombre:</label>
+    <select class="form-select" id="AsignacionNombreCert" name="AsignacionNombreCert" onclick="loadDocDataAsigCert()">
     </select>
     <input type="hidden" name="AsignacionNoRango" />
 </div>
+
+
+
+    <div class="row">
+        <div class="col-6">
+            <h1>Listado de Armas Registrados</h1>
+        </div>
+        <div class="col d-flex justify-content-end align-items-center">
+            <a asp-controller="Arma" asp-action="ExportPDf" class="btn btn-success" style="background-color:red">Export to PDF</a>
+        </div>
+    </div>
+    <body>
+        <p>Form. No 25, ARD</p>
+        <h2>ARMADA DE REPÚBLICA DOMINICANA</h2>
+        <h3>RECIBO MEMORANDUM</h3>
+        <p>Santo Domingo, Este</p>
+        <p>lugar</p>
+        <p>------------------------</p>
+        <p>@ViewBag.fecha</p>
+        <p>Fecha</p>
+        <p>------------------------</p>
+        <p>ACUSO RECIBO AL, INTENDENTE DEL MAT.BELICO, ARD</p>
+        <p>------------------------</p>
+        <p>De los efectos siguientes para uso oficial del @ViewBag.rango</p>
+        <p>@ViewBag.nombreCompleto</p>
+        <p>propiedades de la Armada de la ARD y me compromento Devolcerlos cuando sean requeridos</p>
+        <p>por la autoridad competente</p>
+
+        <p>------------------------</p>
+
+
+        <h3>CANTIDAD    ARTICULO    VALOR</h3>
+        <ul>
+            @foreach (var weaponDetail in ViewBag.WeaponDetails)
+            {
+                <li>@weaponDetail</li>
+            }
+        </ul>
+        <p>
+            -x-x-x-x-x-x-x-x-x-x-x-x--x-x-x-x-x-x-x-x-
+        </p>
+        <p>Nota: CARGADA MENDIANTE OFICIO NO. @ViewBag.NoOficio,</p>
+        <p>DE FECHA @ViewBag.FECHAASIGNACION, DEL COMANDANTE GENERAL,</p>
+        <P>PARA SERVICIO CON EL @ViewBag.NOMBRESERVICIO, ARD</P>
+
+
+
+        <h2>@ViewBag.NOMBRECOMPLETO</h2>
+        <h3>@ViewBag.rango</h3>
+        <p>@ViewBag.Cedula</p>
+        <p>@ViewBag.dirrecion,TEL. @ViewBag.tel .</p>
+
+
+        <h2>@ViewBag.Director</h2>
+        <h3>@ViewBag.rango</h3>
+        <p>INTENDENTE DEL MAT.BELICO, ARD</p>
+    </body>
+
