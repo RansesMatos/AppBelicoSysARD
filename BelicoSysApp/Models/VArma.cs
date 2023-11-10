@@ -17,6 +17,11 @@
         public string ArmaEstadoDescripcion { get; set; } = null!;
 
         public bool ArmaStatus { get; set; }
+        public string Asignacion_nombre { get; set; } = null!;
+        public string Asignacion_rango { get; set; } = null!;
+        public string Asignacion_Documento { get; set; } = null!;
+        public string Fecha_Asignacion { get; set; } = null!;
+
 
         public DateTime FechaRegistro { get; set; }
         public int IdAsignacion { get; set; }

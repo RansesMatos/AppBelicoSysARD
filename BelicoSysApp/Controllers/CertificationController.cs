@@ -1,15 +1,30 @@
-﻿using BelicoSysApp.Models;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
-using Microsoft.AspNetCore.Http;
+﻿using AspNetCore.Reporting;
+using BelicoSysApp.Models;
+using BelicoSysApp.Services;
+using DinkToPdf;
+using DinkToPdf.Contracts;
+
 using Microsoft.AspNetCore.Mvc;
-using System.Web.Razor.Text;
+
+using Microsoft.Reporting;
+using System.Reflection;
+
 using System.Web.WebPages;
+
 
 namespace BelicoSysApp.Controllers
 {
     public class CertificationController : Controller
     {
+        private readonly IApiServiceAsignacion _apiServiceAsignacion;
+        private readonly IConverter _converter;
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        public CertificationController(IConverter converter, IApiServiceAsignacion apiServiceAsignacion, IWebHostEnvironment webHostEnvironment)
+        {
+            _converter = converter;
+            _apiServiceAsignacion = apiServiceAsignacion;
+            _webHostEnvironment = webHostEnvironment;
+        }
         // GET: CertificationController
         [HttpGet]
         public ActionResult CertificationS()
@@ -32,27 +47,94 @@ namespace BelicoSysApp.Controllers
         }
 
 
-        public async Task<IActionResult> ExportPDf(PdfBody cuerpoRepo)
+        public async Task<IActionResult> ExportPDf()
         {
-            //ICollection<VArma> lista = await _apiArma.GetVArmas();
-            //var valuesList = lista.ToList();
-
-            string fileName = "values.pdf";
-
-            using (MemoryStream memoryStream = new MemoryStream())
+            var doc = new HtmlToPdfDocument()
             {
-                Document document = new Document();
-                PdfWriter writer = PdfWriter.GetInstance(document, memoryStream);
-
-                document.Open();
-
-                document.Add(cuerpoRepo);
-
-                
-                document.Close();
-
-                return File(memoryStream.ToArray(), "application/pdf", fileName);
+                GlobalSettings =
+        {
+            ColorMode = ColorMode.Color,
+            Orientation = Orientation.Portrait,
+            PaperSize = PaperKind.A4,
+        },
+                Objects = {
+            new ObjectSettings()
+            {
+                PagesCount = true,
+                HtmlContent = "<h1>Hello World</h1>",
+                WebSettings = { DefaultEncoding = "utf-8" },
+                HeaderSettings = { FontSize = 9, Right = "Page [page] of [toPage]", Line = true },
+                FooterSettings = { FontSize = 9, Center = "Sample Footer" }
             }
+        }
+            };
+
+            var pdfData = _converter.Convert(doc);
+            return new FileContentResult(pdfData, "application/pdf");
+        }
+
+        [HttpPost]
+
+        public IActionResult ReportIdCard(string documento)
+        {
+            documento = "'22400750893'";
+            //// Asumiendo que _apiServiceAsignacion.GetVArmas() es asíncrono, deberías esperar el resultado adecuadamente.
+            //// No uses .Result en una llamada asíncrona. Puede causar deadlocks y otros problemas.
+            //// Idealmente, haz que tu método sea asíncrono y usa await.
+            //var itemJetsky = _apiServiceAsignacion.GetVArmas().Result.Where(x => x.Asignacion_Documento == documento);
+
+            //// Asegúrate de que tienes una ruta válida a tu archivo RDLC
+            //var path = Path.Combine(_webHostEnvironment.WebRootPath, "Reporte", "BelicoReporteTenencia.rdlc");
+
+            //// El diccionario de datos probablemente debería ser configurado de manera diferente
+            //Dictionary<string, string> reportParameters = new Dictionary<string, string>
+            //{
+            //    { "Cedula", documento }
+            //};
+
+            //LocalReport localReport = new LocalReport(path);
+
+            //// Configura los parámetros del reporte si son necesarios
+            //localReport.AddDataSource("DataSet1", itemJetsky); // Asegúrate de que el nombre del DataSet coincida con el que está en tu archivo RDLC
+
+            //// Renderiza el reporte a PDF
+            //var result = localReport.Execute(RenderType.Pdf, parameters: reportParameters);
+
+            //// Devuelve el archivo PDF
+            // return File(result.MainStream, "application/pdf", "ReportIdCard.pdf");
+            var itemJetsky = _apiServiceAsignacion.GetVArmas().Result.Where(x => x.Asignacion_Documento == documento);
+
+            string mimType = "";
+            int extension = 1;
+            var path = $"{_webHostEnvironment.WebRootPath}\\Reporte\\BelicoReporteTenencia.rdlc";
+            Dictionary<string, string> data = new Dictionary<string, string>();
+            data.Add("Cedula", documento);
+
+
+
+            if (data.ContainsKey("Cedula"))
+            {
+                data["Cedula"] = null;
+            }
+            else
+            {
+#pragma warning disable S112 // General exceptions should never be thrown
+                throw new Exception(String.Format("Key {0} was not found", "Cedula"));
+#pragma warning restore S112 // General exceptions should never be thrown
+            }
+            LocalReport localReport = new LocalReport(path);
+#pragma warning disable S3011 // Reflection should not be used to increase accessibility of classes, methods, or fields
+            BindingFlags bindFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static;
+#pragma warning restore S3011 // Reflection should not be used to increase accessibility of classes, methods, or fields
+            FieldInfo field = localReport.GetType().GetField("localReport", bindFlags);
+            object rptObj = field.GetValue(localReport);
+            Type type = rptObj.GetType();
+            PropertyInfo pi = type.GetProperty("EnableExternalImages");
+            pi.SetValue(rptObj, true, null);
+            var result = localReport.Execute(RenderType.Pdf, extension, data, mimType);
+
+
+            return File(result.MainStream, "Application/pdf");
         }
         public ActionResult xCert()
         {

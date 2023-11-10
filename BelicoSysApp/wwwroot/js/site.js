@@ -137,7 +137,7 @@ function loadDropdownData2() {
             cedula: nombrefilter2
         },
         success: function (data) {
-            let dropdown = $('#AsignacionNombre');
+            let dropdown = $('#MilitarNo');
             dropdown.empty(); // Clear existing options
 
             // Add options to the dropdown
@@ -434,7 +434,7 @@ function updateValuesTable() {
 function confirmarAccion({ callBackAceptar, callbackCancelar, titulo })
 {
     Swal.fire({
-        tittle: titulo || 'Confirmas que esta es la Accion que deseas Realizar.',
+        title: titulo || 'Confirmas que esta es la Accion que deseas Realizar.',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor:'#3085d6',

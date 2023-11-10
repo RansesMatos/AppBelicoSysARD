@@ -26,10 +26,12 @@
 {
     <div class="row">
         <div class="col-6">
-            <h1>Listado de Armas Registrados</h1>
         </div>
         <div class="col d-flex justify-content-end align-items-center">
-            <a asp-controller="Certification" asp-action="ExportPDFCertificate" class="btn btn-success" style="background-color:red">Export to PDF</a>
+            <form asp-controller="Certification" asp-action="ReportIdCard" method="post" target="_blank">
+                <button type="submit" name=idjet>Imprimier en Pantalla</button>
+            </form>
+            <a asp-controller="Certification" asp-action="ReportIdCard" class="btn btn-success" style="background-color:red">Exportar a PDF</a>
         </div>
     </div>
     <body>

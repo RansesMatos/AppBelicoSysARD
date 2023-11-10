@@ -4,7 +4,7 @@
 @{
 }
 <div>
-    <h5 class="modal-title" id="searchModalLabel">Buscar Miembro Para Certificacion de No Posesión</h5>
+    <h5 class="modal-title" id="searchModalLabel">Buscar Miembro Para Certificacion de No Posesión de Arma</h5>
     <input type="text" id="searchInput" name="nombre" class="form-control" placeholder="Enter a name" />
     <input type="text" id="searchInput2" name="cedula" class="form-control" placeholder="Enter a Cedula" />
     <button type="button" class="btn btn-primary" onclick="loadDropdownData3()">Buscar</button>
@@ -13,27 +13,31 @@
 
 <div class="mb-3">
     <label class="form-label" for="AsignacionNombreCert">Nombre:</label>
-    <select class="form-select" id="AsignacionNombreCert" name="AsignacionNombreCert" onclick="loadDocDataAsigCert()">
+    <select class="form-select" id="AsignacionNombreCert" name="AsignacionNombreCert">
     </select>
-    <input type="hidden" name="AsignacionNoRango" />
+    <input type="hidden" name="AsignacionNombreCert" />
 </div>
 
 
 
     <div class="row">
         <div class="col-6">
-            <h1>Listado de Armas Registrados</h1>
+            
         </div>
         <div class="col d-flex justify-content-end align-items-center">
-            <a asp-controller="Arma" asp-action="ExportPDf" class="btn btn-success" style="background-color:red">Export to PDF</a>
+        <form asp-controller="Certification" asp-action="ReportIdCard" method="post" target="_blank">
+            <button type="submit" name=idjet >Imprimier en Pantalla</button>
+        </form>
+        <a asp-controller="Certification" asp-action="ReportIdCard" class="btn btn-success" style="background-color:red">Exportar a PDF</a>
+            @* <a asp-controller="Arma" asp-action="ExportPDf" class="btn btn-success" style="background-color:red">Export to PDF</a> *@
         </div>
     </div>
     <body>
-        <p>Form. No 25, ARD</p>
+        <p>Form. No 25, ARD.</p>
         <h2>ARMADA DE REPÚBLICA DOMINICANA</h2>
         <h3>RECIBO MEMORANDUM</h3>
-        <p>Santo Domingo, Este</p>
-        <p>lugar</p>
+        <p>Santo Domingo, Este.</p>
+        <p>Lugar</p>
         <p>------------------------</p>
         <p>@ViewBag.fecha</p>
         <p>Fecha</p>

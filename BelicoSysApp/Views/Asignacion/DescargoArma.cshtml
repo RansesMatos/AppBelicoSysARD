@@ -23,7 +23,7 @@
     </div>
   </div>
 </div> *@
-
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
 {
     <script>
@@ -65,7 +65,7 @@
         <input type="hidden"  name="MilitarNo"  />
             </div>
         </div>
-    <button type="submit" class="btn btn-primary" >Elegir</button>
+    <button type="submit" class="btn btn-primary" >Selecionar</button>
     </form>
     <p>Militar NO: @ViewBag.noM</p>
     <p>Rango: @ViewBag.desc_rango</p>

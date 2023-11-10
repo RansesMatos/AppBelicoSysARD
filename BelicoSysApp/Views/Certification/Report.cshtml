@@ -1,0 +1,22 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Report</title>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <div>
+            <rsweb:ReportViewer ID="ReportIdCard" runat="server" Width="100%" Height="600px"
+                ProcessingMode="Local" EnableExternalImages="true" EnableHyperlinks = "true">
+                <LocalReport ReportPath="~/Reports/ParteDelanteraCarnet2.rdlc">
+                </LocalReport>
+            </rsweb:ReportViewer>
+        </div>
+    </form>
+</body>
+</html>
