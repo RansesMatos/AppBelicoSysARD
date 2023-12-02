@@ -174,6 +174,22 @@ namespace BelicoSysApp.Services
 
             return armaMarcaList;
         }
+        public async Task<ICollection<ArmaModelo>> GetArmasModelo()
+        {
+            ICollection<ArmaModelo> armaModeloList = new List<ArmaModelo>();
+            var client = new HttpClient();
+            client.BaseAddress = new Uri(_baseUrl);
+            var response = await client.GetAsync("api/ArmaModelo");
+            if (response != null && response.IsSuccessStatusCode)
+            {
+
+                var json_respuesta = await response.Content.ReadAsStringAsync();
+                ICollection<ArmaModelo> resultado = JsonConvert.DeserializeObject<ICollection<ArmaModelo>>(json_respuesta);
+                armaModeloList = resultado;
+            }
+
+            return armaModeloList;
+        }
 
         public async Task<ICollection<TipoArma>> GetArmasTipos()
         {

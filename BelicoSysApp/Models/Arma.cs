@@ -7,6 +7,7 @@
         public int IdTipoArma { get; set; }
 
         public int IdArmaMarca { get; set; }
+        public int IdModelo { get; set; }
 
         public string ArmaCalibre { get; set; } = null!;
 

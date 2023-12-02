@@ -63,7 +63,7 @@
                             <li><a style="color:gray"  class="dropdown-item" href="#">Asignar Arma a Departamentos</a></li>
                             <li><a style="color:gray"  class="dropdown-item" href="@Url.Action("DescargoArma","Asignacion")">Consulta Arma Civiles</a></li>
                             <li><a class="dropdown-item" href="@Url.Action("AsignacionReport","Asignacion")">Reportes</a></li>
-                            <li><a style ="color:gray" class="dropdown-item" href="#">Actualizacion</a></li>
+                             <li><a style ="color:gray" class="dropdown-item" href="#">Ordenes</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
@@ -77,7 +77,9 @@
                         </ul>
                     </li>
                 </ul>
-                <a class="nav-link active" onclick="location.href='@Url.Action("Logout","Account")'">Salir</a>
+                <a class="nav-link active" style="margin-right: 15px" onclick="location.href='@Url.Action("Index","Home")'"> Inicio </a>
+                
+                <a class="nav-link active" onclick="location.href='@Url.Action("Logout","Account")'"> Salir </a>
             </div>
         </div>
     </nav> 
