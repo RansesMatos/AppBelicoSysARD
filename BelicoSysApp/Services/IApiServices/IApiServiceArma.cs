@@ -17,6 +17,7 @@ namespace BelicoSysApp.Services
         Task<ICollection<Almacen>> GetAlmacenes();
         Task<ICollection<ArmaMarca>> GetArmasMarcas();
         Task<ICollection<TipoArma>> GetArmasTipos();
+        Task<ICollection<ArmaModelo>> GetArmasModelo();
 
 
 

@@ -1,6 +1,8 @@
 ﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 // for details on configuring this project to bundle and minify static web assets.
 
+const { drop } = require("../../../../../../node_modules/cypress/types/lodash/index");
+
 
 // Write your JavaScript code.
 const valuesList = [];
@@ -342,14 +344,22 @@ function loadDropdownArmaupdated() {
             armaSerial: nombrefilter
         },
         success: function (data) {
-            console.log(data);
-            //let idarma = $('#IdArma1');
-            ////let dropdown = document.getElementById('IdTipoArmaU');
-            ////idarma.empty(); // Clear existing options     
-            ////dropdown.append($('<option></option>').val(data.taNombre));
-            //idarma.val(data.idArma);
-            document.getElementById("IdTipoArmaU").append($('<option></option>').val(data.taNombre));
-            document.getElementById("IdArmaMarca").append($('<option></option>').val(data.armaMarcaDescripcion)); 
+            console.log(data)
+            let idarma = $('#IdArma1');
+            let dropdown = document.getElementById('IdTipoArmaU');
+            if (data.taNombre.length > 0) {
+                // Sustituye el primer valor en la lista
+
+               // dropdown.find('option').addValue(data.taNombre)
+                $('#IdTipoArmaU option:first').text(data.taNombre).val(data.taNombre);
+                $('#IdArmaMarca option:first').text(data.armaMarcaDescripcion).val(data.armaMarcaDescripcion);
+                $('#ArmaCalibre option:first').text(data.armaCalibre).val(data.armaCalibre);
+          
+            }
+            idarma.empty(); // Clear existing options     
+            //dropdown.append($('<option>', data.taNombre));
+           idarma.val(data.idArma)
+            
         },
         error: function (xhr, status, error) {
             console.error('Error loading dropdown data: ' + error);

@@ -142,9 +142,12 @@ namespace BelicoSysApp.Controllers
         {
             IEnumerable<Almacen> listaA = await _apiArma.GetAlmacenes();
             IEnumerable<ArmaMarca> listaM = await _apiArma.GetArmasMarcas();
+            IEnumerable<ArmaModelo> listaM0 = await _apiArma.GetArmasModelo();
+
             IEnumerable<TipoArma> listaAT = await _apiArma.GetArmasTipos();
             var listaADto = new List<Almacen>();
             var listaMarcaDto = new List<ArmaMarca>();
+            var listaModeloDto = new List<ArmaModelo>();
             var listaTipoDto = new List<TipoArma>();
             foreach (var Almacen in listaA)
             {
@@ -157,6 +160,10 @@ namespace BelicoSysApp.Controllers
             {
                 listaMarcaDto.Add(marca);
             }
+            foreach (var modelo in listaM0)
+            {
+                listaModeloDto.Add(modelo);
+            }
             foreach (var tipoArma in listaAT)
             {
                 listaTipoDto.Add(tipoArma);
@@ -164,6 +171,7 @@ namespace BelicoSysApp.Controllers
 
             ViewBag.Almacen = new SelectList(listaADto, "IdAlmacen", "AlmacenDescripcion");
             ViewBag.Marca = new SelectList(listaMarcaDto, "IdArmaMarca", "ArmaMarcaDescripcion");
+            ViewBag.Modelo = new SelectList(listaModeloDto, "IdArmaModelo", "descModelo");
             ViewBag.ArmaTipo = new SelectList(listaTipoDto, "IdTipoArma", "TaNombre");
             
 
@@ -223,11 +231,15 @@ namespace BelicoSysApp.Controllers
         [HttpGet]
         public async Task<IActionResult> ArmaUpdate()
         {
+
             IEnumerable<Almacen> listaA = await _apiArma.GetAlmacenes();
             IEnumerable<ArmaMarca> listaM = await _apiArma.GetArmasMarcas();
+            IEnumerable<ArmaModelo> listaM0 = await _apiArma.GetArmasModelo();
+
             IEnumerable<TipoArma> listaAT = await _apiArma.GetArmasTipos();
             var listaADto = new List<Almacen>();
             var listaMarcaDto = new List<ArmaMarca>();
+            var listaModeloDto = new List<ArmaModelo>();
             var listaTipoDto = new List<TipoArma>();
             foreach (var Almacen in listaA)
             {
@@ -240,6 +252,10 @@ namespace BelicoSysApp.Controllers
             {
                 listaMarcaDto.Add(marca);
             }
+            foreach (var modelo in listaM0)
+            {
+                listaModeloDto.Add(modelo);
+            }
             foreach (var tipoArma in listaAT)
             {
                 listaTipoDto.Add(tipoArma);
@@ -247,6 +263,7 @@ namespace BelicoSysApp.Controllers
 
             ViewBag.Almacen = new SelectList(listaADto, "IdAlmacen", "AlmacenDescripcion");
             ViewBag.Marca = new SelectList(listaMarcaDto, "IdArmaMarca", "ArmaMarcaDescripcion");
+            ViewBag.Modelo = new SelectList(listaMarcaDto, "IdArmaModelo", "descModelo");
             ViewBag.ArmaTipo = new SelectList(listaTipoDto, "IdTipoArma", "TaNombre");
 
 

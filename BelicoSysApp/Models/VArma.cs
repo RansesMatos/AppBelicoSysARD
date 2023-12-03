@@ -20,9 +20,7 @@
         public string Asignacion_nombre { get; set; } = null!;
         public string Asignacion_rango { get; set; } = null!;
         public string Asignacion_Documento { get; set; } = null!;
-        public string Fecha_Asignacion { get; set; } = null!;
-
-
+        public DateTime Fecha_Asignacion { get; set; }
         public DateTime FechaRegistro { get; set; }
         public int IdAsignacion { get; set; }
 
