@@ -339,16 +339,17 @@ function loadDropdownArmaupdated() {
         url: 'SearchArma',
         type: 'GET',
         data: {
-            armaserial: nombrefilter
+            armaSerial: nombrefilter
         },
         success: function (data) {
-            console.log(data)
-            let idarma = $('#IdArma1');
-            let dropdown = document.getElementById('IdTipoArmaU');
-            idarma.empty(); // Clear existing options     
-            dropdown.append($('<option></option>').text('aguas').val(data.idarma));
-           idarma.val(data.idArma)
-            
+            console.log(data);
+            //let idarma = $('#IdArma1');
+            ////let dropdown = document.getElementById('IdTipoArmaU');
+            ////idarma.empty(); // Clear existing options     
+            ////dropdown.append($('<option></option>').val(data.taNombre));
+            //idarma.val(data.idArma);
+            document.getElementById("IdTipoArmaU").append($('<option></option>').val(data.taNombre));
+            document.getElementById("IdArmaMarca").append($('<option></option>').val(data.armaMarcaDescripcion)); 
         },
         error: function (xhr, status, error) {
             console.error('Error loading dropdown data: ' + error);
