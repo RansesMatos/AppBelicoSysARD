@@ -341,7 +341,7 @@ function loadDropdownArmaupdated() {
         url: 'SearchArma',
         type: 'GET',
         data: {
-            armaserial: nombrefilter
+            armaSerial: nombrefilter
         },
         success: function (data) {
             console.log(data)
