@@ -1,56 +1,43 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+    // Aquí puedes definir variables de Razor o realizar configuraciones iniciales si es necesario
 }
-<div>
-    <h5 class="modal-title" id="searchModalLabel">Buscar Miembro Para Certificacion de No Posesión de Arma</h5>
-    <input type="text" id="searchInput" name="nombre" class="form-control" placeholder="Enter a name" />
-    <input type="text" id="searchInput2" name="cedula" class="form-control" placeholder="Enter a Cedula" />
-    <button type="button" class="btn btn-primary" onclick="loadDropdownData3()">Buscar</button>
-</div>
-<div id="notification" class="notification"></div>
 
-<div class="mb-3">
-    <label class="form-label" for="AsignacionNombreCert">Nombre:</label>
-    <select class="form-select" id="AsignacionNombreCert" name="AsignacionNombreCert">
-    </select>
-    <input type="hidden" name="AsignacionNombreCert" />
-</div>
+    <meta charset="UTF-8">
+    <title>Certificación de No Posesión de Arma</title>
+    <link rel="stylesheet" href="~/css/style.css"> <!-- Asegúrate de tener este archivo CSS para los estilos -->
 
 
-
-    <div class="row">
-        <div class="col-6">
-            
-        </div>
-        <div class="col d-flex justify-content-end align-items-center">
-        <form asp-controller="Certification" asp-action="ReportIdCard" method="post" target="_blank">
-            <button type="submit" name=idjet >Imprimier en Pantalla</button>
-        </form>
-        <a asp-controller="Certification" asp-action="ReportIdCard" class="btn btn-success" style="background-color:red">Exportar a PDF</a>
-            @* <a asp-controller="Arma" asp-action="ExportPDf" class="btn btn-success" style="background-color:red">Export to PDF</a> *@
-        </div>
+    <div>
+        <h5 id="searchModalLabel">Buscar Miembro Para Certificación de No Posesión de Arma</h5>
+        <input type="text" id="searchByName" class="form-control" placeholder="Ingrese un nombre" />
+        <input type="text" id="searchByCedula" class="form-control" placeholder="Ingrese una cédula" />
+        <button type="button" class="btn btn-primary" onclick="searchMember()">Buscar</button>
     </div>
-    <body>
+    <div id="notification"></div>
+
+    <div class="mb-3">
+        <label for="AsignacionNombreCert">Nombre:</label>
+        <select id="AsignacionNombreCert" name="AsignacionNombreCert" class="form-select">
+            <!-- Las opciones se cargarán aquí -->
+        </select>
+    </div>
+
+    <div class="content">
         <p>Form. No 25, ARD.</p>
         <h2>ARMADA DE REPÚBLICA DOMINICANA</h2>
         <h3>RECIBO MEMORANDUM</h3>
         <p>Santo Domingo, Este.</p>
         <p>Lugar</p>
-        <p>------------------------</p>
+        <div class="line">------------------------</div>
         <p>@ViewBag.fecha</p>
         <p>Fecha</p>
-        <p>------------------------</p>
+        <div class="line">------------------------</div>
         <p>ACUSO RECIBO AL, INTENDENTE DEL MAT.BELICO, ARD</p>
-        <p>------------------------</p>
-        <p>De los efectos siguientes para uso oficial del @ViewBag.rango</p>
-        <p>@ViewBag.nombreCompleto</p>
-        <p>propiedades de la Armada de la ARD y me compromento Devolcerlos cuando sean requeridos</p>
-        <p>por la autoridad competente</p>
+        <div class="line">------------------------</div>
+        <p>De los efectos siguientes para uso oficial del @ViewBag.rango @ViewBag.nombreCompleto</p>
+        <p>propiedades de la Armada de la ARD y me comprometo a devolverlos cuando sean requeridos por la autoridad competente.</p>
 
-        <p>------------------------</p>
-
+        <div class="line">------------------------</div>
 
         <h3>CANTIDAD    ARTICULO    VALOR</h3>
         <ul>
@@ -59,23 +46,25 @@
                 <li>@weaponDetail</li>
             }
         </ul>
-        <p>
-            -x-x-x-x-x-x-x-x-x-x-x-x--x-x-x-x-x-x-x-x-
-        </p>
-        <p>Nota: CARGADA MENDIANTE OFICIO NO. @ViewBag.NoOficio,</p>
+        <div class="line">-x-x-x-x-x-x-x-x-x-x-x-x--x-x-x-x-x-x-x-x-</div>
+        <p>Nota: CARGADA MEDIANTE OFICIO NO. @ViewBag.NoOficio,</p>
         <p>DE FECHA @ViewBag.FECHAASIGNACION, DEL COMANDANTE GENERAL,</p>
-        <P>PARA SERVICIO CON EL @ViewBag.NOMBRESERVICIO, ARD</P>
-
-
+        <p>PARA SERVICIO CON EL @ViewBag.NOMBRESERVICIO, ARD</p>
 
         <h2>@ViewBag.NOMBRECOMPLETO</h2>
         <h3>@ViewBag.rango</h3>
         <p>@ViewBag.Cedula</p>
-        <p>@ViewBag.dirrecion,TEL. @ViewBag.tel .</p>
-
+        <p>@ViewBag.direccion, TEL. @ViewBag.tel.</p>
 
         <h2>@ViewBag.Director</h2>
-        <h3>@ViewBag.rango</h3>
+        <h3>@ViewBag.rango Director</h3>
         <p>INTENDENTE DEL MAT.BELICO, ARD</p>
-    </body>
+
+        <div class="actions">
+            <form asp-controller="Certification" asp-action="ReportIdCard" method="post" target="_blank">
+                <button type="submit" class="btn btn-primary">Imprimir en Pantalla</button>
+            </form>
+            <a asp-controller="Certification" asp-action="ReportIdCard" class="btn btn-success" style="background-color:red">Exportar a PDF</a>
+        </div>
+    </div>
 

@@ -1,0 +1,85 @@
+﻿@model AsignacionArma
+@{
+    ViewData["Title"] = "Sistema de Registro Arma ordenes";
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+}
+
+
+    <!-- Button to trigger the modal -->
+@* <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#searchModal">
+  Consultar Miembros
+</button>
+
+<!-- The modal dialog -->
+<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true"> 
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="searchModalLabel">Buscar Nombre</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <input type="text" id="searchInput" name="nombre" class="form-control" placeholder="Enter a name" />
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>      
+       <button type="button" class="btn btn-primary" onclick="loadDropdownData2()">Buscar</button>       
+      </div>
+    </div>
+  </div>
+</div> *@
+@if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
+{
+    <script>
+        // Call the JavaScript function to display the notification
+        showNotification('@Html.Raw(ViewBag.SuccessMessage)');
+    </script>
+}    
+
+
+<body>
+    <h1>Crear Orden de Material Bélico</h1>
+    <form id="formOrdenMaterial">
+        <label for="idOrden">ID de la Orden:</label>
+        <input type="text" id="idOrden" name="idOrden"><br><br>
+
+        <!-- Botón que activa el modal para seleccionar materiales -->
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalMateriales">
+            Seleccionar Materiales
+        </button>
+    </form>
+
+    <!-- Modal para seleccionar materiales -->
+    <div class="modal fade" id="modalMateriales" tabindex="-1" role="dialog" aria-labelledby="modalMaterialesLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalMaterialesLabel">Seleccionar Materiales</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Lista de materiales para seleccionar. Esto deberá ser poblado dinámicamente con los materiales disponibles -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary">Guardar selección</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script>
+        // Aquí puedes agregar JavaScript para interactuar con el modal y otras funcionalidades
+    </script>
+</body>
+
+
+
+
+
+

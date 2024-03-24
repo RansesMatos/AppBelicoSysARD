@@ -1,0 +1,79 @@
+﻿@model AsignacionArma
+@{
+    ViewData["Title"] = "Sistema de Registro Arma ordenes";
+}
+
+
+    <!-- Button to trigger the modal -->
+@* <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#searchModal">
+  Consultar Miembros
+</button>
+
+<!-- The modal dialog -->
+<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true"> 
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="searchModalLabel">Buscar Nombre</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <input type="text" id="searchInput" name="nombre" class="form-control" placeholder="Enter a name" />
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>      
+       <button type="button" class="btn btn-primary" onclick="loadDropdownData2()">Buscar</button>       
+      </div>
+    </div>
+  </div>
+</div> *@
+@if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
+{
+    <script>
+        // Call the JavaScript function to display the notification
+        showNotification('@Html.Raw(ViewBag.SuccessMessage)');
+    </script>
+}    
+
+
+<body>
+    <h1>Listado de Órdenes de Material Bélico</h1>
+    <div id="ordenesContainer">
+        <!-- El contenido aquí será generado dinámicamente basado en la información recuperada desde el backend -->
+    </div>
+
+    <script>
+        // Función para cargar las órdenes desde el backend
+        function cargarOrdenes() {
+            // Suponiendo que tienes una API en tu backend que te devuelve la lista de órdenes
+            fetch('/api/ordenes')
+                .then(response => response.json())
+                .then(data => {
+                    const ordenesContainer = document.getElementById('ordenesContainer');
+                    ordenesContainer.innerHTML = ''; // Limpiar el contenido actual
+                    data.forEach(orden => {
+                        // Crear y añadir el elemento de la orden al contenedor
+                        const ordenElement = document.createElement('div');
+                        ordenElement.innerHTML = `
+                                    <h3>Orden ID: ${orden.id}</h3>
+                                    <p>Descripción: ${orden.descripcion}</p>
+                                    <p>Estado: ${orden.estado}</p>
+                                `;
+                        ordenesContainer.appendChild(ordenElement);
+                    });
+                })
+                .catch(error => console.error('Error al cargar las órdenes:', error));
+        }
+
+        // Llamar a cargarOrdenes() cuando la página se cargue
+        window.onload = function () {
+            cargarOrdenes();
+        };
+    </script>
+</body>
+
+
+
+
+
+

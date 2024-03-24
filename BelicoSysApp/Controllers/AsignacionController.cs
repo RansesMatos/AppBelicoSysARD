@@ -83,6 +83,23 @@ namespace BelicoSysApp.Controllers
 
             return View();
         }
+        [HttpGet]
+        public IActionResult AsignacionOrden()
+        {
+
+           
+
+            return View();
+        }
+        [HttpGet]
+        public IActionResult AsignacionOLista()
+        {
+
+
+
+            return View();
+        }
+
 
         [HttpPost]
         public async Task<IActionResult> DescargoArma(VPersonal codigo)
