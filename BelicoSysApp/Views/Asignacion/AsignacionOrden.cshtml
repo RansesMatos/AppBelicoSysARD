@@ -4,14 +4,13 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 }
 
-
-    <!-- Button to trigger the modal -->
+<!-- Button to trigger the modal -->
 @* <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#searchModal">
   Consultar Miembros
 </button>
 
 <!-- The modal dialog -->
-<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true"> 
+<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
@@ -22,8 +21,8 @@
         <input type="text" id="searchInput" name="nombre" class="form-control" placeholder="Enter a name" />
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>      
-       <button type="button" class="btn btn-primary" onclick="loadDropdownData2()">Buscar</button>       
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+       <button type="button" class="btn btn-primary" onclick="loadDropdownData2()">Buscar</button>
       </div>
     </div>
   </div>
@@ -34,20 +33,74 @@
         // Call the JavaScript function to display the notification
         showNotification('@Html.Raw(ViewBag.SuccessMessage)');
     </script>
-}    
+}
 
 
 <body>
-    <h1>Crear Orden de Material Bélico</h1>
-    <form id="formOrdenMaterial">
-        <label for="idOrden">ID de la Orden:</label>
-        <input type="text" id="idOrden" name="idOrden"><br><br>
+    <h1>Crear Orden Asignacion Masiva de Material Bélico</h1>
+    <label for="idOrden">ID de la Orden:</label>
+    <span id="orderNumber"></span>
 
+    <br>
+    <br>
+    <div>
+        <h5 class="modal-title" id="searchModalLabel">Buscar Miembro</h5>
+
+        <div class="row">
+            <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
+                <input type="text" id="searchInput" name="No Carnert" class="form-control" placeholder="Ingresar el Carnet" />
+            </div>
+            <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
+                <input type="text" id="searchInput2" name="cedula" class="form-control" placeholder="Ingresar la Cedula" />
+            </div>
+        </div>
+
+        <button type="button" class="btn btn-primary" onclick="loadDropdownData4()">Buscar</button>
+
+    </div>
+    <form id="formOrdenMaterial" action="/Asignacion/saveOrder/">
+        <div class="row">
+
+            <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
+                <label class="form-label" for="MilitarNo">Nombre:</label>
+                <select class="form-select" id="MilitarNo" name="MilitarNo" onclick="loadDocDataOrden()" style="width: auto">
+                </select>
+                <input type="hidden" name="MilitarNo" />
+            </div>
+        </div>
+        <label>Motivo:</label>
+        <select class="form-select" id="motivo" name="motivo">
+            <option value="1">Pratica</option>
+            <option value="1">Marcha</option>
+            <option value="2">Desfile</option>
+        </select>
+
+        <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
+            <label for="imageFile">Subir Documento de Orden Asignacion:</label>
+            <input type="file" name="imageFile" />
+        </div>
         <!-- Botón que activa el modal para seleccionar materiales -->
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalMateriales">
             Seleccionar Materiales
         </button>
+
+
+        <div class="row mt-5 table-responsive" id="areaTableMaterial" >
+            <table class="table caption-top" id="tableMaterials" style="width:100%">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Serial</th>
+
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                </tbody>
+            </table>
+        </div>
+
     </form>
+
 
     <!-- Modal para seleccionar materiales -->
     <div class="modal fade" id="modalMateriales" tabindex="-1" role="dialog" aria-labelledby="modalMaterialesLabel" aria-hidden="true">
@@ -55,26 +108,80 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalMaterialesLabel">Seleccionar Materiales</h5>
+
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
+                    <label>Cantidad de fusiles asignar.</label>
+                    <input type="number" id="cantFusil" name="cantFusil" />
                     <!-- Lista de materiales para seleccionar. Esto deberá ser poblado dinámicamente con los materiales disponibles -->
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary">Guardar selección</button>
+                    <button type="button" class="btn btn-primary" id="btnSelectOrderDetalle">Cargar selección</button>
                 </div>
             </div>
         </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="btnSaveOrder">Guardar selección</button>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script>
-        // Aquí puedes agregar JavaScript para interactuar con el modal y otras funcionalidades
+        $(document).ready(() => {
+            getLastOrderNumber();
+            saveOrder();
+            selectWeapons();
+
+        })
+
+        function selectWeapons() {
+            const btnSelectWeapon = $('#btnSelectOrderDetalle');
+
+            const table = $('#tableBody');
+            btnSelectWeapon.click(() => {
+                const inpCantidad = $('#cantFusil').val();
+                const URL = `/Arma/SearchArmaAll/?cantidad=${inpCantidad}`;
+                $.get(URL, (resp) => {
+                    console.log(resp);
+                    for (let i = 0; i < resp.length;i++ ){
+                        table.append(`<tr><td>${i + 1}</td><td>${resp[i].armaSerie}</td><tr>`);
+                    }
+                    $('#areaTableMaterial').css('visibility', 'visible');
+                })
+
+            });
+        }
+
+        function getLastOrderNumber() {
+            const URL = "/Asignacion/GetOrderNumber";
+            const year = new Date().getFullYear();
+            $.get(URL, (resp) => {
+                const numberModifyed = resp.padStart(5, "0");
+                $('#orderNumber').html(`${year}-${numberModifyed}`);
+            })
+        }
+
+        function saveOrder() {
+            const btnSaveOrder = $('#btnSaveOrder');
+            const formData = $("#formOrdenMaterial").serialize();
+
+            const url = "/Asignacion/saveOrder";
+            btnSaveOrder.click((e) => {
+                console.log(e);
+                $.post(url, formData, (resp) => {
+                    console.log(resp)
+                    $('#areaTableMaterial').css('visibility', 'visible');
+                })
+
+            });
+        }
     </script>
 </body>
 

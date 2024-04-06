@@ -21,7 +21,7 @@ namespace BelicoSysApp.Controllers
             _apiArma = apiArma;
         }
 
-        
+
         public async Task<IActionResult> ExportPDf()
         {
             ICollection<VArma> lista = await _apiArma.GetVArmas();
@@ -37,8 +37,8 @@ namespace BelicoSysApp.Controllers
                 document.Open();
                 PdfPTable table = new PdfPTable(2);
 
-               // table.AddCell("Index");
-               // table.AddCell("Value");
+                // table.AddCell("Index");
+                // table.AddCell("Value");
 
                 //for (int i = 0; i < valueslist.count; i++)
                 //{
@@ -72,23 +72,32 @@ namespace BelicoSysApp.Controllers
 
             return Ok(lista);
         }
+        [HttpGet]
+        public async Task<JsonResult> SearchArmaAll(int cantidad)
+        {
+
+            ICollection<Arma> armas = await _apiArma.GetArmas();
+            IEnumerable<Arma> filtro = armas.Take(cantidad).Where(x => x.idTipoArma == 2 && x.armaAsig == false).OrderBy(x => x.idArma);
+
+            return Json(filtro);
+        }
         public async Task<IActionResult> Export()
         {
             ICollection<VArma> lista = await _apiArma.GetVArmas();
 
             if (lista.Count != 0)
             {
-                
 
-               var valuesList = lista.ToList();
-                
+
+                var valuesList = lista.ToList();
+
 
                 using (var package = new XLWorkbook())
                 {
                     var worksheet = package.Worksheets.Add("Sheet1");
 
                     // Add headers
-                    worksheet.Cell(1,1).Value = "Index";
+                    worksheet.Cell(1, 1).Value = "Index";
                     worksheet.Cell(1, 2).Value = "Value";
 
                     // Add data
@@ -173,7 +182,7 @@ namespace BelicoSysApp.Controllers
             ViewBag.Marca = new SelectList(listaMarcaDto, "IdArmaMarca", "ArmaMarcaDescripcion");
             ViewBag.Modelo = new SelectList(listaModeloDto, "IdArmaModelo", "descModelo");
             ViewBag.ArmaTipo = new SelectList(listaTipoDto, "IdTipoArma", "TaNombre");
-            
+
 
 
             return View("ArmaCreate");
@@ -187,8 +196,8 @@ namespace BelicoSysApp.Controllers
                 foreach (var file in imageFile)
                 {
                     // Generate a unique file name to avoid conflicts
-                    var fileName = Guid.NewGuid().ToString() + model.ArmaSerie.ToString() + Path.GetExtension(file.FileName);
-                    model.ImagePath = fileName;
+                    var fileName = Guid.NewGuid().ToString() + model.armaSerie.ToString() + Path.GetExtension(file.FileName);
+                    model.imagePath = fileName;
                     // Set the path where you want to save the image on the server
                     var imagePath = Path.Combine("wwwroot", "Images", fileName);
                     multiimagename.Add(imagePath.ToString());
@@ -200,24 +209,24 @@ namespace BelicoSysApp.Controllers
                 }
             }
 
-            if (model.IdArma == 0)
+            if (model.idArma == 0)
             {
-                model.ImagePath = multiimagename[0] + ";" + multiimagename[1] + ";" + multiimagename[2] + ";" + multiimagename[3];
+                model.imagePath = multiimagename[0] + ";" + multiimagename[1] + ";" + multiimagename[2] + ";" + multiimagename[3];
                 var respuesta = await _apiArma.Save(model);
-                if (respuesta.IdArma == 0)
+                if (respuesta.idArma == 0)
                 {
                     ModelState.AddModelError("", "Error el Numero de Serie ya esta registrado");
                 }
                 Zen.Barcode.Code128BarcodeDraw armaBarcode = Zen.Barcode.BarcodeDrawFactory.Code128WithChecksum;
-                var codigoB = armaBarcode.Draw(respuesta.ArmaSerie,60);
+                var codigoB = armaBarcode.Draw(respuesta.armaSerie, 60);
 
                 //var imagePath = Path.Combine("wwwroot", "Images", );
                 //using (var fileStream = new Bitmap(imagePath, FileMode.Create))
                 //{
                 //    file.CopyTo(fileStream);
                 //}
-                TempData["SuccessMessage"] = $"Registro Creado Con el ID {respuesta.IdArma}";
-                ViewBag.SuccessMessage = $"Arma Registrada Con el ID {respuesta.IdArma}";
+                TempData["SuccessMessage"] = $"Registro Creado Con el ID {respuesta.idArma}";
+                ViewBag.SuccessMessage = $"Arma Registrada Con el ID {respuesta.idArma}";
             }
             else
             {

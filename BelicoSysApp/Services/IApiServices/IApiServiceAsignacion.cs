@@ -16,6 +16,7 @@ namespace BelicoSysApp.Services
         Task<ICollection<AsignarEstado>> GetAsigEstado();
 
         Task<AsignacionArma> Get(int idAsig);
+        Task<int> GetOrders();
 
         Task<AsignacionArma> Save(AsignacionArma objeto);
 

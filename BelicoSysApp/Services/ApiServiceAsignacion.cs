@@ -18,14 +18,14 @@ namespace BelicoSysApp.Services
             var client = new HttpClient();
             client.BaseAddress = new Uri(_baseUrl);
             var response = await client.GetAsync("api/AsignarArma");
-            if(response != null && response.IsSuccessStatusCode) 
+            if (response != null && response.IsSuccessStatusCode)
             {
 
                 var json_respuesta = await response.Content.ReadAsStringAsync();
                 ICollection<AsignacionArma> resultado = JsonConvert.DeserializeObject<ICollection<AsignacionArma>>(json_respuesta);
                 armaList = resultado;
             }
-           
+
             return armaList;
 
         }
@@ -103,7 +103,7 @@ namespace BelicoSysApp.Services
 
             var client = new HttpClient();
             client.BaseAddress = new Uri(_baseUrl);
-          
+
             var response = await client.GetAsync($"api/AsignarArma{idAsig}");
 
             if (response.IsSuccessStatusCode)
@@ -114,7 +114,7 @@ namespace BelicoSysApp.Services
             }
 
             return objeto;
-        
+
         }
         public Task<bool> Edit(AsignacionArma objeto)
         {
@@ -126,18 +126,18 @@ namespace BelicoSysApp.Services
             var client = new HttpClient();
             client.BaseAddress = new Uri(_baseUrl);
 
-            var content = new StringContent(JsonConvert.SerializeObject(objeto), Encoding.UTF8, "application/json");            
+            var content = new StringContent(JsonConvert.SerializeObject(objeto), Encoding.UTF8, "application/json");
 
             var response = await client.PostAsync("api/AsignarArma", content);
             var json_respuesta = await response.Content.ReadAsStringAsync();
             var resultado = JsonConvert.DeserializeObject<AsignacionArma>(json_respuesta);
-            asignacioncreada = resultado;          
+            asignacioncreada = resultado;
             if (response.IsSuccessStatusCode)
             {
-               
+
                 return asignacioncreada;
             }
-            
+
 
             return null;
         }
@@ -179,8 +179,8 @@ namespace BelicoSysApp.Services
             IEnumerable<VPersonal> vArmaList = new List<VPersonal>();
             var client = new HttpClient();
             client.BaseAddress = new Uri(_baseUrl);
-            if (nombre != null) 
-            { 
+            if (nombre != null)
+            {
                 var response = await client.GetAsync($"/api/AsignarArma/Personal?nombre={nombre}&status={status}");
                 if (response != null && response.IsSuccessStatusCode)
                 {
@@ -205,7 +205,7 @@ namespace BelicoSysApp.Services
 
                 return vArmaList;
             }
-           
+
         }
 
         public async Task<VPersonal> GetVPersonaId(decimal documentId)
@@ -224,9 +224,33 @@ namespace BelicoSysApp.Services
                 objeto = resultado;
             }
 
-            return objeto; 
+            return objeto;
         }
 
-      
+        public async Task<int> GetOrders()
+        {
+            int respons = 0;
+
+            try
+            {
+                var client = new HttpClient();
+                client.BaseAddress = new Uri(_baseUrl);
+                var response = await client.GetAsync("api/Order");
+                if (response != null && response.IsSuccessStatusCode)
+                {
+
+                    var json_respuesta = await response.Content.ReadAsStringAsync();
+                    int resultado = JsonConvert.DeserializeObject<int>(json_respuesta);
+                    respons = resultado;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return respons;
+
+        }
     }
 }
