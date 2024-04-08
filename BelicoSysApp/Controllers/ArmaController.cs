@@ -76,10 +76,13 @@ namespace BelicoSysApp.Controllers
         public async Task<JsonResult> SearchArmaAll(int cantidad)
         {
 
-            ICollection<Arma> armas = await _apiArma.GetArmas();
-            IEnumerable<Arma> filtro = armas.Take(cantidad).Where(x => x.idTipoArma == 2 && x.armaAsig == false).OrderBy(x => x.idArma);
+            ICollection<Arma> armas = await _apiArma.GetArmasMasiva(cantidad,2);
+            if (armas.Count < cantidad)
+            {
+                ModelState.AddModelError("", $"No se tiene disponible esa cantidad la cantidad disponible es {armas.Count}");
+            }
 
-            return Json(filtro);
+            return Json(armas);
         }
         public async Task<IActionResult> Export()
         {

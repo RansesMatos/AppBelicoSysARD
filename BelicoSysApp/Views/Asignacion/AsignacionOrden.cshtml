@@ -58,35 +58,42 @@
         <button type="button" class="btn btn-primary" onclick="loadDropdownData4()">Buscar</button>
 
     </div>
-    <form id="formOrdenMaterial" action="/Asignacion/saveOrder/">
+    <form id="formOrdenMaterial" asp-controller="Asignacion" asp-action="saveOrder" method="post" enctype="multipart/form-data">
         <div class="row">
-
+            <input type="hidden" name="orderNumber" />
             <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
                 <label class="form-label" for="MilitarNo">Nombre:</label>
-                <select class="form-select" id="MilitarNo" name="MilitarNo" onclick="loadDocDataOrden()" style="width: auto">
+                <select class="form-select" id="MilitarNo" name="MilitarNo" style="width: auto">
                 </select>
                 <input type="hidden" name="MilitarNo" />
             </div>
         </div>
         <label>Motivo:</label>
-        <select class="form-select" id="motivo" name="motivo">
-            <option value="1">Pratica</option>
-            <option value="1">Marcha</option>
-            <option value="2">Desfile</option>
+        <select class="form-select" id="Motivo" name="Motivo">
+            <option value="Pratica">Pratica</option>
+            <option value="Marcha">Marcha</option>
+            <option value="Desfile">Desfile</option>
         </select>
 
         <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
             <label for="imageFile">Subir Documento de Orden Asignacion:</label>
             <input type="file" name="imageFile" />
         </div>
+        <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
+            <input type="number" id="Orden_total" name="Orden_total"  placeholder="Ingresar la cantidad" />
+        </div>
+
+        <button type="button" class="btn btn-primary" id="btnSelectOrderDetalle">Cargar selección</button>
+
+
         <!-- Botón que activa el modal para seleccionar materiales -->
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalMateriales">
+         <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalMateriales">
             Seleccionar Materiales
-        </button>
+        </button>-->
 
 
         <div class="row mt-5 table-responsive" id="areaTableMaterial" >
-            <table class="table caption-top" id="tableMaterials" style="width:100%">
+            <table class="table caption-top" id="tableMaterials" name="tableMaterials" style="width:100%">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
@@ -94,11 +101,14 @@
 
                     </tr>
                 </thead>
-                <tbody id="tableBody">
+                <tbody id="tableBody" name="tableBody">
                 </tbody>
             </table>
         </div>
-
+        <input type="hidden" name="Orden_total" />
+        <div class="modal-footer">
+            <button class="btn btn-primary" id="btnSaveOrder" type="submit">Guardar selección</button>
+        </div>
     </form>
 
 
@@ -126,9 +136,9 @@
         </div>
     </div>
 
-    <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="btnSaveOrder">Guardar selección</button>
-    </div>
+   <!-- <div class="modal-footer">
+        <button class="btn btn-primary" id="btnSaveOrder"  type="submit">Guardar selección</button>
+     </div>-->
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
@@ -136,7 +146,7 @@
     <script>
         $(document).ready(() => {
             getLastOrderNumber();
-            saveOrder();
+            //saveOrder();
             selectWeapons();
 
         })
@@ -146,14 +156,20 @@
 
             const table = $('#tableBody');
             btnSelectWeapon.click(() => {
-                const inpCantidad = $('#cantFusil').val();
+                const inpCantidad = $('#Orden_total').val();
                 const URL = `/Arma/SearchArmaAll/?cantidad=${inpCantidad}`;
                 $.get(URL, (resp) => {
                     console.log(resp);
+                    if (inpCantidad > resp.length) {
+                        const disponible = resp.length;
+                        alert(`La cantidad selecionada no esta Disponible, actualemtne se poseen ${disponible}
+                        Se cargaran en pantalla`)
+                    }
                     for (let i = 0; i < resp.length;i++ ){
                         table.append(`<tr><td>${i + 1}</td><td>${resp[i].armaSerie}</td><tr>`);
                     }
-                    $('#areaTableMaterial').css('visibility', 'visible');
+                    $('#areaTableMaterial').css('visibility', 'visible');                   
+
                 })
 
             });
@@ -175,9 +191,10 @@
             const url = "/Asignacion/saveOrder";
             btnSaveOrder.click((e) => {
                 console.log(e);
+                console.log(formData);
                 $.post(url, formData, (resp) => {
                     console.log(resp)
-                    $('#areaTableMaterial').css('visibility', 'visible');
+                   
                 })
 
             });

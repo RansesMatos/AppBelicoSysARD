@@ -1,7 +1,11 @@
 ﻿using BelicoSysApp.Models;
 using BelicoSysApp.Services;
+using DocumentFormat.OpenXml.EMMA;
+using DocumentFormat.OpenXml.Vml;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
+using System.Collections;
 using System.Collections.Generic;
 using System.Web.WebPages;
 
@@ -11,9 +15,11 @@ namespace BelicoSysApp.Controllers
     {
 
         private readonly IApiServiceAsignacion _apiServiceAsignacion;
-        public AsignacionController(IApiServiceAsignacion apiServiceAsignacion)
+        private readonly IApiServiceArma _apiServiceAarma;
+        public AsignacionController(IApiServiceAsignacion apiServiceAsignacion, IApiServiceArma apiServiceAarma)
         {
             _apiServiceAsignacion = apiServiceAsignacion;
+            _apiServiceAarma = apiServiceAarma;
         }
         public async Task<IActionResult> AsignacionReport()
         {
@@ -283,16 +289,97 @@ namespace BelicoSysApp.Controllers
             return View();
         }
         [HttpPost]
-        public JsonResult saveOrder(dynamic data)
+        public  async Task<IActionResult> SaveOrder(Order data, IList<IFormFile> imageFile)
         {
-            return Json("Registro Exitos");
+            string imageRuta= "";
+            if (imageFile != null && imageFile.Count > 0)
+            {
+                foreach (var file in imageFile)
+                {
+                    // Generate a unique file name to avoid conflicts
+                    var fileName = Guid.NewGuid().ToString() + data.Orden_id.ToString() + System.IO.Path.GetExtension(file.FileName);
+                    data.Document_File = fileName;
+                    // Set the path where you want to save the image on the server
+                    var imagePath = System.IO.Path.Combine("wwwroot", "Images", fileName);
+                    imageRuta =imagePath.ToString();
+                    // Save the image file to the server
+                    using (var fileStream = new FileStream(imagePath, FileMode.Create))
+                    {
+                        file.CopyTo(fileStream);
+                    }
+                }
+            }
+
+            if (data.Orden_id == 0)
+            {
+                ICollection<Arma> filtro = await _apiServiceAarma.GetArmasMasiva(data.Orden_total,2);
+                int ultimo = await _apiServiceAsignacion.GetOrderLastNumber() + 1;
+
+                if (filtro != null) 
+                {
+                    foreach (var item in filtro) 
+                    {
+                        OrderDetalle oDetalle = new OrderDetalle
+                        {
+                            Orden_id = ultimo,
+                            ArmaSerie = item.armaSerie
+                           
+                        };     
+                        
+                    await _apiServiceAsignacion.SaveOrderDetalle(oDetalle);
+                   // await _apiServiceAarma.Edit
+                    }
+                    Console.WriteLine("detalle Guardado");
+                }
+                data.Document_File = imageRuta;
+                var respuesta =  await _apiServiceAsignacion.SaveOrder(data);
+                if (respuesta.Orden_id == 0)
+                {
+                    ModelState.AddModelError("", "Error el Numero de Serie ya esta registrado");
+                }
+                TempData["SuccessMessage"] = $"Registro Creado Con el ID {respuesta.Orden_id}";
+                ViewBag.SuccessMessage = "Item has been created successfully.";
+                return View("AsignacionOrden");
+            }
+            else
+            {
+                ModelState.AddModelError("", "Error Contacatar el Administrador");
+                return Json("Error Contacatar el Administrador");
+            }            
+
         }
         [HttpGet]
         public async Task<JsonResult> GetOrderNumber()
         {
-            int lastOrderNumber = await _apiServiceAsignacion.GetOrders();
+            int lastOrderNumber = await _apiServiceAsignacion.GetOrderLastNumber();
 
             return Json($"{lastOrderNumber + 1}");
+        }
+
+        [HttpGet]
+
+        public async Task<JsonResult> GetOrdenes() 
+        {
+            ICollection<Order> ordenes = await _apiServiceAsignacion.GetOrders();
+            
+            return Json(ordenes);
+        }
+        [HttpGet]
+        public async Task<JsonResult> GetOrderInd(int inpCantidad)
+        {
+            var itemPersona = await _apiServiceAsignacion.GetOrderIndi(inpCantidad);
+
+           
+            return Json(itemPersona);
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetOrderDExiste(string serie ,int orderId)
+        {
+            var itemPersona = await _apiServiceAsignacion.ExisteFusil(serie,orderId);
+
+
+            return Json(itemPersona);
         }
     }
 }

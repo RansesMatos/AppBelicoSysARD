@@ -30,6 +30,23 @@ namespace BelicoSysApp.Services
             return armaList;
 
         }
+        public async Task<ICollection<Arma>> GetArmasMasiva(int cantidad,int cantipo)
+        {
+            ICollection<Arma> armaList = new List<Arma>();
+            var client = new HttpClient();
+            client.BaseAddress = new Uri(_baseUrl);
+            var response = await client.GetAsync($"/Arma/ArmasMasiva?cantidad={cantidad}&cantipo={cantipo}");
+            if (response != null && response.IsSuccessStatusCode)
+            {
+
+                var json_respuesta = await response.Content.ReadAsStringAsync();
+                ICollection<Arma> resultado = JsonConvert.DeserializeObject<ICollection<Arma>>(json_respuesta);
+                armaList = resultado;
+            }
+
+            return armaList;
+
+        }
         public async Task<VArma> GetVArmaSerial(string armaSerial)
         {
             VArma vArmaList = new VArma();

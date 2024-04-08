@@ -12,13 +12,20 @@ namespace BelicoSysApp.Services
         Task<ICollection<Pertrecho>> Getpertrechos();
         Task<IEnumerable<VPersonal>> GetVPersonal(String? nombre,String? cedula ,String status);
         Task<VPersonal> GetVPersonaId(decimal documentId);
+        Task<Order> GetOrderIndi(int idorder);
 
         Task<ICollection<AsignarEstado>> GetAsigEstado();
 
         Task<AsignacionArma> Get(int idAsig);
-        Task<int> GetOrders();
+        Task<OrderDetalle> GetODetalle(int idAsig);
+        Task<ICollection<Order>> GetOrders();
+        Task<int> GetOrderLastNumber();
 
         Task<AsignacionArma> Save(AsignacionArma objeto);
+        Task<Order> SaveOrder(Order objeto);
+        Task<OrderDetalle> SaveOrderDetalle(OrderDetalle objeto);
+
+        Task<bool> ExisteFusil(string serie, int orderId);
 
         Task<bool> Edit(AsignacionArma objeto);
 

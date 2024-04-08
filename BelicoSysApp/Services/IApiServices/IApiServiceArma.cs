@@ -5,6 +5,7 @@ namespace BelicoSysApp.Services
     public interface IApiServiceArma
     {
         Task<ICollection<Arma>> GetArmas();
+        Task<ICollection<Arma>> GetArmasMasiva(int cantidad, int cantipo);
         Task<ICollection<VArma>> GetVArmas();
         Task<Arma> Get(int IdArma);
         Task<VArma> GetVArmaSerial(string armaSerial);

@@ -1,4 +1,5 @@
 ﻿using BelicoSysApp.Models;
+using DocumentFormat.OpenXml.Office2010.Word;
 using Newtonsoft.Json;
 using System.Text;
 
@@ -227,7 +228,24 @@ namespace BelicoSysApp.Services
             return objeto;
         }
 
-        public async Task<int> GetOrders()
+        public async Task<ICollection<Order>> GetOrders()
+        {
+            ICollection<Order> orderList = new List<Order>();
+            var client = new HttpClient();
+            client.BaseAddress = new Uri(_baseUrl);
+            var response = await client.GetAsync("api/Order");
+            if (response != null && response.IsSuccessStatusCode)
+            {
+
+                var json_respuesta = await response.Content.ReadAsStringAsync();
+                ICollection<Order> resultado = JsonConvert.DeserializeObject<ICollection<Order>>(json_respuesta);
+                orderList = resultado;
+            }
+
+            return orderList;
+
+        }
+        public async Task<int> GetOrderLastNumber()
         {
             int respons = 0;
 
@@ -235,7 +253,7 @@ namespace BelicoSysApp.Services
             {
                 var client = new HttpClient();
                 client.BaseAddress = new Uri(_baseUrl);
-                var response = await client.GetAsync("api/Order");
+                var response = await client.GetAsync("/Order/GetlastNumber");
                 if (response != null && response.IsSuccessStatusCode)
                 {
 
@@ -251,6 +269,91 @@ namespace BelicoSysApp.Services
             }
             return respons;
 
+        }
+
+        public async Task<Order> SaveOrder(Order objeto)
+        {
+           
+            var client = new HttpClient();
+            client.BaseAddress = new Uri(_baseUrl);
+
+            var content = new StringContent(JsonConvert.SerializeObject(objeto), Encoding.UTF8, "application/json");
+
+            var response = await client.PostAsync("api/Order", content);
+            var json_respuesta = await response.Content.ReadAsStringAsync();
+            var resultado = JsonConvert.DeserializeObject<Order>(json_respuesta);
+             Order order = resultado;
+            if (response.IsSuccessStatusCode)
+            {
+
+                return order;
+            }
+
+
+            return null;
+        }
+        public async Task<OrderDetalle> SaveOrderDetalle(OrderDetalle objeto)
+        {
+
+            var client = new HttpClient();
+            client.BaseAddress = new Uri(_baseUrl);
+
+            var content = new StringContent(JsonConvert.SerializeObject(objeto), Encoding.UTF8, "application/json");
+
+            var response = await client.PostAsync("/Order/detalle/createOrderDetalle", content);
+            var json_respuesta = await response.Content.ReadAsStringAsync();
+            var resultado = JsonConvert.DeserializeObject<OrderDetalle>(json_respuesta);
+            OrderDetalle orderd = resultado;
+            if (response.IsSuccessStatusCode)
+            {
+
+                return orderd;
+            }
+
+
+            return null;
+        }
+
+        public async Task<Order> GetOrderIndi(int idorder)
+        {
+            Order objeto = new Order();
+
+            var client = new HttpClient();
+            client.BaseAddress = new Uri(_baseUrl);
+
+            var response = await client.GetAsync($"/api/Order/{idorder}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var json_respuesta = await response.Content.ReadAsStringAsync();
+                var resultado = JsonConvert.DeserializeObject<Order>(json_respuesta);
+                objeto = resultado;
+            }
+
+            return objeto;
+
+        }
+
+        public Task<OrderDetalle> GetODetalle(int idAsig)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<bool> ExisteFusil(string serie, int orderId)
+        {
+            
+                var client = new HttpClient();
+                client.BaseAddress = new Uri(_baseUrl);
+                var response = await client.GetAsync($"Order/detalle/Existe?serie={serie}&ordenId={orderId}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return true;
+                }
+
+                return false;
+
+            
         }
     }
 }
