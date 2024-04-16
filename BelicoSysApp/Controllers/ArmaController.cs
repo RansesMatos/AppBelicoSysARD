@@ -214,20 +214,27 @@ namespace BelicoSysApp.Controllers
 
             if (model.idArma == 0)
             {
+                Zen.Barcode.CodeQrBarcodeDraw armaBarcode = Zen.Barcode.BarcodeDrawFactory.CodeQr;
+                var codigoB = armaBarcode.Draw(model.armaSerie, 120);
+
+                var fileName = Guid.NewGuid().ToString() + model.armaSerie.ToString() + Path.GetExtension(".jpg");
+                model.imagePath = fileName;
+                var imagePath = Path.Combine("wwwroot", "Images", fileName);
+
+                //using (var fileStream = new FileStream(imagePath, FileMode.Create))
+                //{
+                //    codigoB.Save(imagePath);
+                //}
+                codigoB.Save(imagePath);
+                model.BarcodePath = imagePath;
                 model.imagePath = multiimagename[0] + ";" + multiimagename[1] + ";" + multiimagename[2] + ";" + multiimagename[3];
+                model.idModelo = 1;
                 var respuesta = await _apiArma.Save(model);
                 if (respuesta.idArma == 0)
                 {
                     ModelState.AddModelError("", "Error el Numero de Serie ya esta registrado");
                 }
-                Zen.Barcode.Code128BarcodeDraw armaBarcode = Zen.Barcode.BarcodeDrawFactory.Code128WithChecksum;
-                var codigoB = armaBarcode.Draw(respuesta.armaSerie, 60);
-
-                //var imagePath = Path.Combine("wwwroot", "Images", );
-                //using (var fileStream = new Bitmap(imagePath, FileMode.Create))
-                //{
-                //    file.CopyTo(fileStream);
-                //}
+                
                 TempData["SuccessMessage"] = $"Registro Creado Con el ID {respuesta.idArma}";
                 ViewBag.SuccessMessage = $"Arma Registrada Con el ID {respuesta.idArma}";
             }

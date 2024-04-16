@@ -16,15 +16,17 @@
 
         public int idArma { get; set; }
         public int idTipoArma { get; set; }
-        public int idArmaMarca { get; set; }
+        public int IdArmaMarca { get; set; }
         public string armaCalibre { get; set; }
-        public object idModelo { get; set; }
+        public int idModelo { get; set; }
         public string armaSerie { get; set; }
         public int idAlmacen { get; set; }
         public int armaEstado { get; set; }
         public bool armaStatus { get; set; }
         public bool armaAsig { get; set; }
         public object imagePath { get; set; }
+        public string? BarcodePath { get; set; } = null!;
+        public string? ArmaNota { get; set; } = null!;
     }
 
 
