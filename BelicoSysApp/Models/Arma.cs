@@ -24,7 +24,10 @@
         public int armaEstado { get; set; }
         public bool armaStatus { get; set; }
         public bool armaAsig { get; set; }
-        public object imagePath { get; set; }
+        public string ImagePath1 { get; set; }
+        public string ImagePath2 { get; set; }
+        public string ImagePath3 { get; set; }
+        public string ImagePath4 { get; set; }
         public string? BarcodePath { get; set; } = null!;
         public string? ArmaNota { get; set; } = null!;
     }

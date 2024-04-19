@@ -3,15 +3,13 @@
 
 const { drop } = require("../../../../../../node_modules/cypress/types/lodash/index");
 
-
 // Write your JavaScript code.
-const valuesList = [];
+
 const button = document.querySelector('#Mant');
 const disableButton = () => {
     console.log("va");
     button.disabled = true;
 };
-
 button.addEventListener('click', disableButton);
 const button2 = document.querySelector('#Mant2');
 const disableButton2 = () => {
@@ -28,8 +26,6 @@ const disableButton3 = () => {
 
 button3.addEventListener('click', disableButton3);
 
-
-
 $(document).ready(function () {
     $('#IdArma').on('change', function () {
         let selectedItem = $(this).find(':selected');
@@ -38,7 +34,6 @@ $(document).ready(function () {
         $(this).attr('data-placeholder', selectedItemName);
     });
 })
-
 
 function searchName() {
     let name = document.getElementById("searchInput").value;
@@ -75,7 +70,6 @@ function deleteAsignacion(id) {
         }
     });
 }
-
 function UpdatePertrecho() {
     let description = document.getElementById("PertrechosDescripcion").value;
     //let description = document.getElementById("PertrechosDescripcion").;
@@ -99,7 +93,6 @@ function UpdatePertrecho() {
         }
     });
 }
-
 function loadDropdownData() {
     let nombrefilter = document.getElementById("searchInput").value;
     let nombrefilter2 = document.getElementById("searchInput2").value;
@@ -127,7 +120,6 @@ function loadDropdownData() {
         }
     });
 }
-
 function loadDropdownData2() {
     let nombrefilter = document.getElementById("searchInput").value;
     let nombrefilter2 = document.getElementById("searchInput2").value;
@@ -210,10 +202,8 @@ function loadDropdownData4() {
         }
     });
 }
-
-
 function loadDocData() {
-    let idfilter = document.getElementById("AsignacionNombre").value;
+    let idfilter = document.getElementById("MilitarNo").value;
     $.ajax({
         url: 'PeronaId',
         type: 'GET',
@@ -222,9 +212,10 @@ function loadDocData() {
         },
         success: function (data) {
             console.log(data)
-            let documentId = $('#AsignacionDocumento1');
+            let documentId = $('#AsignacionDocumento');
             documentId.empty(); // Clear existing options
-            document.getElementById("AsignacionDocumento").textContent = 'Documento: ' + data;
+            document.getElementById("AsignacionDocumento1").textContent = 'Documento: ' + data;
+            document.getElementById("AsignacionDocumento").textContent =  data;
         },
         error: function (xhr, status, error) {
             console.error('Error Cargando Cedula data: ' + error);
@@ -238,9 +229,10 @@ function loadDocData() {
         },
         success: function (datar) {
             console.log(datar)
-            let rango = $('#Asignacionrango1');
+            let rango = $('#Asignacionrango');
             rango.empty(); // Clear existing options
-            document.getElementById("Asignacionrango").textContent = 'Rango: ' + datar;
+            document.getElementById("Asignacionrango1").textContent = 'Rango: ' + datar;
+            document.getElementById("Asignacionrango").textContent = datar;
             rango.val(datar)
         },
         error: function (xhr, status, error) {
@@ -255,9 +247,12 @@ function loadDocData() {
         },
         success: function (datan) {
             console.log(datan)
-            let noMilitar = $('#AsignacionNoRango1');
+            let noMilitar = $('#AsignacionNoRango');
+            let mNombre = $('#AsignacionNombre');
             noMilitar.empty(); // Clear existing options
-            document.getElementById("AsignacionNoRango").textContent = 'NoMilitar: ' + datan.militarNo;
+            document.getElementById("AsignacionNoRango1").textContent = 'NoMilitar: ' + datan.militarNo;
+            document.getElementById("AsignacionNoRango").textContent = datan.militarNo;
+            document.getElementById("AsignacionNombre").textContent = datan.nombres;
             noMilitar.val(datan.nombres)
         },
         error: function (xhr, status, error) {
@@ -320,7 +315,6 @@ function loadDocDataOrden() {
     });
 
 }
-
 function loadDocDataAsigCert() {
     let idfilter = document.getElementById("AsignacionNombreCert").value;
     $.ajax({
@@ -375,7 +369,6 @@ function loadDocDataAsigCert() {
     });
 
 }
-
 function showNotification(message) {
     const notification = document.getElementById('notification');
     notification.innerHTML = message;
@@ -386,7 +379,6 @@ function showNotification(message) {
         notification.style.display = 'none';
     }, 5000); // Hide after 5 seconds (adjust as needed)
 }
-
 function loadDropdownArma() {
     let nombrefilter = document.getElementById("searchArmaInput").value;
     $.ajax({
@@ -472,58 +464,7 @@ function ExportPDFCertificate() {
         }
     });
 }
-function addValue() {
-    const enteredValue = document.getElementById('IdPertrechos').value;
-    valuesList.push(enteredValue);
-    updateValuesTable();
-};
-function removeValue(index) {
-    valuesList.splice(index, 1);
-    updateValuesTable();
-};
 
-function updateValuesTable() {
-
-    const valuesTableContainer = document.getElementById('valuesTable');
-    valuesTableContainer.innerHTML = '<h3>Pertrechos asignados:</h3>';
-
-    if (valuesList.length === 0) {
-        valuesTableContainer.innerHTML += '<p>No values added yet.</p>';
-    } else {
-        const table = document.createElement('table');
-        table.className = 'table table-bordered';
-        const tbody = document.createElement('tbody');
-
-        valuesList.forEach((value, index) => {
-            const row = document.createElement('tr');
-            const indexCell = document.createElement('td');
-            indexCell.textContent = index + 1;
-            const valueCell = document.createElement('td');
-            valueCell.textContent = value;
-            const inputVal = document.createElement('input');
-            inputVal.type = 'number';
-            const removeCell = document.createElement('td');
-            const btnRemove = document.createElement('button');
-            btnRemove.textContent = 'Remover';
-            btnRemove.className = 'btn btn-danger btn-sm';
-            btnRemove.style.color = 'Black';
-            btnRemove.onclick = () => removeValue(index);
-            removeCell.appendChild(btnRemove);
-
-
-            row.appendChild(btnRemove);
-            row.appendChild(valueCell);
-            row.appendChild(inputVal);
-
-            tbody.appendChild(row);
-        });
-
-        table.appendChild(tbody);
-        valuesTableContainer.appendChild(table);
-    }
-
-
-}
 
 
 function confirmarAccion({ callBackAceptar, callbackCancelar, titulo }) {

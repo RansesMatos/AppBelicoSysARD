@@ -5,6 +5,7 @@ namespace BelicoSysApp.Services
     public interface IApiServiceAsignacion
     {
         Task<ICollection<AsignacionArma>> GetAsignaciones();
+        Task<ICollection<AsignacionPertrecho>> GetAsignacionesPertrecho();
         Task<ICollection<VArma>> GetVArmas();
         Task<VArma> GetVArmaSerial(string armaSerial);
         Task<ICollection<VArma>> GetVArmasF();
@@ -13,6 +14,7 @@ namespace BelicoSysApp.Services
         Task<IEnumerable<VPersonal>> GetVPersonal(String? nombre,String? cedula ,String status);
         Task<VPersonal> GetVPersonaId(decimal documentId);
         Task<Order> GetOrderIndi(int idorder);
+        Task<AsignacionPertrecho> GetAsigPertrecho(int idAsigPertrecho);
 
         Task<ICollection<AsignarEstado>> GetAsigEstado();
 
@@ -23,6 +25,7 @@ namespace BelicoSysApp.Services
 
         Task<AsignacionArma> Save(AsignacionArma objeto);
         Task<Order> SaveOrder(Order objeto);
+        Task<AsignacionPertrecho> SaveAsigPertrecho(AsignacionPertrecho objeto);
         Task<OrderDetalle> SaveOrderDetalle(OrderDetalle objeto);
 
         Task<bool> ExisteFusil(string serie, int orderId);
@@ -30,5 +33,9 @@ namespace BelicoSysApp.Services
         Task<bool> Edit(AsignacionArma objeto);
 
         Task<bool> Delete(int idProducto);
+        Task<bool> DeleteAsignacionPertrecho(int idAsigPertercho);
+
+
+
     }
 }

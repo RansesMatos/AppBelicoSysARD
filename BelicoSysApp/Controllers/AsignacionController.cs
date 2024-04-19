@@ -182,7 +182,7 @@ namespace BelicoSysApp.Controllers
                 listaEstDto.Add(asignarEstado);
             }
             ViewBag.IdArma = new SelectList(listaDto, "IdArma", "ArmaSerie");
-            ViewBag.pertrecho = new SelectList(listaDtop, "PertrechosDescripcion", "PertrechosDescripcion");
+            ViewBag.pertrecho = new SelectList(listaDtop, "IdPertrechos", "PertrechosDescripcion");
             ViewBag.AsignacionEstado = new SelectList(listaEstDto, "IdAsignacionEstado", "AsignacionEstadoDescripcion");
             ViewBag.AsignacionTipo = new SelectList(listaEstDto, "IdAsignacionEstado", "AsignacionEstadoDescripcion");
             ViewBag.SuccessMessage = null;
@@ -381,6 +381,47 @@ namespace BelicoSysApp.Controllers
 
             return Json(itemPersona);
         }
+
+        [HttpGet]
+
+        public async Task<JsonResult> GetAsignacionPertrechos()
+        {
+            ICollection<AsignacionPertrecho> asigPertrecho = await _apiServiceAsignacion.GetAsignacionesPertrecho();
+
+            return Json(asigPertrecho);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AsignacionPertrechoCreate(AsignacionPertrecho model)
+        {
+
+            if (model.Id_Asignacion_pertrecho == 0)
+            {
+                var respuesta = await _apiServiceAsignacion.SaveAsigPertrecho(model);
+                if (respuesta.Id_Asignacion_pertrecho == 0)
+                {
+                    ModelState.AddModelError("", "Error el Numero de Serie ya esta registrado");
+                }
+                //TempData["SuccessMessage"] = $"Registro Creado Con el ID {respuesta.Id_Asignacion_pertrecho}";
+            }
+            else
+            {
+                ModelState.AddModelError("", "Error Contacatar el Administrador");
+            }
+
+            return Ok();
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetasignacionPertrecho(int AsigP)
+        {
+            var itemPersona = await _apiServiceAsignacion.GetAsigPertrecho(AsigP);
+
+            return Json(itemPersona);
+        }
+
+
+
     }
 }
 

@@ -4,17 +4,15 @@
 }
 
 
-    <!-- Button to trigger the modal -->
-
-
-
+<!-- Button to trigger the modal -->
 @if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
 {
     <script>
         // Call the JavaScript function to display the notification
         showNotification('@Html.Raw(ViewBag.SuccessMessage)');
     </script>
-}    
+
+}
 
 
 <body>
@@ -24,18 +22,25 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="searchModalLabel">Ingrese Numero de Orden</h5>
-                    
+
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <input type="text" id="searchInput" name="nombre" class="form-control" placeholder="Ingrese Numero de Orden" />
-                    <span id="orderNumber">Numero de Armamento a Devolver.</span>  
-
-                    <div id="elementos">
-
+                      <div class="row">
+                       <div class="col-md-auto">                         
+                              <input type="text" id="searchInput" name="nombre" class="form-control" placeholder="Ingrese Numero de Orden" />
+                        </div>
+                    
+                       <div class="col-md-auto">
+                            <button type="button" id="btnBuscar" name="btnBuscar" class="btn btn-primary">Buscar</button>
+                       </div>
+                         <div id="elementos">
+                    </div>
                     </div>
 
-                    <div class="row mt-5 table-responsive" id="areaTableMaterial">
+                  
+
+                    <div class="row table-responsive" id="areaTableMaterial">
                         <table class="table caption-top" id="tableMaterials" name="tableMaterials" style="width:100%">
                             <thead>
                                 <tr>
@@ -51,7 +56,6 @@
                 </div>
                 <div class="modal-footer" id="modalfooter">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" id="btnBuscar" name="btnBuscar" class="btn btn-primary">Buscar</button>
                 </div>
             </div>
         </div>
@@ -70,47 +74,47 @@
             getorderNumber();
             RebajarArmar();
             ValidarElementos();
-          
+
 
         });
         const orderNum = $('#searchInput').val();
 
         function getorderNumber() {
-            $('#elementos').html('<input type="text" id="nuevoInput" placeholder="Ingresar Numero de Serie">');
+            $('#elementos').html('<input type="text" id="nuevoInput" class="form-control" placeholder="Ingresar Numero de Serie">');
             $('#elementos').append(' <button type="button" id="btnValidar" name="btnValidar" class="btn btn-primary">Agregar</button>');
             $('#nuevoInput').css('visibility', 'hidden');
             $('#btnValidar').css('visibility', 'hidden');
             $('#btnCompletar').css('visibility', 'hidden');
             const btnSelectWeapon = $('#btnBuscar');
-           
+
             btnSelectWeapon.click(() => {
                 const inpCantidad = $('#searchInput').val();
                 const URL = "/Asignacion/GetOrderInd";
                 $.get(URL, { inpCantidad }, (resp) => {
                     console.log(resp);
                     const numberModifyed = resp.orden_total;
-                    if (numberModifyed > 0) {
-                       $('#orderNumber').html(`Numero de Armamento a Devolver: ${numberModifyed}`);
+                        if (numberModifyed > 0) {
+                        $('#orderNumber').html(`Numero de Armamento a Devolver: ${numberModifyed}`);
                         $('#btnBuscar').css('visibility', 'hidden');
                         $('#nuevoInput').css('visibility', 'visible')
                         $('#btnValidar').css('visibility', 'visible')
                         $('#btnCompletar').css('visibility', 'visible');
                     }
-                    
+
                 })
-                
+
             });
-            
+
             $('#modalfooter').append(' <button type="button" id="btnCompletar" name="btnCompletar" class="btn btn-primary">Completar</button>');
 
         }
         let elementosA = []
         function RebajarArmar() {
-           
+
             const btnvalidar = $('#btnValidar');
-            
+
             const table = $('#tableBody');
-            btnvalidar.click((e) => {
+                    btnvalidar.click((e) => {
                 table.empty();
                 console.log(e)
                 let devolver = $('#orderNumber').val();
@@ -121,37 +125,37 @@
                     elementosA.push(Nserie);
                 }
                 elementosA.forEach((elemento, index) => {
-                    table.append(`<tr><td>${index + 1}</td><td>${elemento}</td></tr>`);
+                      const URL = `/Asignacion/GetOrderDExiste/?serie=${elemento}&orderId=${orderNum}`;
+                        $.get(URL, (resp) => {
+                            const colorBg = resp ? '#22bb33' : '#bb2124';
+                               table.append(`<tr><td style='background-color:${colorBg};color:#fff'>${index + 1}</td><td style='background-color:${colorBg};color:#fff'>${elemento}</td></tr>`);
+                        });
                 });
 
                 $('#areaTableMaterial').css('visibility', 'visible');
 
                 console.log(elementosA)
-                let i = 0;     
+                let i = 0;
 
 
             });
         }
         function ValidarElementos() {
-            
+            const table = $('#tableBody');
             let devolver = $('#orderNumber').val();
-           // const orderNum = $('#searchInput').val();
-            const btnCompletar = $('#btnCompletar')
+            // const orderNum = $('#searchInput').val();
+            const btnCompletar = $('#btnCompletar');
+
             btnCompletar.click
-            ((e) => {
+                ((e) => {
                     const orderNum = $('#searchInput').val();
                     console.log(e)
                     console.log(orderNum)
 
                     elementosA.forEach((elemento, index) => {
-                        const URL = `/Asignacion/GetOrderDExiste/?serie=${elemento}&orderId=${orderNum}`;
-                    $.get(URL, (resp) => {
-
-                        console.log(resp)
-
-                    });
+                      
+                    })
                 })
-            })
 
 
         }
@@ -168,13 +172,13 @@
                         // Crear y añadir el elemento de la orden al contenedor
                         const ordenElement = document.createElement('div');
                         ordenElement.innerHTML = `
-                                    <h3>Orden ID: ${orden.orden_id}</h3>
-                                    <p>Descripción: ${orden.motivo}</p>
-                                    <p>Estado: ${orden.orden_status}</p>
-                                    <p>Catidad Solicitada: ${orden.orden_total}</p>
-                                    <p>Fecha de Solicitud: ${orden.orden_fecha}</p>
-                                             ${orden.orden_status ? ' <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#searchModal">Cerrar Orden</button>' : '<button>Consultar Orden </button>'}
-                                `;
+                                            <h3>Orden ID: ${orden.orden_id}</h3>
+                                            <p>Descripción: ${orden.motivo}</p>
+                                            <p>Estado: ${orden.orden_status}</p>
+                                            <p>Catidad Solicitada: ${orden.orden_total}</p>
+                                            <p>Fecha de Solicitud: ${orden.orden_fecha}</p>
+                                                     ${orden.orden_status ? ' <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#searchModal">Cerrar Orden</button>' : '<button>Consultar Orden </button>'}
+                                        `;
                         ordenesContainer.appendChild(ordenElement);
                     });
                 })

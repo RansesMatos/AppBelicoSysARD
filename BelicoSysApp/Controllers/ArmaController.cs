@@ -53,6 +53,7 @@ namespace BelicoSysApp.Controllers
                     table.AddCell(item.ArmaCalibre);
                     table.AddCell(item.ArmaStatus.ToString());
                     table.AddCell(item.ArmaSerie);
+                    table.AddCell(item.BarcodePath);
                     table.CompleteRow();
 
 
@@ -200,10 +201,10 @@ namespace BelicoSysApp.Controllers
                 {
                     // Generate a unique file name to avoid conflicts
                     var fileName = Guid.NewGuid().ToString() + model.armaSerie.ToString() + Path.GetExtension(file.FileName);
-                    model.imagePath = fileName;
+                    model.ImagePath1 = fileName;
                     // Set the path where you want to save the image on the server
                     var imagePath = Path.Combine("wwwroot", "Images", fileName);
-                    multiimagename.Add(imagePath.ToString());
+                    multiimagename.Add(fileName.ToString());
                     // Save the image file to the server
                     using (var fileStream = new FileStream(imagePath, FileMode.Create))
                     {
@@ -214,11 +215,11 @@ namespace BelicoSysApp.Controllers
 
             if (model.idArma == 0)
             {
-                Zen.Barcode.CodeQrBarcodeDraw armaBarcode = Zen.Barcode.BarcodeDrawFactory.CodeQr;
+                Zen.Barcode.Code128BarcodeDraw armaBarcode = Zen.Barcode.BarcodeDrawFactory.Code128WithChecksum;
                 var codigoB = armaBarcode.Draw(model.armaSerie, 120);
 
                 var fileName = Guid.NewGuid().ToString() + model.armaSerie.ToString() + Path.GetExtension(".jpg");
-                model.imagePath = fileName;
+                model.BarcodePath = fileName;
                 var imagePath = Path.Combine("wwwroot", "Images", fileName);
 
                 //using (var fileStream = new FileStream(imagePath, FileMode.Create))
@@ -226,8 +227,11 @@ namespace BelicoSysApp.Controllers
                 //    codigoB.Save(imagePath);
                 //}
                 codigoB.Save(imagePath);
-                model.BarcodePath = imagePath;
-                model.imagePath = multiimagename[0] + ";" + multiimagename[1] + ";" + multiimagename[2] + ";" + multiimagename[3];
+               
+                model.ImagePath1 = multiimagename[0].ToString();
+                model.ImagePath2 = multiimagename[1].ToString();
+                model.ImagePath3 = multiimagename[2].ToString();
+                model.ImagePath4 = multiimagename[3].ToString();
                 model.idModelo = 1;
                 var respuesta = await _apiArma.Save(model);
                 if (respuesta.idArma == 0)

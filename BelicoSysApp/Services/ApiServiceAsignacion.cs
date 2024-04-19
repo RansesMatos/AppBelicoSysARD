@@ -355,5 +355,79 @@ namespace BelicoSysApp.Services
 
             
         }
+
+        public async Task<ICollection<AsignacionPertrecho>> GetAsignacionesPertrecho()
+        {
+            ICollection<AsignacionPertrecho> orderList = new List<AsignacionPertrecho>();
+            var client = new HttpClient();
+            client.BaseAddress = new Uri(_baseUrl);
+            var response = await client.GetAsync("api/AsignacionPertrecho");
+            if (response != null && response.IsSuccessStatusCode)
+            {
+
+                var json_respuesta = await response.Content.ReadAsStringAsync();
+                ICollection<AsignacionPertrecho> resultado = JsonConvert.DeserializeObject<ICollection<AsignacionPertrecho>>(json_respuesta);
+                orderList = resultado;
+            }
+
+            return orderList;
+        }
+
+        public async Task<AsignacionPertrecho> GetAsigPertrecho(int idAsigPertrecho)
+        {
+            AsignacionPertrecho objeto = new AsignacionPertrecho();
+
+            var client = new HttpClient();
+            client.BaseAddress = new Uri(_baseUrl);
+
+            var response = await client.GetAsync($"/api/AsignacionPertrecho/{idAsigPertrecho}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var json_respuesta = await response.Content.ReadAsStringAsync();
+                var resultado = JsonConvert.DeserializeObject<AsignacionPertrecho>(json_respuesta);
+                objeto = resultado;
+            }
+
+            return objeto;
+        }
+
+        public async Task<AsignacionPertrecho> SaveAsigPertrecho(AsignacionPertrecho objeto)
+        {
+            _ = new AsignacionPertrecho();
+            var client = new HttpClient();
+            client.BaseAddress = new Uri(_baseUrl);
+
+            var content = new StringContent(JsonConvert.SerializeObject(objeto), Encoding.UTF8, "application/json");
+
+            var response = await client.PostAsync("api/AsignacionPertrecho", content);
+            var json_respuesta = await response.Content.ReadAsStringAsync();
+            var resultado = JsonConvert.DeserializeObject<AsignacionPertrecho>(json_respuesta);
+            AsignacionPertrecho pertrcho = resultado;
+            if (response.IsSuccessStatusCode)
+            {
+
+                return pertrcho;
+            }
+
+
+            return null;
+        }
+
+        public async Task<bool> DeleteAsignacionPertrecho(int idAsigPertercho)
+        {
+            var client = new HttpClient();
+            client.BaseAddress = new Uri(_baseUrl);
+            var response = await client.DeleteAsync($"api/AsignacionPertrecho/{idAsigPertercho}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+    
     }
 }
