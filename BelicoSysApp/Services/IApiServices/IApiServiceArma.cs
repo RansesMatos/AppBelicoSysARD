@@ -12,7 +12,7 @@ namespace BelicoSysApp.Services
 
         Task<Arma> Save(Arma objeto);
 
-        Task<bool> Edit(Arma objeto);
+        Task<bool> Edit(ArmaUpdateDto objeto);
 
         Task<bool> Delete(int idProducto);
         Task<ICollection<Almacen>> GetAlmacenes();

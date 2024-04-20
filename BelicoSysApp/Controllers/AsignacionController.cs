@@ -5,6 +5,7 @@ using DocumentFormat.OpenXml.Vml;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
+using Org.BouncyCastle.Crypto.Tls;
 using System.Collections;
 using System.Collections.Generic;
 using System.Web.WebPages;
@@ -190,25 +191,47 @@ namespace BelicoSysApp.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> AsignacionCreate(AsignacionArma model)
+        public async Task<IActionResult> AsignacionCreate(AsignacionArma model, string searchArmaInput)
         {
+            model.AsignacionEstado = 1;
+            ArmaController arma = new ArmaController();
+            
+            
 
-            if (model.IdAsignacion == 0)
+            try
             {
-                var respuesta = await _apiServiceAsignacion.Save(model);
-                if (respuesta.IdAsignacion == 0)
+                if (model.IdAsignacion == 0)
                 {
-                    ModelState.AddModelError("", "Error el Numero de Serie ya esta registrado");
+                    ArmaUpdateDto consArma = new ArmaUpdateDto
+                    {
+                        idArma = model.IdArma.Value,
+                        armaSerie = searchArmaInput,
+                        armaEstado = 6
+                    };
+
+                     await _apiServiceAarma.Edit(consArma);
+                    var respuesta = await _apiServiceAsignacion.Save(model);
+                    if (respuesta.IdAsignacion == 0)
+                    {
+                        ModelState.AddModelError("", "Error el Numero de Serie ya esta registrado");
+                    }
+                    TempData["SuccessMessage"] = $"Registro Creado Con el ID {respuesta.IdAsignacion}";
+                    ViewBag.SuccessMessage = "Item has been created successfully.";
                 }
-                TempData["SuccessMessage"] = $"Registro Creado Con el ID {respuesta.IdAsignacion}";
-                ViewBag.SuccessMessage = "Item has been created successfully.";
+                else
+                {
+                    ModelState.AddModelError("", "Error Contacatar el Administrador");
+                }
+
+                return View();
             }
-            else
+            catch (Exception e )
             {
-                ModelState.AddModelError("", "Error Contacatar el Administrador");
+               Console.WriteLine(e.ToString());
+                return View();
             }
 
-            return View();
+           
         }
 
         [HttpGet]

@@ -67,30 +67,32 @@
             <label class="form-label" for="MilitarNo">Nombre:</label>
             <select class="form-select" id="MilitarNo" name="MilitarNo" onclick="loadDocData()" style="width: auto">
         </select>
-            <input type="hidden" class="form-control" id="AsignacionNombre" name="AsignacionNombre" />
+            <input type="hidden" class="form-control" id="AsignacionNombre" name="AsignacionNombre" readonly/>
         </div>
     </div>
     <div class="row">
         <div class="mb-3">
-        <label class="form-label" for="AsignacionDocumento" id="AsignacionDocumento1" >Documento:</label>
-            <input type="hidden" class="form-control" id="AsignacionDocumento" name="AsignacionDocumento" />
+        <label class="form-label" for="Asignacion_Documento" id="AsignacionDocumento1">Documento:</label>
+            
         </div>
+        <input type="hidden" class="form-control" id="AsignacionDocumento" name="AsignacionDocumento" readonly/>
 
      <div class="mb-3">
-        <label class="form-label" id="Asignacionrango1" for="Asignacion_rango">Rango:</label>
-        <input type="hidden" id="Asignacionrango" name="AsignacionRango" readonly />
+        <label class="form-label" id="Asignacionrango1" for="Asignacion_rango">Rango:</label>            
      </div>
+        <input type="hidden" class="form-control" id="Asignacionrango" name="AsignacionRango" readonly />
 
         <div class="mb-3">
-            <label class="form-label" id="AsignacionNoRango1" for="AsignacionNoRango">NoMilitar:</label><br />
-            <input type="hidden" id="AsignacionNoRango" name="AsignacionNoRango" readonly />
+            <label class="form-label" id="AsignacionNoRango1" for="Asignacion_NORango">NoMilitar:</label><br/>
+            
         </div>
+        <input type="hidden" class="form-control" id="AsignacionNoRango" name="AsignacionNoRango" readonly />
     </div>
     <div class="row">
 
         <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
         <label class="form-label" >Arma serial:</label>
-        <input type="text" id="searchArmaInput" class="form-control" placeholder="Entra el serial del arma" /><br />
+            <input type="text" id="searchArmaInput" name="searchArmaInput" class="form-control" placeholder="Entra el serial del arma" /><br />
         <button type="button" class="btn btn-primary" onclick="loadDropdownArma()">Buscar</button><br />    
         <input type="hidden" id="IdArma1" name="IdArma" /><br />
         <label class="form-label" id="calibre">Calibre:</label> 
@@ -138,14 +140,6 @@
         <!--<in class="form-control" type="text" id="NotaAsignacion" name="NotaAsignacion" />-->
     </div>
         </div>
-@*     <div class="mb-3">
-        <label class="form-label" for="FechaAsignacion">Fecha Asignacion:</label>
-        <input class="form-control" type="date" id="FechaAsignacion" name="FechaAsignacion" />
-    </div> *@
-@*        <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
-        <label class="form-label" for="FechaDevolucion">Fecha Devolucion:</label>
-        <input class="form-control" type="date" id="FechaDevolucion" name="FechaDevolucion"  />
-        </div>*@
     </div>
         <div class="row">
         <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
@@ -173,10 +167,12 @@
     
 
     function addValue() {
+   
         const idMilitar = document.getElementById('AsignacionNoRango').innerText.split(' ')
+        const documentid = document.getElementById('AsignacionDocumento').innerText;
         if (valuesList.length == 0) {
             console.log(valuesList)
-            
+           
         }
 
         console.log(valuesList)
@@ -235,8 +231,7 @@
         
         const idMilitar = document.getElementById('AsignacionNoRango').innerText.split(' ');
 
-        const url = "/Asignacion/AsignacionPertrechoCreate";
-        
+        const url = "/Asignacion/AsignacionPertrechoCreate";  
         
 
 

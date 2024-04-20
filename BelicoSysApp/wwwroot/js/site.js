@@ -211,11 +211,12 @@ function loadDocData() {
             id: idfilter
         },
         success: function (data) {
-            console.log(data)
+            console.log("datos" + data)
             let documentId = $('#AsignacionDocumento');
-            documentId.empty(); // Clear existing options
+            // Clear existing options
             document.getElementById("AsignacionDocumento1").textContent = 'Documento: ' + data;
-            document.getElementById("AsignacionDocumento").textContent =  data;
+            document.getElementById("AsignacionDocumento").textContent = data;
+            documentId.val(data)
         },
         error: function (xhr, status, error) {
             console.error('Error Cargando Cedula data: ' + error);
@@ -247,13 +248,13 @@ function loadDocData() {
         },
         success: function (datan) {
             console.log(datan)
-            let noMilitar = $('#AsignacionNoRango');
+             let noMilitar = $('#AsignacionNoRango');
             let mNombre = $('#AsignacionNombre');
-            noMilitar.empty(); // Clear existing options
-            document.getElementById("AsignacionNoRango1").textContent = 'NoMilitar: ' + datan.militarNo;
-            document.getElementById("AsignacionNoRango").textContent = datan.militarNo;
+            document.getElementById("AsignacionNoRango1").textContent = 'NoMilitar: ' + datan.militarNo;            
             document.getElementById("AsignacionNombre").textContent = datan.nombres;
-            noMilitar.val(datan.nombres)
+            document.getElementById("AsignacionNoRango").textContent = datan.militarNo;
+            mNombre.val(datan.nombres)
+            noMilitar.val(datan.militarNo)
         },
         error: function (xhr, status, error) {
             console.error('Error Cargando Cedula data: ' + error);

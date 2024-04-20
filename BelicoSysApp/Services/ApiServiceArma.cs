@@ -1,4 +1,5 @@
 ﻿using BelicoSysApp.Models;
+using DocumentFormat.OpenXml.EMMA;
 using Newtonsoft.Json;
 using System;
 using System.Text;
@@ -117,9 +118,25 @@ namespace BelicoSysApp.Services
             return objeto;
         
         }
-        public Task<bool> Edit(Arma objeto)
+        public async Task<bool> Edit(ArmaUpdateDto objeto)
         {
-            throw new NotImplementedException();
+            _ = new Arma();
+            var client = new HttpClient();
+            client.BaseAddress = new Uri(_baseUrl);
+
+            var content = new StringContent(JsonConvert.SerializeObject(objeto), Encoding.UTF8, "application/json");
+
+            var response = await client.PatchAsync($"/api/Arma/{objeto.idArma}", content);
+            var json_respuesta = await response.Content.ReadAsStringAsync();
+            var resultado = JsonConvert.DeserializeObject<ArmaUpdateDto>(json_respuesta);
+            ArmaUpdateDto armaUpdate = resultado;
+            if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+            {
+
+                return response.IsSuccessStatusCode;
+            }
+
+            return false;
         }
         public async Task<Arma> Save(Arma objeto)
         {
