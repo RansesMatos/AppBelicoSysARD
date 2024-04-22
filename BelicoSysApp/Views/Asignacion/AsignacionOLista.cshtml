@@ -110,36 +110,72 @@
         }
         let elementosA = []
         function RebajarArmar() {
-
             const btnvalidar = $('#btnValidar');
-
             const table = $('#tableBody');
-                    btnvalidar.click((e) => {
-                table.empty();
-                console.log(e)
-                let devolver = $('#orderNumber').val();
+            const areaTableMaterial = $('#areaTableMaterial'); // Cachea este selector para optimizar
+
+            btnvalidar.click(() => {
+                table.empty(); // Limpia la tabla en cada clic
+
                 const orderNum = $('#searchInput').val();
                 let Nserie = $('#nuevoInput').val();
-                elementosA.push(Nserie);
+
+                // Verifica si el número de serie ya está en el array antes de agregarlo
                 if (!elementosA.includes(Nserie)) {
                     elementosA.push(Nserie);
                 }
-                elementosA.forEach((elemento, index) => {
-                      const URL = `/Asignacion/GetOrderDExiste/?serie=${elemento}&orderId=${orderNum}`;
-                        $.get(URL, (resp) => {
-                            const colorBg = resp ? '#22bb33' : '#bb2124';
-                               table.append(`<tr><td style='background-color:${colorBg};color:#fff'>${index + 1}</td><td style='background-color:${colorBg};color:#fff'>${elemento}</td></tr>`);
-                        });
+
+                // Usa Promise.all para manejar las solicitudes HTTP de manera asíncrona pero ordenada
+                Promise.all(elementosA.map((elemento, index) => {
+                    const URL = `/Asignacion/GetOrderDExiste/?serie=${elemento}&orderId=${orderNum}`;
+                    return $.get(URL).then(resp => ({
+                        colorBg: resp ? '#22bb33' : '#bb2124',
+                        index,
+                        elemento
+                    }));
+                })).then(results => {
+                    results.forEach(({ colorBg, index, elemento }) => {
+                        table.append(`<tr><td style='background-color:${colorBg};color:#fff'>${index + 1}</td><td style='background-color:${colorBg};color:#fff'>${elemento}</td></tr>`);
+                    });
+                }).catch(error => {
+                    console.error('Error realizando las solicitudes:', error);
                 });
 
-                $('#areaTableMaterial').css('visibility', 'visible');
-
-                console.log(elementosA)
-                let i = 0;
-
-
+                areaTableMaterial.css('visibility', 'visible'); // Hacer visible el área después de procesar
+                console.log(elementosA);
             });
         }
+        // function RebajarArmar() {
+
+        //     const btnvalidar = $('#btnValidar');
+
+        //     const table = $('#tableBody');
+        //             btnvalidar.click((e) => {
+        //         table.empty();
+        //         console.log(e)
+        //         let devolver = $('#orderNumber').val();
+        //         const orderNum = $('#searchInput').val();
+        //         let Nserie = $('#nuevoInput').val();
+        //         elementosA.push(Nserie);
+        //         if (!elementosA.includes(Nserie)) {
+        //             elementosA.push(Nserie);
+        //         }
+        //         elementosA.forEach((elemento, index) => {
+        //               const URL = `/Asignacion/GetOrderDExiste/?serie=${elemento}&orderId=${orderNum}`;
+        //                 $.get(URL, (resp) => {
+        //                     const colorBg = resp ? '#22bb33' : '#bb2124';
+        //                        table.append(`<tr><td style='background-color:${colorBg};color:#fff'>${index + 1}</td><td style='background-color:${colorBg};color:#fff'>${elemento}</td></tr>`);
+        //                 });
+        //         });
+
+        //         $('#areaTableMaterial').css('visibility', 'visible');
+
+        //         console.log(elementosA)
+        //         let i = 0;
+
+
+        //     });
+        // }
         function ValidarElementos() {
             const table = $('#tableBody');
             let devolver = $('#orderNumber').val();

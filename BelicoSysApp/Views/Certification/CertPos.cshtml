@@ -3,68 +3,282 @@
 }
 
     <meta charset="UTF-8">
-    <title>Certificación de No Posesión de Arma</title>
-    <link rel="stylesheet" href="~/css/style.css"> <!-- Asegúrate de tener este archivo CSS para los estilos -->
+    <title>Formulario No.25</title>
+   @* <link rel="stylesheet" href="~/css/style.css"> <!-- Asegúrate de tener este archivo CSS para los estilos --> *@
 
 
     <div>
-        <h5 id="searchModalLabel">Buscar Miembro Para Certificación de No Posesión de Arma</h5>
-        <input type="text" id="searchByName" class="form-control" placeholder="Ingrese un nombre" />
+        <h5 id="searchModalLabel">Buscar Miembro Para Formulario 25.</h5>
+        <input type="text" id="searchByCarnet" class="form-control" placeholder="Ingrese un NoCarnet" />
         <input type="text" id="searchByCedula" class="form-control" placeholder="Ingrese una cédula" />
-        <button type="button" class="btn btn-primary" onclick="searchMember()">Buscar</button>
+    <button type="button" class="btn btn-primary" id="btnBuscar" name="btnBuscar">Buscar</button>
     </div>
     <div id="notification"></div>
 
-    <div class="mb-3">
-        <label for="AsignacionNombreCert">Nombre:</label>
-        <select id="AsignacionNombreCert" name="AsignacionNombreCert" class="form-select">
-            <!-- Las opciones se cargarán aquí -->
-        </select>
-    </div>
+<div class="row">
 
-    <div class="content">
+    <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
+        <label class="form-label" for="MilitarNo">Nombre:</label>
+        <select class="form-select" id="MilitarNo" name="MilitarNo" onclick="loadDropDownDataCert()" style="width: auto">
+        </select>
+        <input type="hidden" class="form-control" id="AsignacionNombre" name="AsignacionNombre" readonly />
+    </div>
+    <button type="button" class="btn btn-primary" id="btnSelect" name="btnSelect">Seleccionar</button>
+
+</div>
+
+    <div class="content" id="cuerpo" name="cuerpo">
         <p>Form. No 25, ARD.</p>
         <h2>ARMADA DE REPÚBLICA DOMINICANA</h2>
         <h3>RECIBO MEMORANDUM</h3>
         <p>Santo Domingo, Este.</p>
         <p>Lugar</p>
         <div class="line">------------------------</div>
-        <p>@ViewBag.fecha</p>
+        <p id="fecha"></p>
         <p>Fecha</p>
         <div class="line">------------------------</div>
         <p>ACUSO RECIBO AL, INTENDENTE DEL MAT.BELICO, ARD</p>
         <div class="line">------------------------</div>
-        <p>De los efectos siguientes para uso oficial del @ViewBag.rango @ViewBag.nombreCompleto</p>
+        <p>De los efectos siguientes para uso oficial del </p>
+        <span id="rango" name="rango"></span>
+        <span id="nombre" name="nombre"></span>
+        <input type="hidden" id="idarma" name="idarma"/>
         <p>propiedades de la Armada de la ARD y me comprometo a devolverlos cuando sean requeridos por la autoridad competente.</p>
 
         <div class="line">------------------------</div>
 
         <h3>CANTIDAD    ARTICULO    VALOR</h3>
-        <ul>
-            @foreach (var weaponDetail in ViewBag.WeaponDetails)
-            {
-                <li>@weaponDetail</li>
-            }
+        <ul id="invetario" name="invetario">
+            
         </ul>
+    <ul id="invetario2" name="invetario2">
+    </ul>   
+
         <div class="line">-x-x-x-x-x-x-x-x-x-x-x-x--x-x-x-x-x-x-x-x-</div>
-        <p>Nota: CARGADA MEDIANTE OFICIO NO. @ViewBag.NoOficio,</p>
-        <p>DE FECHA @ViewBag.FECHAASIGNACION, DEL COMANDANTE GENERAL,</p>
-        <p>PARA SERVICIO CON EL @ViewBag.NOMBRESERVICIO, ARD</p>
 
-        <h2>@ViewBag.NOMBRECOMPLETO</h2>
-        <h3>@ViewBag.rango</h3>
-        <p>@ViewBag.Cedula</p>
-        <p>@ViewBag.direccion, TEL. @ViewBag.tel.</p>
-
-        <h2>@ViewBag.Director</h2>
-        <h3>@ViewBag.rango Director</h3>
-        <p>INTENDENTE DEL MAT.BELICO, ARD</p>
-
-        <div class="actions">
-            <form asp-controller="Certification" asp-action="ReportIdCard" method="post" target="_blank">
-                <button type="submit" class="btn btn-primary">Imprimir en Pantalla</button>
-            </form>
-            <a asp-controller="Certification" asp-action="ReportIdCard" class="btn btn-success" style="background-color:red">Exportar a PDF</a>
-        </div>
+        
+        <span id="nombred" name="nombred"></span>
+        <span id="rangod" name="rangod"></span>
+        <span id="cedula" name="cedula"></span>
+        <span id="dir" name="dir"></span>
+         <h2>YAN LIROY VARGAS CAMINERO</h2>
+        <h3>CAPITÁN DE NAVÍO</h3>
+        <p>INTENDENTE DEL MAT.BELICO, ARD</p>        
     </div>
 
+<div class="actions">
+@*     <form asp-controller="Certification" asp-action="Crearpdf25" method="post" target="_blank">
+        <button type="submit" class="btn btn-primary">Imprimir en Pantalla</button>
+    </form> *@
+    <a id="btnpdf" name="btnpdf" class="btn btn-success" style="background-color:red">Exportar a PDF</a>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(() => {
+        loadDropDownDataCert();
+        loadDocDataCert();
+        Pdf();
+
+
+    });
+    function loadDropDownDataCert() {
+        const btnSelectWeapon = $('#btnBuscar');
+
+        btnSelectWeapon.click(() => {
+            let carnet = document.getElementById("searchByCarnet").value;
+            let cedula = document.getElementById("searchByCedula").value;
+            const URL = "/Asignacion/SearchPeople";
+            $.get(URL, { carnet, cedula }, (resp) => {
+                console.log(resp);
+                let dropdown = $('#MilitarNo');
+                dropdown.empty(); // Clear existing options
+
+                // Add options to the dropdown
+                $.each(resp, function (index, item) {
+                    dropdown.append($('<option id="selecion1" name="selecion1"></option>').text(item.rangos + " " + item.nombres + " - ( " + item.cedula + " )").val(item.militarNo));
+                });
+
+            })
+        });
+    }
+    function loadDocDataCert() {
+        const btnSelector = $('#btnSelect');
+        btnSelector.click(() => {
+            const selectedOption = $('option').val();
+            console.log(selectedOption);
+            clearFields();
+
+            const assignURL = "/Asignacion/GetAsignaciones";
+            const pertURL = "/Asignacion/GetAsignacionPertrechosM";
+
+            fetchAssignments(assignURL, selectedOption);
+            fetchInventoryItemsP(pertURL, selectedOption);
+        });
+    }
+
+    function clearFields() {
+        $('#rango, #nombre, #rangod, #nombred, #dir, #cedula').empty();
+    }
+
+    function fetchAssignments(url, noRango) {
+        $.get(url, { noRango }, (response) => {
+            if (response && response.length > 0) {
+                clearFields();
+                console.log(response);
+                updateAssignmentDetails(response);
+                $.each(response, (index, item) => {
+                    fetchInventoryItems(response[index].idArma);
+                })
+            }
+        });
+    }
+
+    function updateAssignmentDetails(assignments) {
+        let uniqueAssignments = getUnique(assignments, 'asignacionRango', 'asignacionNombre');
+
+        const rango = $('#rango');
+        const nombre = $('#nombre');
+        const rango2 = $('#rangod');
+        const nombre2 = $('#nombred');
+        const dir = $('#dir');
+        const cedula = $('#cedula');
+
+        $.each(uniqueAssignments, (index, item) => {
+            rango.append($('<p>').text(item.asignacionRango));
+            nombre.append($('<p>').text(item.asignacionNombre));
+            nombre2.append($('<h2>').text(item.asignacionNombre));
+            rango2.append($('<h3>').text(item.asignacionRango));            
+            dir.append($('<p>').text(item.numeroCarnet));
+            cedula.append($('<p>').text(item.cedula));
+        });
+    }
+    function getUnique(arr, ...identifiers) {
+        const uniqueData = new Map();
+
+        arr.forEach((item) => {
+            const key = identifiers.map(id => item[id]).join('|');
+            if (!uniqueData.has(key)) {
+                uniqueData.set(key, item);
+            }
+        });
+
+        return Array.from(uniqueData.values());
+    }
+
+    function fetchInventoryItems(idArma) {
+        const inventoryURL = "/Asignacion/GetVarmaAll";
+        $.get(inventoryURL, { idArma }, (response) => {
+            if (response && response.length > 0 ) {
+                console.log(response);
+
+                updateInventory(response);
+            }
+        });
+    }
+
+    function updateInventory(items) {
+        const inventory = $('#invetario');
+        $.each(items, (index, item) => {            
+            const text = `01.- ${item.taNombre} MARCA ${item.armaMarcaDescripcion} CAL.${item.armaCalibre} NO.${item.armaSerie}`;
+            inventory.append($('<li>').text(text));
+        });
+    }
+
+    function fetchInventoryItemsP(url, militarNo) {
+        $.get(url, { militarNo }, (response) => {
+            if (response) {
+                console.log(response);
+                updateInventoryP(response);
+            }
+        });
+    }
+    function Pdf(url, selectedOption) {
+        const btnSelector = $('#btnpdf');
+        const pdfURL = "/Certification/Crearpdf25"
+        btnSelector.click(() => {
+            const selectedOption = $('option').val();
+            $.get(pdfURL, { selectedOption }, (response) => {
+                if (response) {
+                    console.log(response);
+                    updateInventoryP(response);
+                }
+            });
+        })
+    }
+
+    function updateInventoryP(items) {
+        const inventory = $('#invetario2');
+        $.each(items, (index, item) => {
+            const text = `0${item.cantidad}.- ${item.pertrechos_descripcion}`;
+            inventory.append($('<li>').text(text));
+        });
+    }
+
+
+    // function loadDocDataCert() {
+        
+    //     const selecionador = $('#btnSelect')
+        
+    //     selecionador.click(() => {
+           
+    //         const noRango = $('option').val()
+    //         console.log(noRango);
+    //         let idarma = $('#idarma')
+    //         let rango = $('#rango');
+    //         rango.empty()
+    //         let nombre = $('#nombre');
+    //         nombre.empty();
+    //         const URL = "/Asignacion/GetAsignaciones";
+    //         const URL2 = "/Asignacion/GetVarmaAll";
+    //         let invt = $('#invetario');
+         
+    //         $.get(URL, { noRango }, (resp) => {
+    //             console.log(resp);
+
+    //             $.each(resp, function (index, item) {
+    //                 rango.append($('<p></P>').text(item.asignacionRango))
+    //                 nombre.append($('<p></P>').text(item.asignacionNombre))
+
+    //                 idarma = item.idArma 
+                    
+                    
+    //             });   
+                
+
+    //         });
+
+            
+               
+    //             $.get(URL2, { idarma }, (resp) => {
+    //                 console.log(resp);
+
+    //                 $.each(resp, function (index2, item2) {
+    //                 invt.append($('<il></il>').text("01.-" + item2.taNombre + " MARCA " + item2.armaMarcaDescripcion + " CAL." + item2.armaCalibre + " NO." + item2.armaSerie));
+
+    //                 });
+
+
+    //             })
+            
+    //     });
+       
+
+    // }
+    function formatDate(date) {
+        return new Intl.DateTimeFormat('es-ES', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        }).format(date);
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const date = new Date(); // Fecha de ejemplo
+        const formattedDate = formatDate(date); // Obtiene la fecha formateada
+        document.getElementById('fecha').textContent = formattedDate; // Actualiza el contenido del div
+    });
+
+</script>

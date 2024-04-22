@@ -2,12 +2,14 @@
 using BelicoSysApp.Services;
 using DocumentFormat.OpenXml.EMMA;
 using DocumentFormat.OpenXml.Vml;
+using iTextSharp.text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using Org.BouncyCastle.Crypto.Tls;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.WebPages;
 
 namespace BelicoSysApp.Controllers
@@ -17,10 +19,12 @@ namespace BelicoSysApp.Controllers
 
         private readonly IApiServiceAsignacion _apiServiceAsignacion;
         private readonly IApiServiceArma _apiServiceAarma;
-        public AsignacionController(IApiServiceAsignacion apiServiceAsignacion, IApiServiceArma apiServiceAarma)
+        private readonly IApiServicePertrecho _apiPertrecho;
+        public AsignacionController(IApiServiceAsignacion apiServiceAsignacion, IApiServiceArma apiServiceAarma, IApiServicePertrecho apiPertrecho)
         {
             _apiServiceAsignacion = apiServiceAsignacion;
             _apiServiceAarma = apiServiceAarma;
+            _apiPertrecho = apiPertrecho;
         }
         public async Task<IActionResult> AsignacionReport()
         {
@@ -37,12 +41,54 @@ namespace BelicoSysApp.Controllers
 
             return View(lista);
         }
+        [HttpGet]
+        public async Task<IActionResult> GetAsignaciones(int noRango)
+        {
+            
+            IEnumerable<AsignacionArma> lista = await _apiServiceAsignacion.GetAsignaciones();
+            var datos = lista.Where(x=> x.AsignacionNoRango == noRango);
+
+            var listaDto = new List<AsignacionArma>();
+
+            foreach (var asignacion in datos)
+            {
+                listaDto.Add(asignacion);
+            }
+
+
+            return Ok(listaDto);
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetVarmaAll(int idarma)
+        {
+
+            IEnumerable<VArma> lista = await _apiServiceAarma.GetVArmas();
+            var datos = lista.Where(x => x.IdArma == idarma);
+
+            var listaDto = new List<VArma>();
+
+            foreach (var asignacion in datos.Distinct().ToList())
+            {
+                
+                    listaDto.Add(asignacion);
+                
+            }
+
+            List<VArma> listafilter = listaDto
+                .Where(x => x.IdArma == idarma)
+                .GroupBy(x => x.IdArma)  // Agrupar por IdArma para manejar duplicados
+                .Select(g => g.First())  // Seleccionar el primer elemento de cada grupo
+                .ToList();
+
+
+            return Ok(listafilter);
+        }
 
         [HttpGet]
-        public async Task<IActionResult> SearchPeople(string? nombre, string? cedula)
+        public async Task<IActionResult> SearchPeople(string? carnet, string? cedula)
         {
             string status = "A";
-            IEnumerable<VPersonal> lista = await _apiServiceAsignacion.GetVPersonal(nombre, cedula, status);
+            IEnumerable<VPersonal> lista = await _apiServiceAsignacion.GetVPersonal(carnet, cedula, status);
             var listaDto = new List<VPersonal>();
 
             foreach (var personal in lista)
@@ -112,7 +158,8 @@ namespace BelicoSysApp.Controllers
         public async Task<IActionResult> DescargoArma(VPersonal codigo)
         {
             var obtasig = codigo.MilitarNo;
-            IEnumerable<AsignacionArma> lisAsig = _apiServiceAsignacion.GetAsignaciones().Result.Where(e => e.AsignacionNoRango == obtasig);
+            IEnumerable<AsignacionArma> lisAsig = _apiServiceAsignacion.GetAsignaciones().Result;
+            lisAsig = lisAsig.Where(x=> x.AsignacionNoRango == obtasig).Distinct();
             IEnumerable<VArma> lista = await _apiServiceAsignacion.GetVArmas();
             var listaDto = new List<VArma>();
             var listaasigDto = new List<AsignacionArma>();
@@ -122,11 +169,22 @@ namespace BelicoSysApp.Controllers
             {
                 listaasigDto.Add(asig);
                 valorarma = asig.IdArma;
-                foreach (var arma in lista.Where(e => e.IdArma == valorarma))
+                foreach (var arma in lista.Where(e => e.IdArma == valorarma).Distinct())
                 {
+                    if(listaDto.Count < listaasigDto.Count) { 
                     listaDto.Add(arma);
+                        }
                 }
             }
+
+            //==========================Petrechos
+            IEnumerable<VPertrecho> listaPer = _apiServiceAsignacion.GetVPertrechos().Result;
+            listaPer = listaPer.Where(x => x.Id_Militar == obtasig && x.status == true);
+           
+            
+           
+
+
 
 
             //foreach (var arma in lista.Where(e => e.IdArma == nuevoC))
@@ -135,7 +193,7 @@ namespace BelicoSysApp.Controllers
             //}
             ViewBag.count = listaasigDto.Count;
             ViewBag.Arma = listaDto;
-            ViewBag.Pertrecho = listaDto;
+            ViewBag.Pertrecho = listaPer;
 
             VPersonal listaP = await _apiServiceAsignacion.GetVPersonaId(codigo.MilitarNo);
 
@@ -206,17 +264,19 @@ namespace BelicoSysApp.Controllers
                     {
                         idArma = model.IdArma.Value,
                         armaSerie = searchArmaInput,
-                        armaEstado = 6
-                    };
+                        armaEstado = 1
 
-                     await _apiServiceAarma.Edit(consArma);
-                    var respuesta = await _apiServiceAsignacion.Save(model);
-                    if (respuesta.IdAsignacion == 0)
+                    };
+                    if (await _apiServiceAarma.Edit(consArma))
                     {
-                        ModelState.AddModelError("", "Error el Numero de Serie ya esta registrado");
+                        var respuesta = await _apiServiceAsignacion.Save(model);
+                        if (respuesta.IdAsignacion == 0)
+                        {
+                            ModelState.AddModelError("", "Error el Numero de Serie ya esta registrado");
+                        }
+                        TempData["SuccessMessage"] = $"Registro Creado Con el ID {respuesta.IdAsignacion}";
+                        ViewBag.SuccessMessage = "Item has been created successfully.";
                     }
-                    TempData["SuccessMessage"] = $"Registro Creado Con el ID {respuesta.IdAsignacion}";
-                    ViewBag.SuccessMessage = "Item has been created successfully.";
                 }
                 else
                 {
@@ -441,6 +501,24 @@ namespace BelicoSysApp.Controllers
             var itemPersona = await _apiServiceAsignacion.GetAsigPertrecho(AsigP);
 
             return Json(itemPersona);
+        }
+
+        [HttpGet]
+
+        public async Task<JsonResult> GetAsignacionPertrechosM(int militarNo)
+        {
+            IEnumerable<VPertrecho> asigPertrecho = await _apiServiceAsignacion.GetVPertrechos();
+            
+            var datos = asigPertrecho.Where(x => x.Id_Militar == militarNo && x.status);
+
+            var listaDto = new List<VPertrecho>();
+
+            foreach (var asignacion in datos)
+            {
+                listaDto.Add(asignacion);
+            }
+
+            return Json(listaDto);
         }
 
 

@@ -152,7 +152,8 @@
                 <tr>
                     <th>Accion</th>
                     <th>Pretrecho ID</th>
-                    <th>Descripcion</th>
+                    <th>Descripción</th>
+                    <th>Cantidad</th>
                 </tr>
             </thead>
             <tbody>
@@ -163,8 +164,15 @@
                             <a class="btn btn-primary">Descargar</a>
                         </td>
                         <td>
-                            @armaitemP.IdArma
+                            @armaitemP.Id_pertrechos
                         </td>
+                        <td>
+                            @armaitemP.pertrechos_descripcion
+                        </td>
+                        <td>
+                            @armaitemP.cantidad
+                        </td>
+                        
                     </tr>
                 }
             </tbody>

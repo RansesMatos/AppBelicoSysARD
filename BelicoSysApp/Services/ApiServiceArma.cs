@@ -120,16 +120,19 @@ namespace BelicoSysApp.Services
         }
         public async Task<bool> Edit(ArmaUpdateDto objeto)
         {
-            _ = new Arma();
+           
             var client = new HttpClient();
             client.BaseAddress = new Uri(_baseUrl);
-
-            var content = new StringContent(JsonConvert.SerializeObject(objeto), Encoding.UTF8, "application/json");
-
+            string jsonString =JsonConvert.SerializeObject(objeto);
+            Console.WriteLine("JSON Body:");
+            Console.WriteLine(jsonString);
+            var content = new StringContent(jsonString, Encoding.UTF8, "application/json");
+            
             var response = await client.PatchAsync($"/api/Arma/{objeto.idArma}", content);
-            var json_respuesta = await response.Content.ReadAsStringAsync();
-            var resultado = JsonConvert.DeserializeObject<ArmaUpdateDto>(json_respuesta);
-            ArmaUpdateDto armaUpdate = resultado;
+
+            //var json_respuesta = await response.Content.ReadAsStringAsync();
+            //var resultado = JsonConvert.DeserializeObject<ArmaUpdateDto>(json_respuesta);
+            //ArmaUpdateDto armaUpdate = resultado;
             if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
             {
 

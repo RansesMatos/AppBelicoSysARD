@@ -229,8 +229,8 @@
         const btnSavePertrecho = $('#btnCrearf');
 
         
-        const idMilitar = document.getElementById('AsignacionNoRango').innerText.split(' ');
-
+        
+       
         const url = "/Asignacion/AsignacionPertrechoCreate";  
         
 
@@ -238,7 +238,8 @@
         btnSavePertrecho.click((e) => {
             console.log(e);
             let i = 0;
-                
+            const idMilitar = document.getElementById('AsignacionNoRango').innerText.split(' ');
+            console.log(idMilitar)
             var arrayDeOpciones = Array.from(valuesList).map(opcion => {
                 do {
                     i = i + 1;

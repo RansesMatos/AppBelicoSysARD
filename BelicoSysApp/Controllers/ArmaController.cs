@@ -1,17 +1,14 @@
 ﻿using BelicoSysApp.Models;
 using BelicoSysApp.Services;
 using ClosedXML.Excel;
-using DocumentFormat.OpenXml.EMMA;
+
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Reporting.Map.WebForms.BingMaps;
-using OfficeOpenXml;
+
 using System.Collections;
-using System.Drawing;
-using System.Net.Http;
-using System.Web.Helpers;
+
 
 namespace BelicoSysApp.Controllers
 {

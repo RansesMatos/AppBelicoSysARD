@@ -28,6 +28,23 @@ namespace BelicoSysApp.Services
             }
 
             return armaList;
+            
+        }
+        public async Task<ICollection<VPertrecho>> GetVPertrechos()
+        {
+            ICollection<VPertrecho> armaList = new List<VPertrecho>();
+            var client = new HttpClient();
+            client.BaseAddress = new Uri(_baseUrl);
+            var response = await client.GetAsync("api/AsignacionPertrecho/vpertrecho");
+            if (response != null && response.IsSuccessStatusCode)
+            {
+
+                var json_respuesta = await response.Content.ReadAsStringAsync();
+                ICollection<VPertrecho> resultado = JsonConvert.DeserializeObject<ICollection<VPertrecho>>(json_respuesta);
+                armaList = resultado;
+            }
+
+            return armaList;
 
         }
         public async Task<ICollection<VArma>> GetVArmas()
@@ -175,14 +192,14 @@ namespace BelicoSysApp.Services
 
         }
 
-        public async Task<IEnumerable<VPersonal>> GetVPersonal(string? nombre, string? cedula, string status)
+        public async Task<IEnumerable<VPersonal>> GetVPersonal(string? carnet, string? cedula, string status)
         {
             IEnumerable<VPersonal> vArmaList = new List<VPersonal>();
             var client = new HttpClient();
             client.BaseAddress = new Uri(_baseUrl);
-            if (nombre != null)
+            if (carnet != null)
             {
-                var response = await client.GetAsync($"/api/AsignarArma/Personal?nombre={nombre}&status={status}");
+                var response = await client.GetAsync($"/api/AsignarArma/Personal?carnet={carnet}&status={status}");
                 if (response != null && response.IsSuccessStatusCode)
                 {
 

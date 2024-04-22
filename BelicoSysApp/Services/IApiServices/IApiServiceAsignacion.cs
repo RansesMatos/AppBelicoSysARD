@@ -5,13 +5,14 @@ namespace BelicoSysApp.Services
     public interface IApiServiceAsignacion
     {
         Task<ICollection<AsignacionArma>> GetAsignaciones();
+        Task<ICollection<VPertrecho>> GetVPertrechos();
         Task<ICollection<AsignacionPertrecho>> GetAsignacionesPertrecho();
         Task<ICollection<VArma>> GetVArmas();
         Task<VArma> GetVArmaSerial(string armaSerial);
         Task<ICollection<VArma>> GetVArmasF();
 
         Task<ICollection<Pertrecho>> Getpertrechos();
-        Task<IEnumerable<VPersonal>> GetVPersonal(String? nombre,String? cedula ,String status);
+        Task<IEnumerable<VPersonal>> GetVPersonal(String? carnet, String? cedula ,String status);
         Task<VPersonal> GetVPersonaId(decimal documentId);
         Task<Order> GetOrderIndi(int idorder);
         Task<AsignacionPertrecho> GetAsigPertrecho(int idAsigPertrecho);

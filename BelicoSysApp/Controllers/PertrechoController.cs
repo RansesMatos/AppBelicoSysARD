@@ -12,6 +12,17 @@ namespace BelicoSysApp.Controllers
         {
             _apiServicePertrecho = apiPertrecho;
         }
+        public PertrechoController()
+        {
+            
+        }
+       
+        public async Task<IActionResult> SearcPert()
+        {
+            var lista = await _apiServicePertrecho.GetPertrecho();
+
+            return Ok(lista);
+        }
 
         public async Task<IActionResult> PertrechoReport()
         {

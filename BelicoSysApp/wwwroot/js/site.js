@@ -100,7 +100,7 @@ function loadDropdownData() {
         url: 'SearchPeople',
         type: 'GET',
         data: {
-            nombre: nombrefilter,
+            carnet: nombrefilter,
             cedula: nombrefilter2
         },
         success: function (data) {
@@ -127,7 +127,7 @@ function loadDropdownData2() {
         url: 'SearchPeople',
         type: 'GET',
         data: {
-            nombre: nombrefilter,
+            carnet: nombrefilter,
             cedula: nombrefilter2
         },
         success: function (data) {
@@ -154,7 +154,7 @@ function loadDropdownData3() {
         url: 'SearchPeople',
         type: 'GET',
         data: {
-            nombre: nombrefilter,
+            carnet: nombrefilter,
             cedula: nombrefilter2
         },
         success: function (data) {
@@ -182,7 +182,7 @@ function loadDropdownData4() {
         url: 'SearchPeople',
         type: 'GET',
         data: {
-            nombre: nombrefilter,
+            carnet: nombrefilter,
             cedula: nombrefilter2
         },
         success: function (data) {
