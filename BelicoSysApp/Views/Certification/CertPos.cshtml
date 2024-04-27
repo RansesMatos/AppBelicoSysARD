@@ -218,55 +218,6 @@
     }
 
 
-    // function loadDocDataCert() {
-        
-    //     const selecionador = $('#btnSelect')
-        
-    //     selecionador.click(() => {
-           
-    //         const noRango = $('option').val()
-    //         console.log(noRango);
-    //         let idarma = $('#idarma')
-    //         let rango = $('#rango');
-    //         rango.empty()
-    //         let nombre = $('#nombre');
-    //         nombre.empty();
-    //         const URL = "/Asignacion/GetAsignaciones";
-    //         const URL2 = "/Asignacion/GetVarmaAll";
-    //         let invt = $('#invetario');
-         
-    //         $.get(URL, { noRango }, (resp) => {
-    //             console.log(resp);
-
-    //             $.each(resp, function (index, item) {
-    //                 rango.append($('<p></P>').text(item.asignacionRango))
-    //                 nombre.append($('<p></P>').text(item.asignacionNombre))
-
-    //                 idarma = item.idArma 
-                    
-                    
-    //             });   
-                
-
-    //         });
-
-            
-               
-    //             $.get(URL2, { idarma }, (resp) => {
-    //                 console.log(resp);
-
-    //                 $.each(resp, function (index2, item2) {
-    //                 invt.append($('<il></il>').text("01.-" + item2.taNombre + " MARCA " + item2.armaMarcaDescripcion + " CAL." + item2.armaCalibre + " NO." + item2.armaSerie));
-
-    //                 });
-
-
-    //             })
-            
-    //     });
-       
-
-    // }
     function formatDate(date) {
         return new Intl.DateTimeFormat('es-ES', {
             day: 'numeric',

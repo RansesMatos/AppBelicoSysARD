@@ -251,11 +251,7 @@ namespace BelicoSysApp.Controllers
         [HttpPost]
         public async Task<IActionResult> AsignacionCreate(AsignacionArma model, string searchArmaInput)
         {
-            model.AsignacionEstado = 1;
-            ArmaController arma = new ArmaController();
-            
-            
-
+            model.AsignacionEstado = 1;      
             try
             {
                 if (model.IdAsignacion == 0)
@@ -501,6 +497,13 @@ namespace BelicoSysApp.Controllers
             var itemPersona = await _apiServiceAsignacion.GetAsigPertrecho(AsigP);
 
             return Json(itemPersona);
+        }
+        [HttpGet]
+        public async Task<JsonResult> SearchArmaJson(string armaSerial)
+        {
+            VArma lista = await _apiServiceAsignacion.GetVArmaSerial(armaSerial);
+
+            return Json(lista);
         }
 
         [HttpGet]

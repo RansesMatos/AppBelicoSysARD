@@ -20,10 +20,7 @@ namespace BelicoSysApp.Controllers
         {
             _apiArma = apiArma;
         }
-        public ArmaController()
-        {
-           
-        }
+
 
         public async Task<IActionResult> ExportPDf()
         {

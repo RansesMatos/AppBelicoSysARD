@@ -1,30 +1,41 @@
-﻿@page
-@model CertificationReport
+﻿@{
+    // Aquí puedes definir variables de Razor o realizar configuraciones iniciales si es necesario
+}
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Certification Report</title>
-    <!-- Add CSS for styling -->
-</head>
+<meta charset="UTF-8">
 <div>
-    <h5 class="modal-title" id="searchModalLabel">Buscar Miembro Para Certificacion</h5>
-    <input type="text" id="searchInput" name="nombre" class="form-control" placeholder="Enter a name" />
-    <input type="text" id="searchInput2" name="cedula" class="form-control" placeholder="Enter a Cedula" />
-    <button type="button" class="btn btn-primary" onclick="loadDropdownData3()">Buscar</button>
-</div>
-<div id="notification" class="notification"></div>
+<h5 id="searchModalLabel">Buscar Miembro Para Certificacion de Porte.</h5>
+<input type="text" id="searchByCarnet" class="form-control" placeholder="Ingrese un NoCarnet" />
+<input type="text" id="searchByCedula" class="form-control" placeholder="Ingrese una cédula" />
+<button type="button" class="btn btn-primary" id="btnBuscar" name="btnBuscar">Buscar</button>
+    </div>
+<div id="notification"></div>
 
-<div class="mb-3">
-    <label class="form-label" for="AsignacionNombreCert">Nombre:</label>
-    <select class="form-select" id="AsignacionNombreCert" name="AsignacionNombreCert" onclick="loadDocDataAsigCert()">
-    </select>
-    <input type="hidden" name="AsignacionNoRango" />
+<div class="column-gap-0">
+
+    <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
+        <label class="form-label" for="MilitarNo">Nombre:</label>
+        <select class="form-select" id="MilitarNo" name="MilitarNo" onclick="loadDropDownDataCert()" style="width: auto">
+        </select>
+        <input type="hidden" class="form-control" id="AsignacionNombre" name="AsignacionNombre" readonly />
+    </div>
+ 
+
+</div>
+<div class="column-gap-1">
+
+    <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
+        <label class="form-label">Arma serial:</label>
+        <input type="text" id="searchArmaInput" name="searchArmaInput" class="form-control" placeholder="Entra el serial del arma" /><br />
+        <input type="hidden" id="IdArma1" name="IdArma" />
+    </div>
+
+    <input type="date" id="inputFecha" value="2023-03-20">
+    <button onclick="convertirFechaATexto()">Convertir Fecha</button>
+    <button type="button" class="btn btn-primary" id="btnSelect" name="btnSelect">Procesar Certificado</button>
 </div>
 
-@if (ViewBag.name != null)
-{
-    <div class="row">
+<div class="content" id="cuerpo" name="cuerpo">
         <div class="col-6">
         </div>
         <div class="col d-flex justify-content-end align-items-center">
@@ -34,27 +45,180 @@
             <a asp-controller="Certification" asp-action="ReportIdCard" class="btn btn-success" style="background-color:red">Exportar a PDF</a>
         </div>
     </div>
-    <body>
+
         <h1>INTENDENCIA MATERIAL BÉLICO</h1>
         <h2>ARMADA DE REPÚBLICA DOMINICANA</h2>
-        <p>@ViewBag.CertificationDate</p>
+        <p id="fecha"></p>
 
         <h3>CERTIFICACIÓN</h3>
         <p>
-            POR MEDIO DE LA PRESENTE, CERTIFICO HABER RECIBIDO Del @ViewBag.name ...
-            <!-- Fill in details from the model -->
-        </p> 
+            POR MEDIO DE LA PRESENTE CERTIFICO QUE LA</p> <span id="tipo" name="tipo"></span>,
+            ES PROPIEDAD DE ESTA INSTITUCIÓN Y ESTÁ CARGADA COMO ARMA DE REGLAMENTO AL <span id="rango" name="rango"></span> <span id="nombre" name="nombre"></span>, ARD.,<p>
+            BAJO FORMULARIO NO. 25  DE FECHA 11 DE SEPTIEMBRE DEL ANO 2008.             
+        </p>
 
-        <ul>
-            @foreach (var weaponDetail in ViewBag.WeaponDetails)
-            {
-                <li>@weaponDetail</li>
-            }
-        </ul>
 
-    <p>@ViewBag.CertifierName</p>
-    <p>@ViewBag.CertifierTitle</p>
+
+<p>SE EXPIDE LA PRESENTE CERTIFICACIÓN A SOLICITUD DE LA PARTE INTERESADA, A LOS</p><p id="fechaTexto"></p>
+
     <!-- Rest of the report design -->
-   </body>
-}
-</html>
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(() => {
+        loadDropDownDataCert();
+        loadDocDataCert();
+
+
+    });
+    function loadDropDownDataCert() {
+        const btnSelectWeapon = $('#btnBuscar');
+
+        btnSelectWeapon.click(() => {
+            let carnet = document.getElementById("searchByCarnet").value;
+            let cedula = document.getElementById("searchByCedula").value;
+            const URL = "/Asignacion/SearchPeople";
+            $.get(URL, { carnet, cedula }, (resp) => {
+                console.log(resp);
+                let dropdown = $('#MilitarNo');
+                dropdown.empty(); // Clear existing options
+
+                // Add options to the dropdown
+                $.each(resp, function (index, item) {
+                    dropdown.append($('<option id="selecion1" name="selecion1"></option>').text(item.rangos + " " + item.nombres + " - ( " + item.cedula + " )").val(item.militarNo));
+                });
+
+            })
+        });
+    }
+    function loadDocDataCert() {
+        const btnSelector = $('#btnSelect');
+        btnSelector.click(() => {
+            const selectedOption = $('option').val();
+            console.log(selectedOption);
+            clearFields();
+
+            const assignURL = "/Asignacion/GetAsignaciones";
+
+            fetchAssignments(assignURL, selectedOption);
+            convertirFechaATexto();
+        });
+    }
+    function clearFields() {
+        $('#rango, #nombre, #rangod, #nombred, #dir, #cedula').empty();
+    }
+
+    function fetchAssignments(url, noRango) {
+        const armaSerial = $('#searchArmaInput');
+        $.get(url, { noRango }, (response) => {
+            if (response && response.length > 0) {
+                clearFields();
+                console.log(response);
+                updateAssignmentDetails(response);
+                fetchInventoryItems(armaSerial.val());
+            }
+        });
+    }
+
+    function updateAssignmentDetails(assignments) {
+        let uniqueAssignments = getUnique(assignments, 'asignacionRango', 'asignacionNombre');
+
+        const rango = $('#rango');
+        const nombre = $('#nombre');
+
+
+        $.each(uniqueAssignments, (index, item) => {
+            rango.append($('<p>').text(item.asignacionRango));
+            nombre.append($('<p>').text(item.asignacionNombre));
+        });
+    }
+    function getUnique(arr, ...identifiers) {
+        const uniqueData = new Map();
+
+        arr.forEach((item) => {
+            const key = identifiers.map(id => item[id]).join('|');
+            if (!uniqueData.has(key)) {
+                uniqueData.set(key, item);
+            }
+        });
+
+        return Array.from(uniqueData.values());
+    }
+
+    function fetchInventoryItems(armaSerial) {
+        const inventoryURL = "/Asignacion/SearchArmaJson";
+        $.get(inventoryURL, { armaSerial }, (response) => {
+            console.log("arma: " + response.lenght);
+            //pdateInventory(response);
+            // if (response && response.length > 0) {
+            //     console.log("arma: " + response);
+
+            //     updateInventory(response);
+            // }
+        });
+    }
+
+    function updateInventory(items) {
+        const inventory = $('#tipo');    
+            const text = ` ${item.taNombre} MARCA ${item.armaMarcaDescripcion} CALIBRE.${item.armaCalibre} NO.${item.armaSerie}`;
+            console.log(text);
+            inventory.text(text);
+    }
+    function formatDate(date) {
+        return new Intl.DateTimeFormat('es-ES', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        }).format(date);
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const date = new Date(); // Fecha de ejemplo
+        const formattedDate = formatDate(date); // Obtiene la fecha formateada
+        document.getElementById('fecha').textContent = formattedDate; // Actualiza el contenido del div
+    });
+
+    function convertirFechaATexto() {
+        const input = document.getElementById('inputFecha');
+        const fecha = new Date(input.value);
+        const fechaTexto = document.getElementById('fechaTexto');
+
+        if (!input.value) {
+            fechaTexto.textContent = 'Por favor, introduce una fecha válida.';
+            return;
+        }
+
+        const dia = fecha.getDate();
+        const mes = fecha.getMonth();
+        const año = fecha.getFullYear();
+
+        const dias = ['UNO', 'DOS', 'TRES', 'CUATRO', 'CINCO', 'SEIS', 'SIETE', 'OCHO', 'NUEVE', 'DIEZ',
+            'ONCE', 'DOCE', 'TRECE', 'CATORCE', 'QUINCE', 'DIECISÉIS', 'DIECISIETE', 'DIECIOCHO', 'DIECINUEVE', 'VEINTE',
+            'VEINTIUNO', 'VEINTIDÓS', 'VEINTITRÉS', 'VEINTICUATRO', 'VEINTICINCO', 'VEINTISÉIS', 'VEINTISIETE', 'VEINTIOCHO', 'VEINTINUEVE', 'TREINTA', 'TREINTA Y UNO'];
+        const meses = ['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO', 'JULIO', 'AGOSTO', 'SEPTIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'];
+
+        const diaTexto = dias[dia - 1];  // Arrays en JS son base-0
+        const mesTexto = meses[mes];     // Mes también es base-0
+
+        const añoTexto = numeroATexto(año);
+
+        fechaTexto.textContent = `${diaTexto} (${dia}) DÍAS DEL MES DE ${mesTexto} DEL AÑO ${añoTexto} (${año}).`;
+    }
+
+    function numeroATexto(numero) {
+        // Esta función debe ser ampliada para convertir cualquier número en su representación textual.
+        // Aquí está extremadamente simplificada para demostración.
+        switch (numero) {
+            case 2023:
+                return 'DOS MIL VEINTITRÉS';
+            default:
+                return numero; // Simplificación, no usar en producción sin expandir.
+        }
+    }
+
+</script >
