@@ -31,7 +31,7 @@ namespace BelicoSysApp.Controllers
         }
         // GET: CertificationController
         [HttpGet]
-        public async Task<ActionResult> CertificationS(int selectedOption)
+        public async Task<ActionResult> CertificationSpfd(int selectedOption)
         {
             VPersonal listaP = await _apiServiceAsignacion.GetVPersonaId(selectedOption);
             IEnumerable<AsignacionArma> Lasig = await _apiServiceAsignacion.GetAsignaciones();
@@ -82,7 +82,6 @@ namespace BelicoSysApp.Controllers
                 Paragraph subHeader1 = new Paragraph("", new Font(Font.FontFamily.HELVETICA, 7));
                 subHeader1.Alignment = Element.ALIGN_LEFT;
                 pdf.Add(subHeader1);
-
                 Paragraph subHeader2 = new Paragraph("INTENDENCIA MATERIAL BÉLICO", new Font(Font.FontFamily.HELVETICA, 7, Font.BOLD));
                 subHeader2.Alignment = Element.ALIGN_CENTER;
                 pdf.Add(subHeader2);
@@ -102,9 +101,9 @@ namespace BelicoSysApp.Controllers
                 subHeader8.Alignment = Element.ALIGN_CENTER;
                 pdf.Add(subHeader8);
                 pdf.Add(subHeader6);
-                Paragraph subHeader9 = new Paragraph("POR MEDIO DE LA PRESENTE CERTIFICO QUE LA " + item.TaNombre + " MARCA" + item.ArmaMarcaDescripcion + " CAL." + item.ArmaCalibre + " NO." + item.ArmaSerie, new Font(Font.FontFamily.HELVETICA, 7));
-                subHeader9.Alignment = Element.ALIGN_LEFT;
-                pdf.Add(subHeader9);
+                //Paragraph subHeader9 = new Paragraph("POR MEDIO DE LA PRESENTE CERTIFICO QUE LA " + item.TaNombre + " MARCA" + item.ArmaMarcaDescripcion + " CAL." + item.ArmaCalibre + " NO." + item.ArmaSerie, new Font(Font.FontFamily.HELVETICA, 7));
+                //subHeader9.Alignment = Element.ALIGN_LEFT;
+                //pdf.Add(subHeader9);
                 pdf.Add(subHeader6);
                 Paragraph subHeader10 = new Paragraph("ES PROPIEDAD DE ESTA INSTITUCIÓN Y ESTÁ CARGADA COMO ARMA DE REGLAMENTO AL  "+ listaP.Rangos + listaP.Nombres +", ARD., ", new Font(Font.FontFamily.HELVETICA, 7));
                 subHeader10.Alignment = Element.ALIGN_LEFT;
@@ -182,6 +181,13 @@ namespace BelicoSysApp.Controllers
                 return View(new FileStreamResult(ms, fileName));
             }
                // return View("CertificationS");
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> CertificationS() 
+        {
+
+            return View("CertificationS");
         }
 
 
@@ -423,20 +429,20 @@ namespace BelicoSysApp.Controllers
                 subHeader14.Alignment = Element.ALIGN_CENTER;
                 subHeader14.SpacingBefore = 25f;
                 pdf.Add(subHeader14);
-                Paragraph subHeader15 = new Paragraph(listaP.Rangos, new Font(Font.FontFamily.HELVETICA, 7));
+                Paragraph subHeader15 = new Paragraph(listaP.Rangos + ", ARD.", new Font(Font.FontFamily.HELVETICA, 7));
                 subHeader15.Alignment = Element.ALIGN_CENTER;
                 pdf.Add(subHeader15);
                 Paragraph subHeader16 = new Paragraph(listaP.Cedula, new Font(Font.FontFamily.HELVETICA, 7));
                 subHeader16.Alignment = Element.ALIGN_CENTER;
                 pdf.Add(subHeader16); 
-                Paragraph subHeader17 = new Paragraph(listaP.desc_departamento+ " TEL"+listaP.num_celular, new Font(Font.FontFamily.HELVETICA, 7));
-                subHeader17.Alignment = Element.ALIGN_LEFT;
+                Paragraph subHeader17 = new Paragraph(listaP.desc_designacion+ " TEL: "+listaP.num_celular, new Font(Font.FontFamily.HELVETICA, 7));
+                subHeader17.Alignment = Element.ALIGN_CENTER;
                 pdf.Add(subHeader17);
                 Paragraph subHeader18 = new Paragraph("YAN LIROY VARGAS CAMINERO", new Font(Font.FontFamily.HELVETICA, 7, Font.BOLD));
                 subHeader18.SpacingBefore = 25f;
                 subHeader18.Alignment = Element.ALIGN_CENTER;
                 pdf.Add(subHeader18);
-                Paragraph subHeader19 = new Paragraph("CAPITÁN DE NAVÍO", new Font(Font.FontFamily.HELVETICA, 7));
+                Paragraph subHeader19 = new Paragraph("CAPITÁN DE NAVÍO, ARD.", new Font(Font.FontFamily.HELVETICA, 7));
                 subHeader19.Alignment = Element.ALIGN_CENTER;
                 pdf.Add(subHeader19);
                 Paragraph subHeader20 = new Paragraph("INTENDENTE DEL MAT.BELICO, ARD", new Font(Font.FontFamily.HELVETICA, 7));

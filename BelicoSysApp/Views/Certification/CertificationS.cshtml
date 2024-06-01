@@ -51,8 +51,7 @@
         <p id="fecha"></p>
 
         <h3>CERTIFICACIÓN</h3>
-        <p>
-            POR MEDIO DE LA PRESENTE CERTIFICO QUE LA</p> <span id="tipo" name="tipo"></span>,
+        <p> POR MEDIO DE LA PRESENTE CERTIFICO QUE LA</p> <span id="tipo" name="tipo"></span>,
             ES PROPIEDAD DE ESTA INSTITUCIÓN Y ESTÁ CARGADA COMO ARMA DE REGLAMENTO AL <span id="rango" name="rango"></span> <span id="nombre" name="nombre"></span>, ARD.,<p>
             BAJO FORMULARIO NO. 25  DE FECHA 11 DE SEPTIEMBRE DEL ANO 2008.             
         </p>
@@ -154,12 +153,7 @@
         const inventoryURL = "/Asignacion/SearchArmaJson";
         $.get(inventoryURL, { armaSerial }, (response) => {
             console.log("arma: " + response.lenght);
-            //pdateInventory(response);
-            // if (response && response.length > 0) {
-            //     console.log("arma: " + response);
-
-            //     updateInventory(response);
-            // }
+            
         });
     }
 
@@ -167,7 +161,8 @@
         const inventory = $('#tipo');    
             const text = ` ${item.taNombre} MARCA ${item.armaMarcaDescripcion} CALIBRE.${item.armaCalibre} NO.${item.armaSerie}`;
             console.log(text);
-            inventory.text(text);
+            inventory.append($('<p>').text());
+            //inventory.text(text);
     }
     function formatDate(date) {
         return new Intl.DateTimeFormat('es-ES', {

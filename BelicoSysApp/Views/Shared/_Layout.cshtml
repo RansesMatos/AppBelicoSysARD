@@ -39,7 +39,7 @@
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="@Url.Action("ArmaCreate","Arma")">Registro de Arma</a></li>
                             <li><a class="dropdown-item" href="@Url.Action("ArmaReport","Arma")">Reportes</a></li>
-                            <li><a style="dropdown-item" class="dropdown-item" href="@Url.Action("ArmaUpdate","Arma")">Actualizacion</a></li>
+                            @* <li><a style="dropdown-item" class="dropdown-item" href="@Url.Action("ArmaUpdate","Arma")">Actualizacion</a></li> *@
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
@@ -60,11 +60,11 @@
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="@Url.Action("DescargoArma","Asignacion")">Consulta Arma Militar</a></li>
                             <li><a class="dropdown-item" href="@Url.Action("AsignacionCreate","Asignacion")">Asignar Arma</a></li>
-                            <li><a style="color:gray"  class="dropdown-item" href="#">Asignar Arma a Departamentos</a></li>
-                            <li><a style="color:gray"  class="dropdown-item" href="@Url.Action("DescargoArma","Asignacion")">Consulta Arma Civiles</a></li>
+                            @* <li><a style="color:gray"  class="dropdown-item" href="#">Asignar Arma a Departamentos</a></li>
+                            <li><a style="color:gray"  class="dropdown-item" href="@Url.Action("DescargoArma","Asignacion")">Consulta Arma Civiles</a></li> *@
                             <li><a class="dropdown-item" href="@Url.Action("AsignacionReport","Asignacion")">Reportes</a></li>
-                            <li><a style="color:gray" class="dropdown-item" href="@Url.Action("AsignacionOrden","Asignacion")">Ordenes</a></li>
-                            <li><a style="color:gray" class="dropdown-item" href="@Url.Action("AsignacionOLista","Asignacion")">Consultar Orden</a></li>
+                            <li><a  class="dropdown-item" href="@Url.Action("AsignacionOrden","Asignacion")">Ordenes</a></li>
+                            <li><a  class="dropdown-item" href="@Url.Action("AsignacionOLista","Asignacion")">Consultar Orden</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
@@ -72,8 +72,8 @@
                             Certificaciones
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="@Url.Action("CertificationS","Certification")">Certificacion Posesion de Arma</a></li>
-                            <li><a class="dropdown-item" href="@Url.Action("xCert","Certification")">Certificacion No Arma</a></li>
+                            @* <li><a class="dropdown-item" href="@Url.Action("CertificationS","Certification")">Certificacion Posesion de Arma</a></li> *@
+                            @* <li ><a class="dropdown-item" href="@Url.Action("xCert","Certification")">Certificacion No Arma</a></li> *@
                             <li><a class="dropdown-item" href="@Url.Action("CertPos","Certification")">Form.25</a></li>
                         </ul>
                     </li>

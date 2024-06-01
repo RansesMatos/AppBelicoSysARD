@@ -12,10 +12,7 @@ namespace BelicoSysApp.Controllers
         {
             _apiServicePertrecho = apiPertrecho;
         }
-        public PertrechoController()
-        {
-            
-        }
+
        
         public async Task<IActionResult> SearcPert()
         {
