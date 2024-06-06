@@ -11743,4 +11743,12 @@ fieldset:disabled .btn {
     display: none !important;
   }
 }
+
+.bg-image {
+    background-image: url('../Images/armas.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    
+}
 /*# sourceMappingURL=bootstrap.min.css.map */
