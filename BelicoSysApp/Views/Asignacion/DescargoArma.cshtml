@@ -1,4 +1,4 @@
-﻿<h2>Consulta de Arma Asignada y Descargo</h2>
+﻿<h2 class="text-center">Consulta de Arma Asignada y Descargo</h2>
 
  @*   <!-- Button to trigger the modal -->
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#searchModal">
@@ -53,7 +53,9 @@
 <div id="notification" class="notification"></div>
 
 
+
 <div>
+
     <form asp-controller="Asignacion" asp-action="DescargoArma" method="post" enctype="multipart/form-data">
 
         <div class="row">
@@ -64,22 +66,55 @@
         </select>
         <input type="hidden"  name="MilitarNo"  />
             </div>
-        </div>
-    <button type="submit" class="btn btn-primary" >Selecionar</button>
-    </form>
-    <p>Militar NO: @ViewBag.noM</p>
-    <p>Rango: @ViewBag.desc_rango</p>
-    <p>Name: @ViewBag.Nombres</p>
-    <p>Cedula: @ViewBag.Cedula</p>
-    <p>Departamento: @ViewBag.Dept</p>
-    <p>Celular: @ViewBag.Tel</p>    
-    <!-- Add any other person information fields you have -->
 
+        </div>
+
+            <button type="submit" class="btn btn-primary">Selecionar</button>
+
+            </form>
+
+
+
+        <div class="mt-2">
+
+    <div class="row row-cols-auto" >
+
+           <div class="col">
+    <p><strong>Militar NO: </strong>@ViewBag.noM</p>
+               </div>
+
+               <div class="col">
+    <p><strong>Rango: </strong>@ViewBag.desc_rango</p>
+    </div>
+
+    <div class="col">
+    <p><strong>Nombre: </strong>@ViewBag.Nombres</p>
+    </div>
+
+    
+
+    
+        <div class="col">
+    <p><strong>Cédula: </strong>@ViewBag.Cedula</p>
+   </div>
+
+    <div class="col" >
+    <p><strong>Celular: </strong>@ViewBag.Tel</p>
+    </div>
+    
+    <div class="col">
+        <p><strong>Departamento: </strong>@ViewBag.Dept</p>
+        </div>
+
+    </div>
+
+    <!-- Add any other person information fields you have -->
+    </div>
     <h3>Armas Asignadas</h3>
 @if (ViewBag.count != 0){
         <table class="table table-striped table-hover">
-    <thead>
-        <tr>
+    <thead class="bg-primary">
+        <tr class="text-white">
             <th>Accion</th>
             <th>Arma ID</th>
             <th>Tipo Arma</th>

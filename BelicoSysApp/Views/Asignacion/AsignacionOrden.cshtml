@@ -37,20 +37,24 @@
 
 
 <body>
-    <h1>Crear Orden Asignacion Masiva de Material Bélico</h1>
+    <h1 class="text-center">Crear Orden Asignacion Masiva de Material Bélico</h1>
     <label for="idOrden">ID de la Orden:</label>
+
     <span id="orderNumber"></span>
 
     <br>
     <br>
-    <div>
-        <h5 class="modal-title" id="searchModalLabel">Buscar Miembro</h5>
+    <div class="container">
+        
 
-        <div class="row">
-            <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
+        <div>
+
+            <div class="row justify-content-center">
+                <h5 class="modal-title" id="searchModalLabel">Buscar Miembro</h5>
+            <div class="col-sm-12 col-md-6 col-lg-6 mb-3">
                 <input type="text" id="searchInput" name="No Carnert" class="form-control" placeholder="Ingresar el Carnet" />
             </div>
-            <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
+            <div class="col-sm-12 col-md-6 col-lg-6 mb-3">
                 <input type="text" id="searchInput2" name="cedula" class="form-control" placeholder="Ingresar la Cedula" />
             </div>
         </div>
@@ -58,42 +62,67 @@
         <button type="button" class="btn btn-primary" onclick="loadDropdownData4()">Buscar</button>
 
     </div>
+     @*probare a mover las cosas aqui*@
+
+    <div>
     <form id="formOrdenMaterial" asp-controller="Asignacion" asp-action="saveOrder" method="post" enctype="multipart/form-data">
+        @*columna del nombre y motivo*@
         <div class="row">
             <input type="hidden" name="orderNumber" />
-            <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
-                <label class="form-label" for="MilitarNo">Nombre:</label>
-                <select class="form-select" id="MilitarNo" name="MilitarNo" style="width: auto">
+            @*primer col*@
+            <div class="col">
+                <label class="form-label" for="MilitarNo"><strong>Nombre:</strong></label>
+                <select class="form-select" id="MilitarNo" name="MilitarNo" style="width: auto;">
                 </select>
                 <input type="hidden" name="MilitarNo" />
             </div>
-        </div>
-        <label>Motivo:</label>
+            @*fin del segundo col*@
+            @*segundo col*@
+            <div class="col">
+                <label><strong>Motivo:</strong></label>
         <select class="form-select" id="Motivo" name="Motivo">
             <option value="Pratica">Pratica</option>
             <option value="Marcha">Marcha</option>
             <option value="Desfile">Desfile</option>
         </select>
+            </div>
+            @*fin del segundo col*@
+            <div></div>
+        </div>
+        @*fin del row de nombre y motivo*@
+        </form>
+    </div>
+    @*probare a mover ahora las cosas aqui*@
 
-        <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
-            <label for="imageFile">Subir Documento de Orden Asignacion:</label>
+        <div class="row mt-2">
+            
+            <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
+                    
+            </div>
+        </div>
+            
+        @*este div que se muestra aqui es parte del container*@
+    </div>
+    @*Este div que se muestra aqui es parte del container*@
+   
+        <div class="col-sm-12 col-md-6 col-lg-4 mb-3 mt-2">
+        <label for="imageFile"><strong>Subir Documento de Orden Asignacion:</strong></label>
             <input type="file" name="imageFile" />
         </div>
-        <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
-            <label >Cantidad de armas a Asginar</label>
-            <input type="number" id="Orden_total" name="Orden_total"  placeholder="Ingresar la cantidad" />
+        <div class="col-sm-12 col-md-8   mb-3">
+            <label ><strong> Cantidad de armas a Asignar</strong></label>
+            <input type="number" id="Orden_total" class="rounded" name="Orden_total"  placeholder="Ingresar la cantidad" />
             <label>Tipo de Arma</label>
             <input type="number" id="Orden_total" name="Orden_total" placeholder="Ingresar la cantidad" />
         </div>
 
-        <button type="button" class="btn btn-primary" id="btnSelectOrderDetalle">Cargar selección</button>
+        <button type="button" class="btn btn-primary ml-3" id="btnSelectOrderDetalle">Cargar selección</button>
 
 
         <!-- Botón que activa el modal para seleccionar materiales -->
          <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalMateriales">
             Seleccionar Materiales
         </button>-->
-
 
         <div class="row mt-5 table-responsive" id="areaTableMaterial" >
             <table class="table caption-top" id="tableMaterials" name="tableMaterials" style="width:100%">
@@ -112,8 +141,7 @@
         <div class="modal-footer">
             <button class="btn btn-primary" id="btnSaveOrder" type="submit">Guardar selección</button>
         </div>
-    </form>
-
+        
 
     <!-- Modal para seleccionar materiales -->
     <div class="modal fade" id="modalMateriales" tabindex="-1" role="dialog" aria-labelledby="modalMaterialesLabel" aria-hidden="true">
@@ -138,6 +166,8 @@
             </div>
         </div>
     </div>
+
+    
 
    <!-- <div class="modal-footer">
         <button class="btn btn-primary" id="btnSaveOrder"  type="submit">Guardar selección</button>
