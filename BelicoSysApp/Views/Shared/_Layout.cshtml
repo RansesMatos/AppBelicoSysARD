@@ -11,6 +11,7 @@
 </head>
 
 <body id="body">
+    <div class="bg-white" >
     <div style="width: 100%; height: auto; text-align: center;"> 
         <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
         <img src="~/img/logo.png" width="100" />
@@ -22,6 +23,7 @@
         <h6>INTENDENCIA DEL MATERIAL BÉLICO</h6>
         <h6>Sistema de Inventario, Cargo y Descargo de Armas</h6>
     </div>
+    
      <nav class="navbar  navbar-expand-lg bg-body-tertiary">
         <div class="container">
             <!--
@@ -84,6 +86,7 @@
             </div>
         </div>
     </nav> 
+    </div>
     @if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
     {
         <div class="alert alert-success">
