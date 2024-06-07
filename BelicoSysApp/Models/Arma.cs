@@ -30,6 +30,7 @@
         public string ImagePath4 { get; set; }
         public string? BarcodePath { get; set; } = null!;
         public string? ArmaNota { get; set; } = null!;
+        public object Op { get; internal set; }
     }
 
 

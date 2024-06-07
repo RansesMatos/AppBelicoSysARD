@@ -48,12 +48,10 @@ namespace BelicoSysApp.Services
             if (response.IsSuccessStatusCode)
             {
                 var json_respuesta = await response.Content.ReadAsStringAsync();
-                var resultado = JsonConvert.DeserializeObject<ApiResult>(json_respuesta);
-                objeto = resultado.pertrecho;
+                var resultado = JsonConvert.DeserializeObject<Pertrecho>(json_respuesta);
+                objeto = resultado;
             }
-
             return objeto;
-        
         }
         public async Task<ICollection<Almacen>> GetAlmacenes()
         {
@@ -83,6 +81,7 @@ namespace BelicoSysApp.Services
             var json_respuesta = await response.Content.ReadAsStringAsync();
             var resultado = JsonConvert.DeserializeObject<Pertrecho>(json_respuesta);
             Pertrecho pertrcho = resultado;
+
             if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
             {
 
