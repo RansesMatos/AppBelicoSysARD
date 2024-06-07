@@ -200,3 +200,10 @@ h1 {
         -o-transform: scale(1);
     }
 }
+
+.bg-image{
+    background-image: url('../Images/armas.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+}
