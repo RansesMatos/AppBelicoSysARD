@@ -74,16 +74,23 @@ namespace BelicoSysApp.Controllers
             return Ok(lista);
         }
         [HttpGet]
-        public async Task<JsonResult> SearchArmaAll(int cantidad)
+        public async Task<JsonResult> SearchArmaAll(int cantidad,int cantidad2)
         {
-
-            ICollection<Arma> armas = await _apiArma.GetArmasMasiva(cantidad,2);
-            if (armas.Count < cantidad)
+            try
             {
-                ModelState.AddModelError("", $"No se tiene disponible esa cantidad la cantidad disponible es {armas.Count}");
-            }
+                ICollection<Arma> armas = await _apiArma.GetArmasMasiva(cantidad, cantidad2);
+                if (armas.Count < cantidad)
+                {
+                    ModelState.AddModelError("", $"No se tiene disponible esa cantidad la cantidad disponible es {armas.Count}");
+                }
 
-            return Json(armas);
+                return Json(armas);
+            }
+            catch (Exception e)
+            {
+                ModelState.AddModelError("", $"Hay un error consultado ");
+                return Json(e);
+            }
         }
         public async Task<IActionResult> Export()
         {
@@ -184,7 +191,7 @@ namespace BelicoSysApp.Controllers
 
             ViewBag.Almacen = new SelectList(listaADto, "IdAlmacen", "AlmacenDescripcion");
             ViewBag.Marca = new SelectList(listaMarcaDto, "IdArmaMarca", "ArmaMarcaDescripcion");
-            ViewBag.Modelo = new SelectList(listaModeloDto, "IdArmaModelo", "descModelo");
+            ViewBag.Modelo = new SelectList(listaModeloDto, "idArmaModelo", "descModelo");
             ViewBag.ArmaTipo = new SelectList(listaTipoDto, "IdTipoArma", "TaNombre");
 
 
