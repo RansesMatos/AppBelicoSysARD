@@ -8,7 +8,7 @@
 
 
     <div>
-        <h5 id="searchModalLabel">Buscar Miembro Para Formulario 25.</h5>
+    <h5 id="searchModalLabel"><strong>Buscar Miembro Para Formulario 25.</strong></h5>
         <div class="row" >
             <div class="col" >
         <input type="text" id="searchByCarnet" class="form-control" placeholder="Ingrese un NoCarnet" />
@@ -25,7 +25,7 @@
 <div class="row">
 
     <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
-        <label class="form-label" for="MilitarNo">Nombre:</label>
+        <label class="form-label" for="MilitarNo"><strong>Nombre:</strong></label>
         <select class="form-select" id="MilitarNo" name="MilitarNo" onclick="loadDropDownDataCert()" style="width: auto">
         </select>
         <input type="hidden" class="form-control" id="AsignacionNombre" name="AsignacionNombre" readonly />
@@ -36,7 +36,7 @@
 </div>
 
     <div class="content" id="cuerpo" name="cuerpo">
-        <p>Form. No 25, ARD.</p>
+        <p class="mt-2" >Form. No 25, ARD.</p>
         <h2 class="text-center">ARMADA DE REPÚBLICA DOMINICANA</h2>
         <h3 class="text-center" >RECIBO MEMORANDUM</h3>
 
@@ -54,7 +54,7 @@
     </div>
 
     </div>
-        <div class="line">------------------------</div>
+        
         <p>ACUSO RECIBO AL, INTENDENTE DEL MAT.BELICO, ARD</p>
         <p>De los efectos siguientes para uso oficial del </p>
         <span id="rango" name="rango"></span>
@@ -87,7 +87,7 @@
 @*     <form asp-controller="Certification" asp-action="Crearpdf25" method="post" target="_blank">
         <button type="submit" class="btn btn-primary">Imprimir en Pantalla</button>
     </form> *@
-    <a id="btnpdf" name="btnpdf" class="btn btn-success" style="background-color:red">Exportar a PDF</a>
+    <a id="btnpdf" name="btnpdf" class="btn btn-success mb-2" style="background-color:#0D6EFD">Exportar a PDF</a>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
