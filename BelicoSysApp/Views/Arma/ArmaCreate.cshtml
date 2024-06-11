@@ -33,11 +33,12 @@
                 <input type="hidden" name="ArmaMarca" />
             </div>
             <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
-                <label class="form-label" for="IdArmaMarca"><strong>Marca del Arma:</strong></label>
-                <select class="form-select" id="IdArmaMarca" name="idArmaMarca" asp-items="@ViewBag.Marca">
-                    <option value="">Selecciona Marca</option>
+
+                <label class="form-label" for="ArmaModelo">Modelo del Arma:</label>
+                <select class="form-select" id="ArmaModelo" name="ArmaModelo" asp-items="@ViewBag.Modelo">
+                    <option value="">Selecciona Modelo</option>
                 </select>
-                <input type="hidden" name="ArmaMarca" />
+                <input type="hidden" name="ArmaModelo" />
             </div>
             <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
                 <label class="form-label" for="ArmaCalibre"><strong>Calibre del Arma:</strong></label>

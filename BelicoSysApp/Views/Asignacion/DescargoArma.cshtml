@@ -131,7 +131,7 @@
         {
             <tr>
                 <td>
-                            <a class="btn btn-primary" id="descargo" onclick="borrarAsignacion(@armaitem.IdAsignacion)">Descargar</a>
+                            <a class="btn btn-primary" id="descargo" onclick="borrarAsignacion(@armaitem.IdAsignacion,@armaitem.IdArma)">Quitar Asignacion</a>
                 </td>
                 <td>
                     @armaitem.IdArma
@@ -174,10 +174,7 @@
      </tr>
      </tbody>
      </table>
-
-
     }
-
 
     <h3>Pertrechos Asignadas</h3>
     @if (ViewBag.count != 0)
@@ -196,7 +193,7 @@
                 {
                     <tr>
                         <td>
-                            <a class="btn btn-primary">Descargar</a>
+                            <a class="btn btn-primary">Quitar Asignacion</a>
                         </td>
                         <td>
                             @armaitemP.Id_pertrechos
@@ -206,8 +203,7 @@
                         </td>
                         <td>
                             @armaitemP.cantidad
-                        </td>
-                        
+                        </td>                   
                     </tr>
                 }
             </tbody>
@@ -222,9 +218,6 @@
                 </tr>
             </tbody>
         </table>
-
-
     }
-    
 </div>
 

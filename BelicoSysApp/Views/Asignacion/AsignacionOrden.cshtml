@@ -141,7 +141,8 @@
         <div class="modal-footer">
             <button class="btn btn-primary" id="btnSaveOrder" type="submit">Guardar selección</button>
         </div>
-        
+    </form>
+
 
     <!-- Modal para seleccionar materiales -->
     <div class="modal fade" id="modalMateriales" tabindex="-1" role="dialog" aria-labelledby="modalMaterialesLabel" aria-hidden="true">
@@ -167,8 +168,6 @@
         </div>
     </div>
 
-    
-
    <!-- <div class="modal-footer">
         <button class="btn btn-primary" id="btnSaveOrder"  type="submit">Guardar selección</button>
      </div>-->
@@ -190,7 +189,9 @@
             const table = $('#tableBody');
             btnSelectWeapon.click(() => {
                 const inpCantidad = $('#Orden_total').val();
-                const URL = `/Arma/SearchArmaAll/?cantidad=${inpCantidad}`;
+                const cantipo = $('#IdTipoArma').val();
+                console.log(cantipo)
+                const URL = `/Arma/SearchArmaAll/?cantidad=${inpCantidad}&cantidad2=${cantipo}`;
                 $.get(URL, (resp) => {
                     console.log(resp);
                     if (inpCantidad > resp.length) {
