@@ -82,13 +82,13 @@
     </div>
     <div class="col d-flex justify-content-end align-items-center">
         <a asp-controller="Asignacion" asp-action="Export" class="btn btn-success me-2">Export to Excel</a>
-        <a asp-controller="Asignacion" asp-action="ExportPDf" class="btn btn-success" style="background-color:red">Export to PDF</a>
+        <a asp-controller="Asignacion" asp-action="ExportPDf" class="btn btn-success" style="background-color: #0D6EFD">Export to PDF</a>
     </div>
 </div>
 
 <div class="row mt-3 mb-2">
     <div class="col-md-3">
-        <label for="ddlRango">Rango:</label>
+        <label class="mb-2" for="ddlRango"><strong>Rango:</strong></label>
         <select id="ddlRango" class="form-control">
             <option value="">Todos</option>
             @foreach (var rango in ViewBag.ddRangoOptions)
@@ -98,11 +98,11 @@
         </select>
     </div>
     <div class="col-md-3">
-        <label for="txtNombres">Nombres:</label>
+        <label class="mb-2" for="txtNombres"><strong>Nombres:</strong></label>
         <input type="text" id="txtNombres" class="form-control" placeholder="Nombre">
     </div>
     <div class="col-md-3">
-        <label for="txtDocumento">Documento:</label>
+        <label class="mb-2" for="txtDocumento"><strong>Documento:</strong></label>
         <input type="text" id="txtDocumento" class="form-control" placeholder="Documento de identidad">
     </div>
 </div>
