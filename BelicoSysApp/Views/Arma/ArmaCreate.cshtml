@@ -15,24 +15,25 @@
 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 <div><form asp-controller="Arma" asp-action="ArmaCreate" method="post" enctype="multipart/form-data">
 
-    <h5 class="text-muted mb-3">Registar Arma</h5>
+        <h5 class="text-muted mb-3 text-center"><strong> Registar Arma</strong></h5>
 
     <div class="row">
             <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
-                <label class="form-label" for="IdTipoArma">Tipo del Arma:</label>
+                <label class="form-label" for="IdTipoArma"><strong>Tipo del Arma:</strong></label>
                 <select class="form-select" id="IdTipoArma" name="IdTipoArma" asp-items="@ViewBag.ArmaTipo">
                     <option value="">Selecciona Tipo</option>
                 </select>
                 <input type="hidden" name="TipoArma" />
             </div>
             <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
-                <label class="form-label" for="IdArmaMarca">Marca del Arma:</label>
+                <label class="form-label" for="IdArmaMarca"><strong>Marca del Arma:</strong></label>
                 <select class="form-select" id="IdArmaMarca" name="idArmaMarca" asp-items="@ViewBag.Marca">
                     <option value="">Selecciona Marca</option>
                 </select>
                 <input type="hidden" name="ArmaMarca" />
             </div>
             <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
+
                 <label class="form-label" for="ArmaModelo">Modelo del Arma:</label>
                 <select class="form-select" id="ArmaModelo" name="ArmaModelo" asp-items="@ViewBag.Modelo">
                     <option value="">Selecciona Modelo</option>
@@ -40,7 +41,7 @@
                 <input type="hidden" name="ArmaModelo" />
             </div>
             <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
-                <label class="form-label" for="ArmaCalibre">Calibre del Arma:</label>
+                <label class="form-label" for="ArmaCalibre"><strong>Calibre del Arma:</strong></label>
                 @*         <input class="form-control" type="text" id="ArmaCalibre" name="ArmaCalibre" /> *@
                 <select class="form-select" id="ArmaCalibre" name="ArmaCalibre">
                     <option value="1"> Seleciona el calibre</option>
@@ -61,11 +62,11 @@
                 </select>
             </div>
             <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
-                <label class="form-label" for="ArmaSerie">Serie del Arma:</label>
+                <label class="form-label" for="ArmaSerie"><strong>Serie del Arma:</strong></label>
                 <input class="form-control" type="text" id="ArmaSerie" name="ArmaSerie" />
             </div>
             <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
-                <label class="form-label" for="IdAlmacen">Almacén:</label>
+                <label class="form-label" for="IdAlmacen"><strong>Almacén:</strong></label>
                 <select class="form-select" id="IdAlmacen" name="IdAlmacen" asp-items="@ViewBag.Almacen">
                     <option value="">Selecciona Almacén</option>
                 </select>
@@ -73,31 +74,31 @@
             </div>
 
             <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
-                <label class="form-label" for="ArmaNota">Observaciones:</label>
+                <label class="form-label" for="ArmaNota"><strong>Observaciones:</strong></label>
                 <input class="form-control" type="text" id="ArmaNota" name="ArmaNota" />
             </div>
 
             <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
-                <label for="imageFile">Imagen Frontal :</label>
+                <label for="imageFile"><strong>Imagen Frontal:</strong></label>
                 <input type="file" name="imageFile" />
             </div>
             <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
-                <label for="imageFile">Imagen Trasera :</label>
+                <label for="imageFile"><strong>Imagen Trasera:</strong></label>
                 <input type="file" name="imageFile" />
             </div>
             <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
-                <label for="imageFile">Imagen Lateral Derech. :</label>
+                <label for="imageFile"><strong>Imagen Lateral Derech. :</strong></label>
                 <input type="file" name="imageFile" />
             </div>
             <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
-                <label for="imageFile">Imagen Lateral Izq. :</label>
+                <label for="imageFile"><strong>Imagen Lateral Izq. : </strong></label>
                 <input type="file" name="imageFile" />
             </div>
     </div>
 
     
     <!-- Repeat the above pattern for the remaining fields -->
-    <div id="btnCrear"><input class="btn btn-primary" type="submit" value="Crear" />
+    <div id="btnCrear"><input class="btn btn-primary mb-4" type="submit" value="Crear" />
 
 
 </div>

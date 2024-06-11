@@ -9,9 +9,16 @@
 
     <div>
         <h5 id="searchModalLabel">Buscar Miembro Para Formulario 25.</h5>
+        <div class="row" >
+            <div class="col" >
         <input type="text" id="searchByCarnet" class="form-control" placeholder="Ingrese un NoCarnet" />
+        </div>
+
+        <div class="col" >
         <input type="text" id="searchByCedula" class="form-control" placeholder="Ingrese una cédula" />
-    <button type="button" class="btn btn-primary" id="btnBuscar" name="btnBuscar">Buscar</button>
+        </div>
+    </div>
+    <button type="button" class="btn btn-primary mt-2" id="btnBuscar" name="btnBuscar">Buscar</button>
     </div>
     <div id="notification"></div>
 
@@ -23,22 +30,32 @@
         </select>
         <input type="hidden" class="form-control" id="AsignacionNombre" name="AsignacionNombre" readonly />
     </div>
+    <div class="container" >
     <button type="button" class="btn btn-primary" id="btnSelect" name="btnSelect">Seleccionar</button>
-
+    </div>
 </div>
 
     <div class="content" id="cuerpo" name="cuerpo">
         <p>Form. No 25, ARD.</p>
-        <h2>ARMADA DE REPÚBLICA DOMINICANA</h2>
-        <h3>RECIBO MEMORANDUM</h3>
+        <h2 class="text-center">ARMADA DE REPÚBLICA DOMINICANA</h2>
+        <h3 class="text-center" >RECIBO MEMORANDUM</h3>
+
+        <div class="row container" >
+
+        <div class="col d-flex">
+        <p class="ml-2" ><strong> Lugar: </strong></p>
         <p>Santo Domingo, Este.</p>
-        <p>Lugar</p>
-        <div class="line">------------------------</div>
+        </div>
+
+       <div class="col d-flex">
+        <p class="ml-2" ><strong>Fecha: </strong></p>
         <p id="fecha"></p>
-        <p>Fecha</p>
+        
+    </div>
+
+    </div>
         <div class="line">------------------------</div>
         <p>ACUSO RECIBO AL, INTENDENTE DEL MAT.BELICO, ARD</p>
-        <div class="line">------------------------</div>
         <p>De los efectos siguientes para uso oficial del </p>
         <span id="rango" name="rango"></span>
         <span id="nombre" name="nombre"></span>
@@ -66,7 +83,7 @@
         <p>INTENDENTE DEL MAT.BELICO, ARD</p>        
     </div>
 
-<div class="actions">
+<div class="actions mb-4">
 @*     <form asp-controller="Certification" asp-action="Crearpdf25" method="post" target="_blank">
         <button type="submit" class="btn btn-primary">Imprimir en Pantalla</button>
     </form> *@
