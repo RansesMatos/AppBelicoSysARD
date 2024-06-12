@@ -1,13 +1,17 @@
 ﻿using BelicoSysApp.Models;
 using BelicoSysApp.Services;
 using ClosedXML.Excel;
-
+using System;
+using System.IO;
+using System.Linq;
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-
 using System.Collections;
+using System.Drawing;
 
 
 namespace BelicoSysApp.Controllers
@@ -19,6 +23,7 @@ namespace BelicoSysApp.Controllers
         public ArmaController(IApiServiceArma apiArma)
         {
             _apiArma = apiArma;
+
         }
 
 
@@ -55,17 +60,90 @@ namespace BelicoSysApp.Controllers
                     table.AddCell(item.ArmaSerie);
                     table.AddCell(item.BarcodePath);
                     table.CompleteRow();
-
-
                 }
 
                 document.Add(table);
                 document.Close();
-
                 return File(memoryStream.ToArray(), "application/pdf", fileName);
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> ExportExcel()
+        {
+            // Obtener datos de la base de datos usando EF Core
+            var arma = await _apiArma.GetArmas();
+            var valuesList = arma.ToList();
+
+            // Crear un nuevo paquete de Excel
+            using (var package = new ExcelPackage())
+            {
+                // Agregar una nueva hoja de cálculo al libro vacío
+                var worksheet = package.Workbook.Worksheets.Add("Reporte");
+
+                // Cargar los datos en la hoja de cálculo
+                worksheet.Cells["A1"].Value = "Id_Arma";
+                worksheet.Cells["B1"].Value = "Id_Tipo_Arma";
+                worksheet.Cells["C1"].Value = "Id_Arma_Marca";
+                worksheet.Cells["D1"].Value = "Calibre";
+                worksheet.Cells["E1"].Value = "Id_Modelo";
+                worksheet.Cells["F1"].Value = "Serie";
+                worksheet.Cells["G1"].Value = "Id_Almacen";
+                worksheet.Cells["H1"].Value = "Estado";
+                worksheet.Cells["I1"].Value = "Status";
+                worksheet.Cells["J1"].Value = "Asignacion_Arma";
+                worksheet.Cells["K1"].Value = "Image_1";
+                worksheet.Cells["L1"].Value = "Image_2";
+                worksheet.Cells["M1"].Value = "Image_3";
+                worksheet.Cells["N1"].Value = "Image_4";
+                worksheet.Cells["O1"].Value = "BarcodePath";
+                worksheet.Cells["P1"].Value = "Nota";
+
+                for (int i = 0; i < valuesList.Count; i++)
+                {
+                    var armaItem = valuesList[i];
+
+                    worksheet.Cells[i + 2, 1].Value = armaItem.idArma ?? 0;
+                    worksheet.Cells[i + 2, 2].Value = armaItem.IdTipoArmaNavigation?.TaNombre ?? string.Empty;
+                    worksheet.Cells[i + 2, 3].Value = armaItem.IdArmaMarcaNavigation?.ArmaMarcaDescripcion ?? string.Empty;
+                    worksheet.Cells[i + 2, 4].Value = armaItem.armaCalibre ?? string.Empty;
+                    worksheet.Cells[i + 2, 5].Value = armaItem.IdTipoModeloNavigation?.descModelo ?? string.Empty;
+                    worksheet.Cells[i + 2, 6].Value = armaItem.armaSerie ?? string.Empty;
+                    worksheet.Cells[i + 2, 7].Value = armaItem.IdAlmacenNavigation?.AlmacenDescripcion ?? string.Empty;
+                    worksheet.Cells[i + 2, 8].Value = armaItem.armaEstado ?? false;
+                    worksheet.Cells[i + 2, 9].Value = armaItem.armaStatus ?? false;
+                    worksheet.Cells[i + 2, 10].Value = armaItem.armaAsig ?? false;
+                    worksheet.Cells[i + 2, 11].Value = armaItem.ImagePath1 ?? string.Empty;
+                    worksheet.Cells[i + 2, 12].Value = armaItem.ImagePath2 ?? string.Empty;
+                    worksheet.Cells[i + 2, 13].Value = armaItem.ImagePath3 ?? string.Empty;
+                    worksheet.Cells[i + 2, 14].Value = armaItem.ImagePath4 ?? string.Empty;
+                    worksheet.Cells[i + 2, 15].Value = armaItem.BarcodePath ?? string.Empty;
+                    worksheet.Cells[i + 2, 16].Value = armaItem.ArmaNota ?? string.Empty;
+                }
+
+                // Formatear el encabezado
+                using (var range = worksheet.Cells[1, 1, 1, 16])
+                {
+                    range.Style.Font.Bold = true;
+                    range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    range.Style.Fill.BackgroundColor.SetColor(Color.DarkBlue);
+                    range.Style.Font.Color.SetColor(Color.White);
+                }
+
+                // Ajustar el ancho de las columnas
+                worksheet.Cells.AutoFitColumns();
+
+                // Guardar el paquete de Excel en un MemoryStream
+                var stream = new MemoryStream();
+                package.SaveAs(stream);
+
+                // Devolver el archivo Excel como un archivo descargable
+                stream.Position = 0;
+                var fileName = "Reporte.xlsx";
+                return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+
+            }
+        }
         [HttpGet]
         public async Task<IActionResult> SearchArma(string armaSerial)
         {

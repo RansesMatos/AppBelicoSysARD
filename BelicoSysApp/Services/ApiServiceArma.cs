@@ -29,7 +29,6 @@ namespace BelicoSysApp.Services
             }
            
             return armaList;
-
         }
         public async Task<ICollection<Arma>> GetArmasMasiva(int cantidad,int cantipo)
         {
