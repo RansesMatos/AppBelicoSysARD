@@ -104,12 +104,12 @@ namespace BelicoSysApp.Controllers
                     var armaItem = valuesList[i];
 
                     worksheet.Cells[i + 2, 1].Value = armaItem.idArma ?? 0;
-                    worksheet.Cells[i + 2, 2].Value = armaItem.IdTipoArmaNavigation?.TaNombre ?? string.Empty;
-                    worksheet.Cells[i + 2, 3].Value = armaItem.IdArmaMarcaNavigation?.ArmaMarcaDescripcion ?? string.Empty;
+                    worksheet.Cells[i + 2, 2].Value = armaItem.idTipoArma ?? 0;
+                    worksheet.Cells[i + 2, 3].Value = armaItem.IdArmaMarca ?? 0;
                     worksheet.Cells[i + 2, 4].Value = armaItem.armaCalibre ?? string.Empty;
                     worksheet.Cells[i + 2, 5].Value = armaItem.IdTipoModeloNavigation?.descModelo ?? string.Empty;
                     worksheet.Cells[i + 2, 6].Value = armaItem.armaSerie ?? string.Empty;
-                    worksheet.Cells[i + 2, 7].Value = armaItem.IdAlmacenNavigation?.AlmacenDescripcion ?? string.Empty;
+                    worksheet.Cells[i + 2, 7].Value = armaItem.idAlmacen ?? 0;
                     worksheet.Cells[i + 2, 8].Value = armaItem.armaEstado ?? false;
                     worksheet.Cells[i + 2, 9].Value = armaItem.armaStatus ?? false;
                     worksheet.Cells[i + 2, 10].Value = armaItem.armaAsig ?? false;
