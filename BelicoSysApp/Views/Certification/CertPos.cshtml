@@ -85,7 +85,7 @@
 @*     <form asp-controller="Certification" asp-action="Crearpdf25" method="post" target="_blank">
         <button type="submit" class="btn btn-primary">Imprimir en Pantalla</button>
     </form> *@
-    <a id="btnpdf" name="btnpdf" class="btn btn-success mb-2 mt-2" style="background-color:#0D6EFD">Exportar a PDF</a>
+    <a id="btnpdf" name="btnpdf" class="btn btn-success mb-2 mt-2" style="background-color:#0D6EFD" >Exportar a PDF</a>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
@@ -95,10 +95,20 @@
     $(document).ready(() => {
         loadDropDownDataCert();
         loadDocDataCert();
-        Pdf();
+        //Pdf();
+        setupPdfButton();
 
 
     });
+    function setupPdfButton() {
+        const btnSelector = $('#btnpdf');
+        const pdfURL = "/Certification/Crearpdf25";
+
+        btnSelector.click(() => {
+            const selectedOption = $('option').val();  // Ensure you use the correct selector for your <select>
+            window.open(pdfURL + '?selectedOption=' + selectedOption, '_blank');
+        });
+    }
     function loadDropDownDataCert() {
         const btnSelectWeapon = $('#btnBuscar');
 
@@ -219,6 +229,7 @@
                 if (response) {
                     console.log(response);
                     updateInventoryP(response);
+
                 }
             });
         })

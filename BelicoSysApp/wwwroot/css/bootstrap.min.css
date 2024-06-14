@@ -129,6 +129,11 @@
   --bs-form-invalid-color: #dc3545;
   --bs-form-invalid-border-color: #dc3545;
 }
+#preview img {
+    width: 100%; /* Ajusta esto según tus necesidades */
+    height: auto;
+    max-width: 400px; /* Establece un máximo razonable */
+}
 [data-bs-theme="dark"] {
   color-scheme: dark;
   --bs-body-color: #dee2e6;
