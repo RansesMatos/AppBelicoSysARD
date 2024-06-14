@@ -72,7 +72,7 @@ namespace BelicoSysApp.Controllers
         public async Task<IActionResult> ExportExcel()
         {
             // Obtener datos de la base de datos usando EF Core
-            var arma = await _apiArma.GetArmas();
+            var arma = await _apiArma.GetVArmas();
             var valuesList = arma.ToList();
 
             // Crear un nuevo paquete de Excel
@@ -83,42 +83,34 @@ namespace BelicoSysApp.Controllers
 
                 // Cargar los datos en la hoja de cálculo
                 worksheet.Cells["A1"].Value = "Id_Arma";
-                worksheet.Cells["B1"].Value = "Id_Tipo_Arma";
-                worksheet.Cells["C1"].Value = "Id_Arma_Marca";
+                worksheet.Cells["B1"].Value = "Nombre Arma";
+                worksheet.Cells["C1"].Value = "Descripcion";
                 worksheet.Cells["D1"].Value = "Calibre";
-                worksheet.Cells["E1"].Value = "Id_Modelo";
-                worksheet.Cells["F1"].Value = "Serie";
-                worksheet.Cells["G1"].Value = "Id_Almacen";
-                worksheet.Cells["H1"].Value = "Estado";
-                worksheet.Cells["I1"].Value = "Status";
-                worksheet.Cells["J1"].Value = "Asignacion_Arma";
-                worksheet.Cells["K1"].Value = "Image_1";
-                worksheet.Cells["L1"].Value = "Image_2";
-                worksheet.Cells["M1"].Value = "Image_3";
-                worksheet.Cells["N1"].Value = "Image_4";
-                worksheet.Cells["O1"].Value = "BarcodePath";
-                worksheet.Cells["P1"].Value = "Nota";
+                worksheet.Cells["E1"].Value = "Serie";
+               
+                worksheet.Cells["F1"].Value = "Almacen";
+                worksheet.Cells["G1"].Value = "Image_1";
+                worksheet.Cells["H1"].Value = "Image_2";
+                worksheet.Cells["I1"].Value = "Image_3";
+                worksheet.Cells["J1"].Value = "Image_4";
+                worksheet.Cells["K1"].Value = "Codigo de Barra";
+             
 
                 for (int i = 0; i < valuesList.Count; i++)
                 {
                     var armaItem = valuesList[i];
 
-                    worksheet.Cells[i + 2, 1].Value = armaItem.idArma ?? 0;
-                    worksheet.Cells[i + 2, 2].Value = armaItem.idTipoArma ?? 0;
-                    worksheet.Cells[i + 2, 3].Value = armaItem.IdArmaMarca ?? 0;
-                    worksheet.Cells[i + 2, 4].Value = armaItem.armaCalibre ?? string.Empty;
-                    worksheet.Cells[i + 2, 5].Value = armaItem.IdTipoModeloNavigation?.descModelo ?? string.Empty;
-                    worksheet.Cells[i + 2, 6].Value = armaItem.armaSerie ?? string.Empty;
-                    worksheet.Cells[i + 2, 7].Value = armaItem.idAlmacen ?? 0;
-                    worksheet.Cells[i + 2, 8].Value = armaItem.armaEstado ?? false;
-                    worksheet.Cells[i + 2, 9].Value = armaItem.armaStatus ?? false;
-                    worksheet.Cells[i + 2, 10].Value = armaItem.armaAsig ?? false;
-                    worksheet.Cells[i + 2, 11].Value = armaItem.ImagePath1 ?? string.Empty;
-                    worksheet.Cells[i + 2, 12].Value = armaItem.ImagePath2 ?? string.Empty;
-                    worksheet.Cells[i + 2, 13].Value = armaItem.ImagePath3 ?? string.Empty;
-                    worksheet.Cells[i + 2, 14].Value = armaItem.ImagePath4 ?? string.Empty;
-                    worksheet.Cells[i + 2, 15].Value = armaItem.BarcodePath ?? string.Empty;
-                    worksheet.Cells[i + 2, 16].Value = armaItem.ArmaNota ?? string.Empty;
+                    worksheet.Cells[i + 2, 1].Value = armaItem.IdArma;
+                    worksheet.Cells[i + 2, 2].Value = armaItem.TaNombre;
+                    worksheet.Cells[i + 2, 3].Value = armaItem.ArmaMarcaDescripcion;
+                    worksheet.Cells[i + 2, 4].Value = armaItem.ArmaCalibre;
+                    worksheet.Cells[i + 2, 5].Value = armaItem.ArmaSerie;
+                    worksheet.Cells[i + 2, 6].Value = armaItem.AlmacenDescripcion;
+                    worksheet.Cells[i + 2, 7].Value = armaItem.ImagePath1 ?? string.Empty;
+                    worksheet.Cells[i + 2, 8].Value = armaItem.ImagePath2 ?? string.Empty;
+                    worksheet.Cells[i + 2, 9].Value = armaItem.ImagePath3 ?? string.Empty;
+                    worksheet.Cells[i + 2, 10].Value = armaItem.ImagePath4 ?? string.Empty;
+                    worksheet.Cells[i + 2, 11].Value = armaItem.BarcodePath ?? string.Empty;
                 }
 
                 // Formatear el encabezado

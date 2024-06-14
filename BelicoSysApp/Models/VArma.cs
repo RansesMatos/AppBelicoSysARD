@@ -2,7 +2,7 @@
 {
     public class VArma
     {
-        public int IdArma { get; set; }
+        public int IdArma{ get; set; }
 
         public string? TaNombre { get; set; }
 
