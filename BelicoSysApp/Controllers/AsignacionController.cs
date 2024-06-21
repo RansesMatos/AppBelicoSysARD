@@ -1,16 +1,9 @@
 ﻿using BelicoSysApp.Models;
 using BelicoSysApp.Services;
-using DocumentFormat.OpenXml.EMMA;
-using DocumentFormat.OpenXml.Vml;
-using iTextSharp.text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Newtonsoft.Json;
-using Org.BouncyCastle.Crypto.Tls;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.WebPages;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 
 namespace BelicoSysApp.Controllers
 {
@@ -27,8 +20,78 @@ namespace BelicoSysApp.Controllers
             _apiServiceAarma = apiServiceAarma;
             _apiPertrecho = apiPertrecho;
 
-         DescargarPertrecho(9, 12263);
+        
         }
+
+        public async Task<ActionResult> GenerateDesasignacionCertificationPdf(int selectedOption)
+        {
+            // Obtener datos necesarios del usuario y los ítems asignados
+            VPersonal userInfo = await _apiServiceAsignacion.GetVPersonaId(selectedOption);
+            IEnumerable<AsignacionArma> asignaciones = await _apiServiceAsignacion.GetAsignaciones();
+            IEnumerable<VPertrecho> pertrechosAsignados = await _apiServiceAsignacion.GetVPertrechos();
+
+            // Filtrar datos específicos para la desasignación
+            var datosDesasignados = asignaciones.Where(x => x.AsignacionNoRango == selectedOption && !x.AsignacionStatus).ToList();
+            var pertrechosDesasignados = pertrechosAsignados.Where(x => x.Id_Militar == selectedOption && !x.status).ToList();
+
+            // Crear el PDF
+            using (MemoryStream ms = new MemoryStream())
+            {
+                Document pdf = new Document(PageSize.A4);
+                PdfWriter writer = PdfWriter.GetInstance(pdf, ms);
+                pdf.Open();
+
+                // Agregar contenido al PDF
+                AddPdfHeader(pdf, "CERTIFICADO DE DESASIGNACIÓN");
+                AddPdfParagraph(pdf, $"Este certificado verifica que los siguientes ítems han sido desasignados de {userInfo.Nombres}:");
+
+                // Listar armas desasignadas
+                foreach (var item in datosDesasignados)
+                {
+                    string armaDetails = $"Arma: {item.IdArma}";
+                    AddPdfParagraph(pdf, armaDetails);
+                }
+
+                // Listar pertrechos desasignados
+                foreach (var item in pertrechosDesasignados)
+                {
+                    string pertrechoDetails = $"Pertrecho: {item.pertrechos_descripcion} - Cantidad: {item.cantidad}";
+                    AddPdfParagraph(pdf, pertrechoDetails);
+                }
+
+                // Información adicional y firma
+                AddPdfSignature(pdf, userInfo);
+
+                pdf.Close();
+                writer.Close();
+
+                // Guardar el PDF en un archivo y/o enviarlo al usuario
+                return File(ms.ToArray(), "application/pdf", $"Desasignacion-{selectedOption}.pdf");
+            }
+        }
+
+        // Métodos auxiliares para añadir contenido al PDF
+        private void AddPdfHeader(Document document, string header)
+        {
+            Paragraph headerParagraph = new Paragraph(header, new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD));
+            headerParagraph.Alignment = Element.ALIGN_CENTER;
+            document.Add(headerParagraph);
+        }
+
+        private void AddPdfParagraph(Document document, string content)
+        {
+            Paragraph paragraph = new Paragraph(content, new Font(Font.FontFamily.HELVETICA, 10));
+            paragraph.Alignment = Element.ALIGN_LEFT;
+            document.Add(paragraph);
+        }
+
+        private void AddPdfSignature(Document document, VPersonal userInfo)
+        {
+            Paragraph signature = new Paragraph($"Firmado por: {userInfo.Nombres}, {userInfo.Rangos}", new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD));
+            signature.Alignment = Element.ALIGN_RIGHT;
+            document.Add(signature);
+        }
+
 
         [HttpGet]
         public async Task<IActionResult> DescargarPertrecho()
@@ -59,15 +122,33 @@ namespace BelicoSysApp.Controllers
         public async Task<IActionResult> AsignacionReport()
         {
             ICollection<AsignacionArma> lista = await _apiServiceAsignacion.GetAsignaciones();
+            List<AsignacionArma> updatedList = new List<AsignacionArma>();
+
+            foreach (var item in lista) 
+            {
+                var query = await _apiServiceAsignacion.GetVPersonaId(Convert.ToDecimal(item.AsignacionDocumento));
+                item.StatusARD = query.desc_estatus;
+                updatedList.Add(item);
+            }
+
+            lista = updatedList;
+
+            var statARD = updatedList.Select(x => x.StatusARD).ToList().Distinct();
+
 
             // TODO: Get options from API
             // NOTE: When pagination added, filtering should be performed on the backend
             var ddRangoOptions = lista.Select(x => x.AsignacionRango).ToList().Distinct();
 
+
+            
+
             //lista = lista.Take(30).ToList();
 
             ViewBag.Arma = lista;
             ViewBag.ddRangoOptions = ddRangoOptions;
+            ViewBag.ddRestatusOptions = statARD;
+
 
             return View(lista);
         }
@@ -558,8 +639,8 @@ namespace BelicoSysApp.Controllers
         }
 
 
-
     }
+
 }
 
 

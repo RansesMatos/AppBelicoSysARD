@@ -1,3 +1,8 @@
+#preview img {
+    width: 100%; /* Ajusta esto según tus necesidades */
+    height: auto;
+    max-width: 400px; /* Establece un máximo razonable */
+}
 :root {
     --background: #1a1a2e;
     --color: #ffffff;

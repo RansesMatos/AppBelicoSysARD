@@ -107,11 +107,13 @@
     </div>
     @*Este div que se muestra aqui es parte del container*@
 
-   <form>
-        <div class="col-sm-12 col-md-6 col-lg-4 mb-3 mt-2">
-        <label for="imageFile"><strong>Subir Documento de Orden Asignacion:</strong></label>
-            <input type="file" name="imageFile" />
-        </div>
+    <div class="col-sm-12 col-md-6 col-lg-4 mb-3 mt-2">
+        <label for="imageFile" class="btn btn-primary">
+            <strong>Subir Documento de Orden Asignación:</strong>
+            <input type="file" name="imageFile" id="imageFile" style="display: none;" onchange="document.getElementById('fileName').textContent = this.files[0].name">
+        </label>
+        <span id="fileName"></span>
+    </div>
 
     <div class="row container">
         <div class="col-sm-12 col-md-6 mb-3">
@@ -151,7 +153,6 @@
         <div class="modal-footer">
             <button class="btn btn-primary" id="btnSaveOrder" type="submit">Guardar selección</button>
         </div>
-    </form>
 
 
     <!-- Modal para seleccionar materiales -->

@@ -8,7 +8,11 @@
         var ddlRango = document.querySelector('#ddlRango');
         var txtNombres = document.querySelector('#txtNombres');
         var txtDocumento = document.querySelector('#txtDocumento');
+        var txtStatusARD = document.querySelector('#estatusARD');
 
+        ddlRango.addEventListener('change', function () {
+            filterData();
+        });
         ddlRango.addEventListener('change', function () {
             filterData();
         });
@@ -63,7 +67,7 @@
                 row.innerHTML = '<td><a class="btn btn-primary">Editar</a></td>' +
                     '<td>' + item.idArma + '</td>' +
                     '<td>' + item.asignacionNoRango + '</td>' +
-                    '<td>' + (item.asignacion_rango || '') + '</td>' +
+                    '<td>' + (item.asignacionRango || '') + '</td>' +
                     '<td>' + item.asignacionNombre + '</td>' +
                     '<td>' + item.asignacionDocumento + '</td>' +
                     '<td>' + (item.fechaAsignacion || '') + '</td>' +
@@ -97,6 +101,7 @@
             }
         </select>
     </div>
+     
     <div class="col-md-3">
         <label class="mb-2" for="txtNombres"><strong>Nombres:</strong></label>
         <input type="text" id="txtNombres" class="form-control" placeholder="Nombre">
@@ -104,6 +109,16 @@
     <div class="col-md-3">
         <label class="mb-2" for="txtDocumento"><strong>Documento:</strong></label>
         <input type="text" id="txtDocumento" class="form-control" placeholder="Documento de identidad">
+    </div>
+    <div class="col-md-3">
+        <label class="mb-2" for="estatusARD"><strong>Estatus:</strong></label>
+        <select id="estatusARD" class="form-control">
+            <option value="">Todos</option>
+            @foreach (var rango in ViewBag.ddRestatusOptions)
+            {
+                <option value="@rango">@rango</option>
+            }
+        </select>
     </div>
 </div>
 
@@ -118,6 +133,7 @@
             <th>Documento</th>
             <th>Fecha Asignacion</th>
             <th>Nota</th>
+            <th>Estatus Armada</th>
             <th>Estatus</th>
         </tr>
     </thead>
@@ -150,12 +166,16 @@
                     @armaitem.NotaAsignacion
                 </td>
                 <td>
+                    @armaitem.StatusARD
+                </td>
+                <td>
                     @if (@armaitem.AsignacionStatus)
                     {
                         <b>Activo</b>
                     }else{
                     <b>Desactivado</b>}
                 </td>
+              
                
             </tr>
         }
