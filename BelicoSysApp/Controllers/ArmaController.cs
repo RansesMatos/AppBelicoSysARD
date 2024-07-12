@@ -27,43 +27,51 @@ namespace BelicoSysApp.Controllers
         }
 
 
-        public async Task<IActionResult> ExportPDf()
+        public async Task<IActionResult> ExportPDF()
         {
+            // Obtener datos
             ICollection<VArma> lista = await _apiArma.GetVArmas();
             var valuesList = lista.ToList();
-
             string fileName = "values.pdf";
 
             using (MemoryStream memoryStream = new MemoryStream())
             {
+                // Configuración inicial del documento
                 Document document = new Document();
                 PdfWriter writer = PdfWriter.GetInstance(document, memoryStream);
-
                 document.Open();
-                PdfPTable table = new PdfPTable(2);
 
-                // table.AddCell("Index");
-                // table.AddCell("Value");
+                // Crear la tabla con el número correcto de columnas
+                PdfPTable table = new PdfPTable(6);  // Ajusta según el número de columnas necesarias
 
-                //for (int i = 0; i < valueslist.count; i++)
-                //{
-                //    table.addcell((i + 1).tostring());
-                //    table.addcell(valueslist[i].armaserie);
-                //}
+                // Añadir headers a la tabla
+                table.AddCell("Nombre del Tipo de Arma");
+                table.AddCell("Fecha de Registro");
+                table.AddCell("Descripción del Almacén");
+                table.AddCell("Calibre del Arma");
+                table.AddCell("Estado del Arma");
+                table.AddCell("Serie del Arma");
+
+                // Llenar la tabla con datos
                 foreach (var item in valuesList)
                 {
                     table.AddCell(item.TaNombre);
-                    table.AddCell(item.FechaRegistro.ToShortTimeString());
+                    table.AddCell(item.FechaRegistro.ToString("g")); // Cambiado para incluir fecha y hora
                     table.AddCell(item.AlmacenDescripcion);
                     table.AddCell(item.ArmaCalibre);
                     table.AddCell(item.ArmaStatus.ToString());
                     table.AddCell(item.ArmaSerie);
+
                     table.AddCell(item.BarcodePath);
                     table.CompleteRow();
+
                 }
 
+                // Añadir la tabla al documento
                 document.Add(table);
                 document.Close();
+
+
                 return File(memoryStream.ToArray(), "application/pdf", fileName);
             }
         }
@@ -241,16 +249,23 @@ namespace BelicoSysApp.Controllers
         }
 
         [HttpGet]
-        public async Task<JsonResult> SearchArmaAll(int cantidad)
+        public async Task<JsonResult> SearchArmaAll(int cantidad,int cantidad2)
         {
-
-            ICollection<Arma> armas = await _apiArma.GetArmasMasiva(cantidad,2);
-            if (armas.Count < cantidad)
+            try
             {
-                ModelState.AddModelError("", $"No se tiene disponible esa cantidad la cantidad disponible es {armas.Count}");
-            }
+                ICollection<Arma> armas = await _apiArma.GetArmasMasiva(cantidad, cantidad2);
+                if (armas.Count < cantidad)
+                {
+                    ModelState.AddModelError("", $"No se tiene disponible esa cantidad la cantidad disponible es {armas.Count}");
+                }
 
-            return Json(armas);
+                return Json(armas);
+            }
+            catch (Exception e)
+            {
+                ModelState.AddModelError("", $"Hay un error consultado ");
+                return Json(e);
+            }
         }
         public async Task<IActionResult> Export()
         {
@@ -351,7 +366,7 @@ namespace BelicoSysApp.Controllers
 
             ViewBag.Almacen = new SelectList(listaADto, "IdAlmacen", "AlmacenDescripcion");
             ViewBag.Marca = new SelectList(listaMarcaDto, "IdArmaMarca", "ArmaMarcaDescripcion");
-            ViewBag.Modelo = new SelectList(listaModeloDto, "IdArmaModelo", "descModelo");
+            ViewBag.Modelo = new SelectList(listaModeloDto, "idArmaModelo", "descModelo");
             ViewBag.ArmaTipo = new SelectList(listaTipoDto, "IdTipoArma", "TaNombre");
 
 

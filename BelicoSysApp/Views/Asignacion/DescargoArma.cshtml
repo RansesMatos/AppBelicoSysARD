@@ -1,4 +1,4 @@
-﻿<h2>Consulta de Arma Asignada y Descargo</h2>
+﻿<h2 class="text-center mb-2">Consulta de Arma Asignada y Descargo</h2>
 
  @*   <!-- Button to trigger the modal -->
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#searchModal">
@@ -34,13 +34,13 @@
 }
 
 <div>
-    <h5 class="modal-title" id="searchModalLabel">Buscar Miembro</h5>
+    <h5 class="modal-title mb-2" id="searchModalLabel">Buscar Miembro</h5>
 
-    <div class="row">
-        <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
+    <div class="row d-flex justify-content-center">
+        <div class="col-sm-12 col-md-6 col-lg-6 mb-3">
             <input type="text" id="searchInput" name="No Carnert" class="form-control" placeholder="Ingresar el Carnet" />
         </div>
-        <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
+        <div class="col-sm-12 col-md-6 col-lg-6 mb-3">
             <input type="text" id="searchInput2" name="cedula" class="form-control" placeholder="Ingresar la Cedula" />
         </div>
     </div>
@@ -54,6 +54,7 @@
 <div id="notification" class="notification"></div>
 
 <div>
+
     <form asp-controller="Asignacion" asp-action="DescargoArma" method="post" enctype="multipart/form-data">
 
         <div class="row">
@@ -64,22 +65,55 @@
         </select>
         <input type="hidden"  name="MilitarNo"  />
             </div>
-        </div>
-    <button type="submit" class="btn btn-primary" >Selecionar</button>
-    </form>
-    <p>Militar NO: @ViewBag.noM</p>
-    <p>Rango: @ViewBag.desc_rango</p>
-    <p>Name: @ViewBag.Nombres</p>
-    <p>Cedula: @ViewBag.Cedula</p>
-    <p>Departamento: @ViewBag.Dept</p>
-    <p>Celular: @ViewBag.Tel</p>    
-    <!-- Add any other person information fields you have -->
 
+        </div>
+
+            <button type="submit" class="btn btn-primary">Selecionar</button>
+
+            </form>
+
+
+
+    <div class="mt-2">
+
+        <div class="row row-cols-auto d-flex justify-content-center">
+
+           <div class="col">
+    <p><strong>Militar NO: </strong>@ViewBag.noM</p>
+               </div>
+
+               <div class="col">
+    <p><strong>Rango: </strong>@ViewBag.desc_rango</p>
+    </div>
+
+    <div class="col">
+    <p><strong>Nombre: </strong>@ViewBag.Nombres</p>
+    </div>
+
+    
+
+    
+        <div class="col">
+    <p><strong>Cédula: </strong>@ViewBag.Cedula</p>
+   </div>
+
+    <div class="col" >
+    <p><strong>Celular: </strong>@ViewBag.Tel</p>
+    </div>
+    
+    <div class="col">
+        <p><strong>Departamento: </strong>@ViewBag.Dept</p>
+        </div>
+
+    </div>
+
+    <!-- Add any other person information fields you have -->
+    </div>
     <h3>Armas Asignadas</h3>
 @if (ViewBag.count != 0){
         <table class="table table-striped table-hover">
-    <thead>
-        <tr>
+    <thead class="bg-primary">
+        <tr class="text-white">
             <th>Accion</th>
             <th>Arma ID</th>
             <th>Tipo Arma</th>
@@ -96,7 +130,9 @@
         {
             <tr>
                 <td>
-                  <a class="btn btn-primary" id="descargo" onclick="borrarAsignacion(@armaitem.IdAsignacion)">Descargar</a>
+
+                            <a class="btn btn-primary" id="descargo" onclick="borrarAsignacion(@armaitem.IdAsignacion,@armaitem.IdArma)">Quitar Asignacion</a>
+
                 </td>
                 <td>
                     @armaitem.IdArma
@@ -139,12 +175,10 @@
      </tr>
      </tbody>
      </table>
-
-
     }
 
 
-    <h3>Pertrechos Asignados</h3>
+    <h3>Pertrechos Asignadas</h3>
 
     @if (ViewBag.count != 0)
     {
@@ -162,7 +196,7 @@
                 {
                     <tr>
                         <td>
-                            <a class="btn btn-primary">Descargar</a>
+                            <a class="btn btn-primary">Quitar Asignacion</a>
                         </td>
                         <td>
                             @armaitemP.Id_pertrechos
@@ -172,8 +206,7 @@
                         </td>
                         <td>
                             @armaitemP.cantidad
-                        </td>
-                        
+                        </td>                   
                     </tr>
                 }
             </tbody>

@@ -8,42 +8,58 @@
 
 
     <div>
-        <h5 id="searchModalLabel">Buscar Miembro Para Formulario 25.</h5>
+    <h5 id="searchModalLabel"><strong>Buscar Miembro Para Formulario 25.</strong></h5>
+        <div class="row" >
+            <div class="col" >
         <input type="text" id="searchByCarnet" class="form-control" placeholder="Ingrese un NoCarnet" />
+        </div>
+
+        <div class="col" >
         <input type="text" id="searchByCedula" class="form-control" placeholder="Ingrese una cédula" />
-    <button type="button" class="btn btn-primary" id="btnBuscar" name="btnBuscar">Buscar</button>
+        </div>
+    </div>
+    <button type="button" class="btn btn-primary mt-2" id="btnBuscar" name="btnBuscar">Buscar</button>
     </div>
     <div id="notification"></div>
 
 <div class="row">
 
     <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
-        <label class="form-label" for="MilitarNo">Nombre:</label>
+        <label class="form-label" for="MilitarNo"><strong>Nombre:</strong></label>
         <select class="form-select" id="MilitarNo" name="MilitarNo" onclick="loadDropDownDataCert()" style="width: auto">
         </select>
         <input type="hidden" class="form-control" id="AsignacionNombre" name="AsignacionNombre" readonly />
     </div>
+    <div class="container" >
     <button type="button" class="btn btn-primary" id="btnSelect" name="btnSelect">Seleccionar</button>
-
+    </div>
 </div>
 
     <div class="content" id="cuerpo" name="cuerpo">
-        <p>Form. No 25, ARD.</p>
-        <h2>ARMADA DE REPÚBLICA DOMINICANA</h2>
-        <h3>RECIBO MEMORANDUM</h3>
-        <p>Santo Domingo, Este.</p>
-        <p>Lugar</p>
-        <div class="line">------------------------</div>
+        <p class="mt-2" >Form. No 25, ARD.</p>
+        <h2 class="text-center">ARMADA DE REPÚBLICA DOMINICANA</h2>
+        <h3 class="text-center" >RECIBO MEMORANDUM</h3>
+
+        <div class="row container" >
+
+        <div class="col d-flex">
+        <span class="mr-2 px-auto"><strong> Lugar: </strong></span>
+        <span>Santo Domingo, Este.</span>
+        </div>
+
+       <div class="col d-flex">
+        <p class="ml-2" ><strong>Fecha: </strong></p>
         <p id="fecha"></p>
-        <p>Fecha</p>
-        <div class="line">------------------------</div>
-        <p>ACUSO RECIBO AL, INTENDENTE DEL MAT.BELICO, ARD</p>
-        <div class="line">------------------------</div>
-        <p>De los efectos siguientes para uso oficial del </p>
+        
+    </div>
+
+    </div>
+
+    <span>Acuso recibo al, INTENDENTE DEL MAT.BELICO, ARD De los efectos siguientes para uso oficial del</span>
         <span id="rango" name="rango"></span>
         <span id="nombre" name="nombre"></span>
         <input type="hidden" id="idarma" name="idarma"/>
-        <p>propiedades de la Armada de la ARD y me comprometo a devolverlos cuando sean requeridos por la autoridad competente.</p>
+        <span>propiedades de la Armada de la ARD y me comprometo a devolverlos cuando sean requeridos por la autoridad competente.</span>
 
         <div class="line">------------------------</div>
 
@@ -61,16 +77,15 @@
         <span id="rangod" name="rangod"></span>
         <span id="cedula" name="cedula"></span>
         <span id="dir" name="dir"></span>
-         <h2>YAN LIROY VARGAS CAMINERO</h2>
-        <h3>CAPITÁN DE NAVÍO</h3>
-        <p>INTENDENTE DEL MAT.BELICO, ARD</p>        
+    <span class="mb-2"><strong>YAN LIROY VARGAS CAMINERO CAPITÁN DE NAVÍO INTENDENTE DEL MAT.BELICO, ARD</strong></span>
+               
     </div>
 
-<div class="actions">
+<div class="actions mb-4">
 @*     <form asp-controller="Certification" asp-action="Crearpdf25" method="post" target="_blank">
         <button type="submit" class="btn btn-primary">Imprimir en Pantalla</button>
     </form> *@
-    <a id="btnpdf" name="btnpdf" class="btn btn-success" style="background-color:red">Exportar a PDF</a>
+    <a id="btnpdf" name="btnpdf" class="btn btn-success mb-2 mt-2" style="background-color:#0D6EFD" >Exportar a PDF</a>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
@@ -80,10 +95,20 @@
     $(document).ready(() => {
         loadDropDownDataCert();
         loadDocDataCert();
-        Pdf();
+        //Pdf();
+        setupPdfButton();
 
 
     });
+    function setupPdfButton() {
+        const btnSelector = $('#btnpdf');
+        const pdfURL = "/Certification/Crearpdf25";
+
+        btnSelector.click(() => {
+            const selectedOption = $('option').val();  // Ensure you use the correct selector for your <select>
+            window.open(pdfURL + '?selectedOption=' + selectedOption, '_blank');
+        });
+    }
     function loadDropDownDataCert() {
         const btnSelectWeapon = $('#btnBuscar');
 
@@ -204,6 +229,7 @@
                 if (response) {
                     console.log(response);
                     updateInventoryP(response);
+
                 }
             });
         })

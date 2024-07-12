@@ -11,24 +11,25 @@
 </head>
 
 <body id="body">
+    <div style="background-color: #172554;" class=" pb-1b ">
     <div style="width: 100%; height: auto; text-align: center;">
         <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
             <img src="~/img/logo.png" width="100" />
         </a>
     </div>
-    <div style="width: 100%; height: auto; text-align: center;">
+    <div class="pb-1" style="width: 100%; height: auto; text-align: center; color: white;">
         <h4>ARMADA DE REPÚBLICA DOMINICANA</h4>
         <h6>UNA PROFESIÓN HONORABLE</h6>
         <h6>INTENDENCIA DEL MATERIAL BÉLICO</h6>
         <h6>Sistema de Inventario, Cargo y Descargo de Armas</h6>
     </div>
-
-    <div class="container mt-5 p-3 border rounded" style="background: white;">
+    </div>
+    <div class="container mt-5 p-3 border rounded" style="background: white; width: 35%;">
         @RenderBody()
     </div>
 
-    <footer id="footer" class="border-top footer text-muted bg-primary">
-        <div class="container text-white" style="text-align:center">
+    <footer id="footer" class="border-top footer text-muted" style="background-color:#172554;">
+        <div class="container text-white" style="text-align:center;">
             &copy; 2023 - Dirreción de Tecnología (TIC), ARD.
         </div>
     </footer>

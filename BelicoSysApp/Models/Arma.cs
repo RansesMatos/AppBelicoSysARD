@@ -18,10 +18,12 @@
         public string ImagePath4 { get; set; }
         public string? BarcodePath { get; set; } = null!;
         public string? ArmaNota { get; set; } = null!;
+
         public virtual ArmaMarca IdArmaMarcaNavigation { get; set; } = null!;
         public virtual TipoArma IdTipoArmaNavigation { get; set; } = null!;
         public virtual ArmaModelo IdTipoModeloNavigation { get; set; } = null!;
         public virtual Almacen IdAlmacenNavigation { get; set; } = null!;
+
     }
 
 
