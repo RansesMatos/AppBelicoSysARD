@@ -3,6 +3,7 @@ using DocumentFormat.OpenXml.EMMA;
 using Newtonsoft.Json;
 using System;
 using System.Text;
+using System.Web.Mvc;
 
 namespace BelicoSysApp.Services
 {
@@ -43,27 +44,39 @@ namespace BelicoSysApp.Services
                 ICollection<Arma> resultado = JsonConvert.DeserializeObject<ICollection<Arma>>(json_respuesta);
                 armaList = resultado;
             }
-
             return armaList;
-
         }
-        public async Task<VArma> GetVArmaSerial(string armaSerial)
+        public async Task<VArma> GetVArmaSerial(string serie)
         {
-            VArma vArmaList = new VArma();
-            var client = new HttpClient();
-            client.BaseAddress = new Uri(_baseUrl);
-            var response = await client.GetAsync($"api/VArmas/{armaSerial}");
-            if (response != null && response.IsSuccessStatusCode)
+            var arma = new VArma();
+            using (var client = new HttpClient())
             {
-
-                var json_respuesta = await response.Content.ReadAsStringAsync();
-                VArma resultado = JsonConvert.DeserializeObject<VArma>(json_respuesta);
-                vArmaList = resultado;
+                client.BaseAddress = new Uri(_baseUrl);
+                var response = await client.GetAsync($"api/VArmas/{serie}");
+                if (response.IsSuccessStatusCode)
+                {
+                    var jsonResponse = await response.Content.ReadAsStringAsync();
+                    arma = JsonConvert.DeserializeObject<VArma>(jsonResponse);
+                }
             }
-
-            return vArmaList;
-
+            return arma;
         }
+        public async Task<List<VArma>> GetVArmaSerialList(string serie)
+        {
+            var arma = new List<VArma>();
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(_baseUrl);
+                var response = await client.GetAsync($"api/VArmas/{serie}");
+                if (response.IsSuccessStatusCode)
+                {
+                    var jsonResponse = await response.Content.ReadAsStringAsync();
+                    arma = JsonConvert.DeserializeObject<List<VArma>>(jsonResponse);
+                }
+            }
+            return arma;
+        }
+
         public async Task<ICollection<VArma>> GetVArmas()
         {
             ICollection<VArma> vArmaList = new List<VArma>();

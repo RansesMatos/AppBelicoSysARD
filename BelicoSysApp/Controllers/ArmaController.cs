@@ -68,6 +68,9 @@ namespace BelicoSysApp.Controllers
             }
         }
 
+        //public async Task<IActionResult> ExportArmaToExcel()
+        //{ }
+
         [HttpGet]
         public async Task<IActionResult> ExportExcel()
         {
@@ -87,13 +90,13 @@ namespace BelicoSysApp.Controllers
                 worksheet.Cells["C1"].Value = "Descripcion";
                 worksheet.Cells["D1"].Value = "Calibre";
                 worksheet.Cells["E1"].Value = "Serie";
-               
                 worksheet.Cells["F1"].Value = "Almacen";
-                worksheet.Cells["G1"].Value = "Image_1";
-                worksheet.Cells["H1"].Value = "Image_2";
-                worksheet.Cells["I1"].Value = "Image_3";
-                worksheet.Cells["J1"].Value = "Image_4";
-                worksheet.Cells["K1"].Value = "Codigo de Barra";
+                worksheet.Cells["G1"].Value = "ArmaStatus";    
+                worksheet.Cells["H1"].Value = "Image_1";
+                worksheet.Cells["I1"].Value = "Image_2";
+                worksheet.Cells["J1"].Value = "Image_3";
+                worksheet.Cells["K1"].Value = "Image_4";
+                worksheet.Cells["M1"].Value = "Codigo de Barra";
              
 
                 for (int i = 0; i < valuesList.Count; i++)
@@ -106,11 +109,12 @@ namespace BelicoSysApp.Controllers
                     worksheet.Cells[i + 2, 4].Value = armaItem.ArmaCalibre;
                     worksheet.Cells[i + 2, 5].Value = armaItem.ArmaSerie;
                     worksheet.Cells[i + 2, 6].Value = armaItem.AlmacenDescripcion;
-                    worksheet.Cells[i + 2, 7].Value = armaItem.ImagePath1 ?? string.Empty;
-                    worksheet.Cells[i + 2, 8].Value = armaItem.ImagePath2 ?? string.Empty;
-                    worksheet.Cells[i + 2, 9].Value = armaItem.ImagePath3 ?? string.Empty;
-                    worksheet.Cells[i + 2, 10].Value = armaItem.ImagePath4 ?? string.Empty;
-                    worksheet.Cells[i + 2, 11].Value = armaItem.BarcodePath ?? string.Empty;
+                    worksheet.Cells[i + 2, 7].Value = armaItem.AlmacenDescripcion;
+                    worksheet.Cells[i + 2, 8].Value = armaItem.ImagePath1 ?? string.Empty;
+                    worksheet.Cells[i + 2, 9].Value = armaItem.ImagePath2 ?? string.Empty;
+                    worksheet.Cells[i + 2, 10].Value = armaItem.ImagePath3 ?? string.Empty;
+                    worksheet.Cells[i + 2, 11].Value = armaItem.ImagePath4 ?? string.Empty;
+                    worksheet.Cells[i + 2, 12].Value = armaItem.BarcodePath ?? string.Empty;
                 }
 
                 // Formatear el encabezado
@@ -136,13 +140,106 @@ namespace BelicoSysApp.Controllers
 
             }
         }
-        [HttpGet]
-        public async Task<IActionResult> SearchArma(string armaSerial)
-        {
-            VArma lista = await _apiArma.GetVArmaSerial(armaSerial);
 
-            return Ok(lista);
+        public async Task<IActionResult> ExportOneArma(string ParameterSerie)
+        {
+            // Obtener datos de la base de datos usando EF Core
+            var arma = await _apiArma.GetVArmaSerialList(ParameterSerie);
+
+            // Asegurarse de que el objeto no sea nulo
+            if (arma == null)
+            {
+                return NotFound();
+            }
+
+            var armas = arma.FirstOrDefault();
+
+            // Crear un nuevo paquete de Excel
+            using (var package = new ExcelPackage())
+            {
+                // Agregar una nueva hoja de cálculo al libro vacío
+                var worksheet = package.Workbook.Worksheets.Add("Reporte");
+
+                // Cargar los datos en la hoja de cálculo
+                worksheet.Cells["A1"].Value = "Id_Arma";
+                worksheet.Cells["B1"].Value = "Nombre Arma";
+                worksheet.Cells["C1"].Value = "Descripcion";
+                worksheet.Cells["D1"].Value = "Calibre";
+                worksheet.Cells["E1"].Value = "Serie";
+                worksheet.Cells["F1"].Value = "Almacen";
+                worksheet.Cells["G1"].Value = "ArmaStatus";
+                worksheet.Cells["H1"].Value = "Image_1";
+                worksheet.Cells["I1"].Value = "Image_2";
+                worksheet.Cells["J1"].Value = "Image_3";
+                worksheet.Cells["K1"].Value = "Image_4";
+                worksheet.Cells["L1"].Value = "Codigo de Barra";
+
+                worksheet.Cells[2, 1].Value = armas.IdArma;
+                worksheet.Cells[2, 2].Value = armas.TaNombre;
+                worksheet.Cells[2, 3].Value = armas.ArmaMarcaDescripcion;
+                worksheet.Cells[2, 4].Value = armas.ArmaCalibre;
+                worksheet.Cells[2, 5].Value = armas.ArmaSerie;
+                worksheet.Cells[2, 6].Value = armas.AlmacenDescripcion;
+                worksheet.Cells[2, 7].Value = armas.ArmaStatus;
+                worksheet.Cells[2, 8].Value = armas.ImagePath1 ?? string.Empty;
+                worksheet.Cells[2, 9].Value = armas.ImagePath2 ?? string.Empty;
+                worksheet.Cells[2, 10].Value = armas.ImagePath3 ?? string.Empty;
+                worksheet.Cells[2, 11].Value = armas.ImagePath4 ?? string.Empty;
+                worksheet.Cells[2, 12].Value = armas.BarcodePath ?? string.Empty;
+
+                // Formatear el encabezado
+                using (var range = worksheet.Cells[1, 1, 1, 12])
+                {
+                    range.Style.Font.Bold = true;
+                    range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    range.Style.Fill.BackgroundColor.SetColor(Color.DarkBlue);
+                    range.Style.Font.Color.SetColor(Color.White);
+                }
+
+                // Ajustar el ancho de las columnas
+                worksheet.Cells.AutoFitColumns();
+
+                // Guardar el paquete de Excel en un MemoryStream
+                var stream = new MemoryStream();
+                package.SaveAs(stream);
+
+                // Devolver el archivo Excel como un archivo descargable
+                stream.Position = 0;
+                var fileName = "Reporte.xlsx";
+                return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+            }
         }
+
+        [HttpGet]
+        //public async Task<IActionResult> SearchArma(string serie)
+        //{
+        //    //if (string.IsNullOrEmpty(armaSerial))
+        //    //{
+        //    //    ViewBag.Message = "Serie is null or empty.";
+        //    //    return BadRequest();
+        //    //}
+
+        //    var arma = await _apiArma.GetVArmaSerial(serie);
+
+
+        //    ViewBag.VArma = arma;
+
+        //    return Ok(arma);
+        //}
+        public async Task<IActionResult> SearchArma(string serie)
+        {
+            ///Este es el metodo para trabajar con las 
+            // Llama al método GetVArmaSerial para obtener los datos
+           
+                var armas = await _apiArma.GetVArmaSerial(serie);
+                if (armas == null)
+                {
+                    ViewBag.Message = "No se encontraron datos para la serie proporcionada.";
+                    return PartialView("_ArmaReport", new List<VArma>());
+                }
+                return PartialView("_ArmaReport", armas);  
+        }
+
         [HttpGet]
         public async Task<JsonResult> SearchArmaAll(int cantidad)
         {
@@ -328,7 +425,6 @@ namespace BelicoSysApp.Controllers
             IEnumerable<Almacen> listaA = await _apiArma.GetAlmacenes();
             IEnumerable<ArmaMarca> listaM = await _apiArma.GetArmasMarcas();
             IEnumerable<ArmaModelo> listaM0 = await _apiArma.GetArmasModelo();
-
             IEnumerable<TipoArma> listaAT = await _apiArma.GetArmasTipos();
             var listaADto = new List<Almacen>();
             var listaMarcaDto = new List<ArmaMarca>();
@@ -359,8 +455,6 @@ namespace BelicoSysApp.Controllers
             ViewBag.Modelo = new SelectList(listaMarcaDto, "IdArmaModelo", "descModelo");
             ViewBag.ArmaTipo = new SelectList(listaTipoDto, "IdTipoArma", "TaNombre");
 
-
-
             return View();
         }
 
@@ -386,11 +480,7 @@ namespace BelicoSysApp.Controllers
                 return false;
             }
             
-
-     
         }
-
-
 
             [HttpGet]
         public IActionResult MenuArma()
@@ -402,8 +492,6 @@ namespace BelicoSysApp.Controllers
             ViewBag.SuccessMessage = successMessage;
             return View();
         }
-
-
 
     }
 
