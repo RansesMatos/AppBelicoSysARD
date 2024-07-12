@@ -291,17 +291,16 @@ namespace BelicoSysApp.Controllers
                 {
                     if(listaDto.Count < listaasigDto.Count) { 
                     listaDto.Add(arma);
-                        }
+                    }
                 }
             }
 
             //==========================Petrechos
             IEnumerable<VPertrecho> listaPer = _apiServiceAsignacion.GetVPertrechos().Result;
             listaPer = listaPer.Where(x => x.Id_Militar == obtasig && x.status == true);
-            //foreach (var arma in lista.Where(e => e.IdArma == nuevoC))
-            //{
-            //    listaDto.Add(arma);
-            //}
+
+           
+
             ViewBag.count = listaasigDto.Count;
             ViewBag.Arma = listaDto;
             ViewBag.Pertrecho = listaPer;
@@ -312,6 +311,8 @@ namespace BelicoSysApp.Controllers
             ViewBag.Tel = listaP.num_celular;
             ViewBag.Dept = listaP.desc_departamento;
             ViewBag.noM = listaP.MilitarNo;
+
+
             ViewBag.DeleteMessage = "Registro Eliminado";
 
             return View();
@@ -590,6 +591,7 @@ namespace BelicoSysApp.Controllers
             if (model.Id_Asignacion_pertrecho == 0)
             {
                 var respuesta = await _apiServiceAsignacion.SaveAsigPertrecho(model);
+
                 if (respuesta.Id_Asignacion_pertrecho == 0)
                 {
                     ModelState.AddModelError("", "Error el Numero de Serie ya esta registrado");

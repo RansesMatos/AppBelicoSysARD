@@ -1,6 +1,9 @@
 using BelicoSysApp.Services;
 using DinkToPdf.Contracts;
 using DinkToPdf;
+using OfficeOpenXml;
+
+ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +35,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Account}/{action=Login}");
+    pattern: "{controller=Account}/{action=Login}/{id?}");
 
 app.Run();

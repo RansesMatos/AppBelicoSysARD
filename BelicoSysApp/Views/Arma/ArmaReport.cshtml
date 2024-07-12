@@ -92,9 +92,14 @@
     <div class="col-6">
         <h1>Listado de Armas Registrados</h1>
     </div>
+    
     <div class="col d-flex justify-content-end align-items-center">
-        <a asp-controller="Arma" asp-action="Export" class="btn btn-success me-2">Export to Excel</a>
-        <a asp-controller="Arma" asp-action="ExportPDf" class="btn btn-success" style="background-color: #0D6EFD">Export to PDF</a>
+
+        <a href="#" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#searchModal">
+            <i class="fas fa-search"></i> Exportar Arma
+        </a>
+        <a asp-controller="Arma" asp-action="ExportExcel" class="btn btn-success me-2"> <i class="fas fa-file-excel"></i> Exportar a Excel</a>
+        <a asp-controller="Arma" asp-action="ExportPDf" class="btn btn-success"  style="background-color: #0D6EFD" "><i class="fas fa-file-pdf"></i> Exportar a PDF</a>
     </div>
 </div>
 
@@ -164,57 +169,79 @@
         @foreach(var armaitem in Model)
         {
             <tr>
-                <td>
-                   @*  <a class="btn btn-primary" >Editar</a> *@
-                    <input type="checkbox">
-                  
-                </td>
-                <td>
-                    @armaitem.IdArma
-                </td>
-                <td>
-                    @armaitem.TaNombre
-                </td>
-                <td>
-                    @armaitem.ArmaMarcaDescripcion
-                </td>
-                <td>
-                    @armaitem.ArmaCalibre
-                </td>
-                <td>
-                    @armaitem.ArmaSerie
-                </td>
-                <td>
-                    @armaitem.AlmacenDescripcion
-                </td>
-                <td>
-                    @armaitem.ArmaEstadoDescripcion
-                </td>
-                <td>
-                    @if (@armaitem.ArmaStatus)
-                    {
-                        <b>Activo</b>
-                    }else{
-                    <b>Desactivado</b>}
-                </td>
-                <td>
-                    <img src="~/Images/@armaitem.ImagePath1" style="block-size: 55px" />
-                </td>
-                <td>
-                    <img src="~/Images/@armaitem.ImagePath1" style="block-size: 55px" />
-                </td>
-                <td>
-                    <img src="~/Images/@armaitem.ImagePath1" style="block-size: 55px" />
-                </td>
-                <td>
-                    <img src="~/Images/@armaitem.ImagePath1" style="block-size: 55px" />
-                </td>
-                <td>
-                    <img src="~/Images/@armaitem.BarcodePath" style="block-size: 55px" />
-                </td>
-               
+                <td><input type="checkbox"></td>
+                <td>@armaitem.IdArma</td>
+                <td>@armaitem.TaNombre</td>
+                <td>@armaitem.ArmaMarcaDescripcion</td>
+                <td>@armaitem.ArmaCalibre</td>
+                <td>@armaitem.ArmaSerie</td>
+                <td>@armaitem.AlmacenDescripcion</td>
+                <td>@armaitem.ArmaEstadoDescripcion</td>
+                <td>@(armaitem.ArmaStatus ? "Activo" : "Desactivado")</td>
+                <td><img src="~/Images/@armaitem.ImagePath1" style="block-size: 55px" /></td>
+                <td><img src="~/Images/@armaitem.ImagePath1" style="block-size: 55px" /></td>
+                <td><img src="~/Images/@armaitem.ImagePath1" style="block-size: 55px" /></td>
+                <td><img src="~/Images/@armaitem.ImagePath1" style="block-size: 55px" /></td>
+                <td><img src="~/Images/@armaitem.BarcodePath" style="block-size: 55px" /></td>
             </tr>
         }
     </tbody>
 </table>
+
+<!-- Modal -->
+<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 90%; width: auto;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="searchModalLabel">Buscar Arma</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+                <form id="searchForm" asp-action="SearchArma" method="get" class="form-group">
+                    <div class="form-group">
+                        <label for="inputSerieArma">Serie Del Arma</label>
+                        <input type="text" name="serie" class="form-control" id="inputSerieArma" placeholder="Digite la Serie del Arma">
+                        <small id="serieHelp" class="form-text text-muted">Debe asegurarse de ingresar correctamente la serie del arma.</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-2">Buscar</button>
+                </form>
+
+                <div id="partialViewContainer">
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <a id="ExportOneArma" href="#" class="btn btn-success">
+                    <i class="fas fa-file-excel"></i> Confirmar Exportación
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('searchForm');
+            const partialViewContainer = document.getElementById('partialViewContainer');
+            const exportLink = document.getElementById('ExportOneArma');
+
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                const serie = document.getElementById('inputSerieArma').value;
+
+                fetch(`/Arma/SearchArma?serie=${serie}`)
+                    .then(response => response.text())
+                    .then(html => {
+                        partialViewContainer.innerHTML = html;
+
+                        // Suponiendo que la serie del arma se encuentra en la quinta columna (index 4)
+                        const serieArma = document.querySelector('#partialViewContainer tbody tr td:nth-child(5)').textContent.trim();
+                        exportLink.href = `/Arma/ExportOneArma?serie=${serieArma}`;
+                    });
+            });
+        });
+    </script>
+}
 

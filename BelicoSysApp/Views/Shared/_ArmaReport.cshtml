@@ -1,0 +1,51 @@
+﻿@{
+    Layout = null;
+}
+
+@model VArma;
+
+@if (Model is null)
+{
+    <div class="alert alert-warning">
+        No se encontraron datos para la serie proporcionada.
+    </div>
+}
+else
+{
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Arma ID</th>
+                <th>Tipo Arma</th>
+                <th>Marca</th>
+                <th>Calibre</th>
+                <th>Serie</th>
+                <th>Almacen</th>
+                <th>Estado</th>
+                <th>Estatus</th>
+                <th>Imagene 1</th>
+                <th>Imagene 2</th>
+                <th>Imagene 3</th>
+                <th>Imagene 4</th>
+                <th>Serial</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@Model.IdArma</td>
+                <td>@Model.TaNombre</td>
+                <td>@Model.ArmaMarcaDescripcion</td>
+                <td>@Model.ArmaCalibre</td>
+                <td>@Model.ArmaSerie</td>
+                <td>@Model.AlmacenDescripcion</td>
+                <td>@Model.ArmaEstadoDescripcion</td>
+                <td>@(Model.ArmaStatus ? "Activo" : "Desactivado")</td>
+                <td><img src="~/Images/@Model.ImagePath1" style="block-size: 55px" /></td>
+                <td><img src="~/Images/@Model.ImagePath2" style="block-size: 55px" /></td>
+                <td><img src="~/Images/@Model.ImagePath3" style="block-size: 55px" /></td>
+                <td><img src="~/Images/@Model.ImagePath4" style="block-size: 55px" /></td>
+                <td><img src="~/Images/@Model.BarcodePath" style="block-size: 55px" /></td>
+            </tr>
+        </tbody>
+    </table>
+}

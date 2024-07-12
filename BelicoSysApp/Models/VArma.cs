@@ -2,18 +2,12 @@
 {
     public class VArma
     {
-        public int IdArma { get; set; }
-
+        public int IdArma{ get; set; }
         public string? TaNombre { get; set; }
-
         public string ArmaMarcaDescripcion { get; set; } = null!;
-
         public string ArmaCalibre { get; set; } = null!;
-
         public string ArmaSerie { get; set; } = null!;
-
         public string AlmacenDescripcion { get; set; } = null!;
-
         public string ArmaEstadoDescripcion { get; set; } = null!;
         public string? ArmaNota { get; set; } = null!;
         public string ImagePath1 { get; set; }
