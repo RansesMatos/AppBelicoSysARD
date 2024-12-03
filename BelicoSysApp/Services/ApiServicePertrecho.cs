@@ -1,5 +1,7 @@
 ﻿using BelicoSysApp.Models;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Net;
 using System.Text;
 
 namespace BelicoSysApp.Services
@@ -11,6 +13,28 @@ namespace BelicoSysApp.Services
         {
             var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json").Build();
             _baseUrl = builder.GetSection("ApiSetting:baseUrl").Value;
+        }
+
+        public async Task<bool> UpdatePertrecho(Pertrecho pertrecho)
+        {
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(_baseUrl);
+                var json = JsonConvert.SerializeObject(pertrecho);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                // Llamada PUT al servicio de pertrechos para actualizar la cantidad
+                var response = await client.PatchAsync($"api/Pertrecho/{pertrecho.IdPertrechos}", content);
+
+                if (response.StatusCode == HttpStatusCode.NoContent)
+                {
+                    // Éxito, el pertrecho se ha actualizado correctamente
+                    return true;
+                }else
+                {
+                    throw new Exception("Error al actualizar el pertrecho.");
+                }
+            }
         }
         public async Task<ICollection<Pertrecho>> GetPertrecho()
         {
@@ -31,10 +55,7 @@ namespace BelicoSysApp.Services
                 PertrechoList = resultado;
             }
 
-#pragma warning disable CS8603 // Possible null reference return.
             return PertrechoList;
-#pragma warning restore CS8603 // Possible null reference return.
-
         }
         public async Task<Pertrecho> Get(int IdPertrecho)
         {
@@ -48,12 +69,10 @@ namespace BelicoSysApp.Services
             if (response.IsSuccessStatusCode)
             {
                 var json_respuesta = await response.Content.ReadAsStringAsync();
-                var resultado = JsonConvert.DeserializeObject<ApiResult>(json_respuesta);
-                objeto = resultado.pertrecho;
+                var resultado = JsonConvert.DeserializeObject<Pertrecho>(json_respuesta);
+                objeto = resultado;
             }
-
             return objeto;
-        
         }
         public async Task<ICollection<Almacen>> GetAlmacenes()
         {
@@ -68,9 +87,10 @@ namespace BelicoSysApp.Services
                 ICollection<Almacen> resultado = JsonConvert.DeserializeObject<ICollection<Almacen>>(json_respuesta);
                 almacenList = resultado;
             }
-
             return almacenList;
         }
+      
+
         public async Task<bool> Edit(int idpertrecho, Pertrecho objeto)
         {
             _ = new Pertrecho();
@@ -108,8 +128,6 @@ namespace BelicoSysApp.Services
                
                 return pertrcho;
             }
-            
-
             return null;
         }
 

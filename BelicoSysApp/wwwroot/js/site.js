@@ -6,12 +6,15 @@ const { drop } = require("../../../../../../node_modules/cypress/types/lodash/in
 // Write your JavaScript code.
 
 const button = document.querySelector('#Mant');
+
 const disableButton = () => {
     console.log("va");
     button.disabled = true;
 };
+
 button.addEventListener('click', disableButton);
 const button2 = document.querySelector('#Mant2');
+
 const disableButton2 = () => {
     console.log("va");
     button2.disabled = true;
@@ -112,7 +115,6 @@ function loadDropdownData() {
                 dropdown.append($('<option></option>').text(item.rangos + "  " + item.nombres + " - ( " + item.cedula + " )").val(item.militarNo));
             });
 
-
             console.log(data)
         },
         error: function (xhr, status, error) {
@@ -120,6 +122,72 @@ function loadDropdownData() {
         }
     });
 }
+
+function descargarPertrecho(button) {
+
+    var noM = button.getAttribute('data-no-m');
+    var idPertrechos = button.getAttribute('data-id-pertrechos');
+
+    fetch(`/Asignacion/DescargarPertrecho?NoMilitar=${noM}&IdPertrecho=${idPertrechos}`,
+    {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            return response.json();
+        }
+        throw new Error('Error en la respuesta del servidor');
+    })
+    .then(data => {
+        Swal.fire({
+            icon: 'success',
+            title: 'Descargado',
+            text: 'El pertrecho se ha descargado exitosamente.'
+        }).then(() => {
+            location.reload();
+        });
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Ocurrió un error al descargar el pertrecho.'
+        });
+     });
+}
+
+function ValidarPertrechoMilitar(militarNo) { 
+
+    try {
+        const response = await fetch(`/Asignacion/ValidarPertrechoAsignacion?NoMilitar=${militarNo}`, {
+            method: 'POST',
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        });
+
+        if (!response.ok) throw new Error('Error en la respuesta del servidor');
+
+        const data = await response.json();
+
+        Swal.fire({
+            icon: data.success ? 'success' : 'error',
+            title: data.success ? 'Seleccionado' : 'Error',
+            text: data.message || (data.success ? 'La asignación ha sido seleccionada exitosamente.' : 'No se pudo completar la selección.')
+        });
+
+    } catch (error) {
+        console.error('Error:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Ocurrió un error al seleccionar la asignación.'
+        });
+    }
+}
+
 function loadDropdownData2() {
     let nombrefilter = document.getElementById("searchInput").value;
     let nombrefilter2 = document.getElementById("searchInput2").value;
@@ -138,9 +206,7 @@ function loadDropdownData2() {
             $.each(data, function (index, item) {
                 dropdown.append($('<option></option>').text(item.rangos + " " + item.nombres + " - ( " + item.cedula + " )").val(item.militarNo));
             });
-
-
-            console.log(data)
+            console.log("Prueba",data)
         },
         error: function (xhr, status, error) {
             console.error('Error loading dropdown data: ' + error);
@@ -174,7 +240,6 @@ function loadDropdownData3() {
         }
     });
 }
-
 function loadDropdownData4() {
     let nombrefilter = document.getElementById("searchInput").value;
     let nombrefilter2 = document.getElementById("searchInput2").value;
@@ -466,8 +531,6 @@ function ExportPDFCertificate() {
     });
 }
 
-
-
 function confirmarAccion({ callBackAceptar, callbackCancelar, titulo }) {
     Swal.fire({
         title: titulo || 'Confirmas que esta es la Accion que deseas Realizar.',
@@ -485,8 +548,6 @@ function confirmarAccion({ callBackAceptar, callbackCancelar, titulo }) {
     })
 
 }
-
-
 function borrarAsignacion(asignacion) {
     confirmarAccion({
         callBackAceptar: () => {

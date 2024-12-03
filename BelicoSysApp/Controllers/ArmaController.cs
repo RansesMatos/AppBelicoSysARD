@@ -1,15 +1,12 @@
 ﻿using BelicoSysApp.Models;
 using BelicoSysApp.Services;
 using ClosedXML.Excel;
-using System;
-using System.IO;
-using System.Linq;
-using OfficeOpenXml;
-using OfficeOpenXml.Style;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
 using System.Collections;
 using System.Drawing;
 

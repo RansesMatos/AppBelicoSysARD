@@ -4,7 +4,6 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@ViewData["Title"] - BelicoSysApp</title>
-
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/bootstrap.min.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/BelicoSysApp.styles.css" asp-append-version="true" />
@@ -23,8 +22,16 @@
         <h6>Sistema de Inventario, Cargo y Descargo de Armas</h6>
     </div>
 
-    <div class="container mt-5 p-3 border rounded" style="background: white;">
+    <div class="container mt-5 p-3 border rounded" style="background: white; width: auto;">
         @RenderBody()
+        
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js"></script>
+
+  
+
+    @await RenderSectionAsync("Scripts", required: false)
     </div>
 
     <footer id="footer" class="border-top footer text-muted bg-primary">
@@ -32,9 +39,6 @@
             &copy; 2023 - Dirreción de Tecnología (TIC), ARD.
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+
 </body>
 </html>

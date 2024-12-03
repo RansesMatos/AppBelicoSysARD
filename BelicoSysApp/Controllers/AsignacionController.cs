@@ -1,16 +1,7 @@
 ﻿using BelicoSysApp.Models;
 using BelicoSysApp.Services;
-using DocumentFormat.OpenXml.EMMA;
-using DocumentFormat.OpenXml.Vml;
-using iTextSharp.text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Newtonsoft.Json;
-using Org.BouncyCastle.Crypto.Tls;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.WebPages;
 
 namespace BelicoSysApp.Controllers
 {
@@ -20,12 +11,14 @@ namespace BelicoSysApp.Controllers
         private readonly IApiServiceAsignacion _apiServiceAsignacion;
         private readonly IApiServiceArma _apiServiceAarma;
         private readonly IApiServicePertrecho _apiPertrecho;
+
         public AsignacionController(IApiServiceAsignacion apiServiceAsignacion, IApiServiceArma apiServiceAarma, IApiServicePertrecho apiPertrecho)
         {
             _apiServiceAsignacion = apiServiceAsignacion;
             _apiServiceAarma = apiServiceAarma;
             _apiPertrecho = apiPertrecho;
         }
+
         public async Task<IActionResult> AsignacionReport()
         {
             ICollection<AsignacionArma> lista = await _apiServiceAsignacion.GetAsignaciones();
@@ -125,36 +118,10 @@ namespace BelicoSysApp.Controllers
             var data = new SelectList(listaDto, "MilitarNo", "Doc");
             ViewBag.Personal = new SelectList(listaDto, "MilitarNo", "Nombres");
 
-
             return Ok(data);
         }
+
         [HttpGet]
-        public IActionResult DescargoArma()
-        {
-
-            ViewBag.count = 0;
-
-            return View();
-        }
-        [HttpGet]
-        public IActionResult AsignacionOrden()
-        {
-
-
-
-            return View();
-        }
-        [HttpGet]
-        public IActionResult AsignacionOLista()
-        {
-
-
-
-            return View();
-        }
-
-
-        [HttpPost]
         public async Task<IActionResult> DescargoArma(VPersonal codigo)
         {
             var obtasig = codigo.MilitarNo;
@@ -180,25 +147,92 @@ namespace BelicoSysApp.Controllers
             //==========================Petrechos
             IEnumerable<VPertrecho> listaPer = _apiServiceAsignacion.GetVPertrechos().Result;
             listaPer = listaPer.Where(x => x.Id_Militar == obtasig && x.status == true);
-           
+
             ViewBag.count = listaasigDto.Count;
             ViewBag.Arma = listaDto;
             ViewBag.Pertrecho = listaPer;
 
             VPersonal listaP = await _apiServiceAsignacion.GetVPersonaId(codigo.MilitarNo);
 
-            ViewBag.Nombres = listaP.Nombres;
-            ViewBag.desc_rango = listaP.desc_rango;
-            ViewBag.Cedula = listaP.Cedula;
-            ViewBag.Tel = listaP.num_celular;
-            ViewBag.Dept = listaP.desc_departamento;
-            ViewBag.noM = listaP.MilitarNo;
+            if (listaP != null)
+            {
+                ViewBag.Nombres = listaP.Nombres;
+                ViewBag.desc_rango = listaP.desc_rango;
+                ViewBag.Cedula = listaP.Cedula;
+                ViewBag.Tel = listaP.num_celular;
+                ViewBag.Dept = listaP.desc_departamento;
+                ViewBag.noM = listaP.MilitarNo;
+            }
 
             ViewBag.DeleteMessage = "Registro Eliminado";
-
+            
             return View();
+    }
+
+        [HttpPost]
+        public async Task<IActionResult> ValidarPertrechoAsignacion(int NoMilitar)
+        {
+            var asignacionesMilitar = await _apiServiceAsignacion.GetAsignacionesPertrecho();
+            var pertrechoAsignadoMilitar = asignacionesMilitar.Where(x => x.Id_Militar == NoMilitar).ToList();
+
+            ViewBag.listAsignados = pertrechoAsignadoMilitar;
+
+            bool pertrechoAsignadoStatus = false;
+
+            foreach (var pertrecho in pertrechoAsignadoMilitar)
+            {
+                if (pertrecho.status)
+                {
+                    pertrechoAsignadoStatus = true;
+                    break;
+                }
+            }
+
+            // Devolver un JSON con el estado y un mensaje
+            return Json(new
+            {
+                success = true,
+                status = pertrechoAsignadoStatus,
+                message = pertrechoAsignadoMilitar.Any() ? "Asignación validada correctamente." : "No se encontraron asignaciones para el militar."
+            });
         }
 
+        [HttpPost]
+        public async Task<IActionResult> DescargarPertrecho(int NoMilitar, int IdPertrecho)
+        {
+            var asignacionesPertrecho = await _apiServiceAsignacion.GetAsignacionesPertrecho();
+
+            var pertrechoAsignado = asignacionesPertrecho.FirstOrDefault(x => x.Id_Militar == NoMilitar && x.Id_pertrechos == IdPertrecho);
+
+            if (pertrechoAsignado != null)
+            {
+                var cantidadAsignada = pertrechoAsignado.cantidad;
+
+                if (pertrechoAsignado.status == true) { 
+                   
+                    pertrechoAsignado.status = false;
+
+                   await _apiServiceAsignacion.UpdateAsignacionPertrecho(pertrechoAsignado);
+                }
+
+                var pertrecho = await _apiPertrecho.Get(IdPertrecho);
+
+                if (pertrecho == null)
+                {
+                    return NotFound("No se encontró el pertrecho con el ID proporcionado.");
+                }
+
+                pertrecho.Cantidad += cantidadAsignada;
+
+                var pertrechoDesignar = await _apiPertrecho.UpdatePertrecho(pertrecho);
+
+                return Ok(new { success = true, message = "El pertrecho se ha descargado exitosamente." });
+            }
+            else
+            {
+                return NotFound(new { success = false, message = "Pertrecho no encontrado." });
+            }
+        }
 
         [HttpGet]
         public async Task<IActionResult> AsignacionCreate()
@@ -232,6 +266,7 @@ namespace BelicoSysApp.Controllers
 
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> AsignacionCreate(AsignacionArma model, string searchArmaInput)
         {
@@ -508,9 +543,6 @@ namespace BelicoSysApp.Controllers
 
             return Json(listaDto);
         }
-
-
-
     }
 }
 

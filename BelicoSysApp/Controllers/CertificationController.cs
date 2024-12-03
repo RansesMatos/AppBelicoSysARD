@@ -79,7 +79,7 @@ namespace BelicoSysApp.Controllers
                 pdf.AddTitle("BelisoSys");
 
                 pdf.Open();
-                Paragraph subHeader1 = new Paragraph("", new Font(Font.FontFamily.HELVETICA, 7));
+                Paragraph subHeader1 = new iTextSharp.text.Paragraph("", new Font(Font.FontFamily.HELVETICA, 7));
                 subHeader1.Alignment = Element.ALIGN_LEFT;
                 pdf.Add(subHeader1);
                 Paragraph subHeader2 = new Paragraph("INTENDENCIA MATERIAL BÉLICO", new Font(Font.FontFamily.HELVETICA, 7, Font.BOLD));
