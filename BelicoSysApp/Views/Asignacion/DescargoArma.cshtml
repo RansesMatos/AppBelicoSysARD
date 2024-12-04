@@ -1,6 +1,10 @@
+<<<<<<< HEAD
 ﻿@{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+=======
+﻿<h2 class="text-center mb-2">Consulta de Arma Asignada y Descargo</h2>
+>>>>>>> 7939d472c0cd643271d46dba332f577f18d26cfc
 
 <h2>Consulta de Arma Asignada y Descargo</h2>
 
@@ -17,13 +21,21 @@
 
 <div style=" border-bottom: 1px solid #e9edf2; border-top: 1px solid #e9edf2; padding: 20px;">
 
+<<<<<<< HEAD
     <h5 class="modal-title" id="searchModalLabel">Buscar Miembro</h5>
    
     <div class="row">
         <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
+=======
+<div>
+    <h5 class="modal-title mb-2" id="searchModalLabel">Buscar Miembro</h5>
+
+    <div class="row d-flex justify-content-center">
+        <div class="col-sm-12 col-md-6 col-lg-6 mb-3">
+>>>>>>> 7939d472c0cd643271d46dba332f577f18d26cfc
             <input type="text" id="searchInput" name="No Carnert" class="form-control" placeholder="Ingresar el Carnet" />
         </div>
-        <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
+        <div class="col-sm-12 col-md-6 col-lg-6 mb-3">
             <input type="text" id="searchInput2" name="cedula" class="form-control" placeholder="Ingresar la Cedula" />
         </div>
 
@@ -52,6 +64,7 @@
 
 <div id="notification" class="notification"></div>
 
+<<<<<<< HEAD
 <div id="asignaciones" class="hidden">
   
     <div class="grid-container">
@@ -78,8 +91,137 @@
             <p>@ViewBag.Tel</p>
         </div>
     </div>
+=======
+<div>
 
+    <form asp-controller="Asignacion" asp-action="DescargoArma" method="post" enctype="multipart/form-data">
+
+        <div class="row">
+
+            <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
+            <label class="form-label" for="MilitarNo">Nombre:</label>
+                <select class="form-select" id="MilitarNo" name="MilitarNo" style="width: auto">
+        </select>
+        <input type="hidden"  name="MilitarNo"  />
+            </div>
+>>>>>>> 7939d472c0cd643271d46dba332f577f18d26cfc
+
+        </div>
+
+            <button type="submit" class="btn btn-primary">Selecionar</button>
+
+            </form>
+
+
+
+    <div class="mt-2">
+
+        <div class="row row-cols-auto d-flex justify-content-center">
+
+           <div class="col">
+    <p><strong>Militar NO: </strong>@ViewBag.noM</p>
+               </div>
+
+               <div class="col">
+    <p><strong>Rango: </strong>@ViewBag.desc_rango</p>
+    </div>
+
+    <div class="col">
+    <p><strong>Nombre: </strong>@ViewBag.Nombres</p>
+    </div>
+
+    
+
+    
+        <div class="col">
+    <p><strong>Cédula: </strong>@ViewBag.Cedula</p>
+   </div>
+
+    <div class="col" >
+    <p><strong>Celular: </strong>@ViewBag.Tel</p>
+    </div>
+    
+    <div class="col">
+        <p><strong>Departamento: </strong>@ViewBag.Dept</p>
+        </div>
+
+    </div>
+
+    <!-- Add any other person information fields you have -->
+    </div>
     <h3>Armas Asignadas</h3>
+<<<<<<< HEAD
+=======
+@if (ViewBag.count != 0){
+        <table class="table table-striped table-hover">
+    <thead class="bg-primary">
+        <tr class="text-white">
+            <th>Accion</th>
+            <th>Arma ID</th>
+            <th>Tipo Arma</th>
+            <th>Marca</th>
+            <th>Calibre</th>
+            <th>Serie</th>
+            <th>Almacen</th>
+            <th>Estado</th>
+            <th>Estatus</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var armaitem in ViewBag.Arma)
+        {
+            <tr>
+                <td>
+
+                            <a class="btn btn-primary" id="descargo" onclick="borrarAsignacion(@armaitem.IdAsignacion,@armaitem.IdArma)">Quitar Asignacion</a>
+
+                </td>
+                <td>
+                    @armaitem.IdArma
+                </td>
+                <td>
+                    @armaitem.TaNombre
+                </td>
+                <td>
+                    @armaitem.ArmaMarcaDescripcion
+                </td>
+                <td>
+                    @armaitem.ArmaCalibre
+                </td>
+                <td>
+                    @armaitem.ArmaSerie
+                </td>
+                <td>
+                    @armaitem.AlmacenDescripcion
+                </td>
+                <td>
+                    @armaitem.ArmaEstadoDescripcion
+                </td>
+                <td>
+                    @if (@armaitem.ArmaStatus)
+                    {
+                        <b>Activo</b>
+                    }else{
+                    <b>Desactivado</b>}
+                </td>
+            </tr>
+        }   
+    </tbody> 
+   </table>
+   }
+   else
+    {   <table>
+        <tbody>
+        <tr>
+        <td>No se encuentran Armas Para este usuario</td>
+     </tr>
+     </tbody>
+     </table>
+    }
+
+
+    <h3>Pertrechos Asignadas</h3>
+>>>>>>> 7939d472c0cd643271d46dba332f577f18d26cfc
 
     @if (ViewBag.count != 0)
     {
@@ -157,6 +299,7 @@
             <tbody>
                 @foreach (var armaitemP in ViewBag.Pertrecho)
                 {
+<<<<<<< HEAD
                    <tr>
                        <td>
                            <a class="btn btn-primary" data-no-m="@ViewBag.noM" data-id-pertrechos="@armaitemP.Id_pertrechos" onclick="descargarPertrecho(this)">Descargar</a>
@@ -165,6 +308,22 @@
                        <td>@armaitemP.pertrechos_descripcion</td>
                        <td>@armaitemP.cantidad</td>
                    </tr>
+=======
+                    <tr>
+                        <td>
+                            <a class="btn btn-primary">Quitar Asignacion</a>
+                        </td>
+                        <td>
+                            @armaitemP.Id_pertrechos
+                        </td>
+                        <td>
+                            @armaitemP.pertrechos_descripcion
+                        </td>
+                        <td>
+                            @armaitemP.cantidad
+                        </td>                   
+                    </tr>
+>>>>>>> 7939d472c0cd643271d46dba332f577f18d26cfc
                 }
             </tbody>
         </table>

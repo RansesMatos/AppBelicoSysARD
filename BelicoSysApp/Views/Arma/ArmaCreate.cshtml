@@ -7,40 +7,43 @@
     <script>
         // Call the JavaScript function to display the notification
         showNotification('@Html.Raw(ViewBag.SuccessMessage)');
+
     </script>
 }
+
 
 <div id="notification" class="notification"></div>
 
 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 <div><form asp-controller="Arma" asp-action="ArmaCreate" method="post" enctype="multipart/form-data">
 
-    <h5 class="text-muted mb-3">Registar Arma</h5>
+        <h5 class="text-muted mb-3 text-center"><strong> Registar Arma</strong></h5>
 
     <div class="row">
             <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
-                <label class="form-label" for="IdTipoArma">Tipo del Arma:</label>
+                <label class="form-label" for="IdTipoArma"><strong>Tipo del Arma:</strong></label>
                 <select class="form-select" id="IdTipoArma" name="IdTipoArma" asp-items="@ViewBag.ArmaTipo">
                     <option value="">Selecciona Tipo</option>
                 </select>
                 <input type="hidden" name="TipoArma" />
             </div>
             <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
-                <label class="form-label" for="IdArmaMarca">Marca del Arma:</label>
+                <label class="form-label" for="IdArmaMarca"><strong>Marca del Arma:</strong></label>
                 <select class="form-select" id="IdArmaMarca" name="idArmaMarca" asp-items="@ViewBag.Marca">
                     <option value="">Selecciona Marca</option>
                 </select>
                 <input type="hidden" name="ArmaMarca" />
             </div>
             <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
-                <label class="form-label" for="IdArmaMarca">Marca del Arma:</label>
-                <select class="form-select" id="IdArmaMarca" name="idArmaMarca" asp-items="@ViewBag.Marca">
-                    <option value="">Selecciona Marca</option>
+
+                <label class="form-label" for="ArmaModelo">Modelo del Arma:</label>
+                <select class="form-select" id="ArmaModelo" name="ArmaModelo" asp-items="@ViewBag.Modelo">
+                    <option value="">Selecciona Modelo</option>
                 </select>
-                <input type="hidden" name="ArmaMarca" />
+                <input type="hidden" name="ArmaModelo" />
             </div>
             <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
-                <label class="form-label" for="ArmaCalibre">Calibre del Arma:</label>
+                <label class="form-label" for="ArmaCalibre"><strong>Calibre del Arma:</strong></label>
                 @*         <input class="form-control" type="text" id="ArmaCalibre" name="ArmaCalibre" /> *@
                 <select class="form-select" id="ArmaCalibre" name="ArmaCalibre">
                     <option value="1"> Seleciona el calibre</option>
@@ -61,11 +64,11 @@
                 </select>
             </div>
             <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
-                <label class="form-label" for="ArmaSerie">Serie del Arma:</label>
+                <label class="form-label" for="ArmaSerie"><strong>Serie del Arma:</strong></label>
                 <input class="form-control" type="text" id="ArmaSerie" name="ArmaSerie" />
             </div>
             <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
-                <label class="form-label" for="IdAlmacen">Almacén:</label>
+                <label class="form-label" for="IdAlmacen"><strong>Almacén:</strong></label>
                 <select class="form-select" id="IdAlmacen" name="IdAlmacen" asp-items="@ViewBag.Almacen">
                     <option value="">Selecciona Almacén</option>
                 </select>
@@ -73,37 +76,91 @@
             </div>
 
             <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
-                <label class="form-label" for="ArmaNota">Observaciones:</label>
+                <label class="form-label" for="ArmaNota"><strong>Observaciones:</strong></label>
                 <input class="form-control" type="text" id="ArmaNota" name="ArmaNota" />
             </div>
 
             <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
-                <label for="imageFile">Imagen Frontal :</label>
-                <input type="file" name="imageFile" />
+                <label for="imageFileFrontal" class="btn btn-primary">
+                    <strong>Imagen Frontal:</strong>
+                    <input type="file" name="imageFile" id="imageFileFrontal" style="display: none;" accept="image/*" onchange="previewFile('imageFileFrontal', 'previewFrontal')">
+                </label>
+                <div id="previewFrontal" style="margin-top: 20px;"></div>
             </div>
             <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
-                <label for="imageFile">Imagen Trasera :</label>
-                <input type="file" name="imageFile" />
+                <label for="imageFileTrasera" class="btn btn-primary">
+                    <strong>Imagen Trasera:</strong>
+                    <input type="file" name="imageFile" id="imageFileTrasera" style="display: none;" accept="image/*" onchange="previewFile('imageFileTrasera', 'previewTrasera')">
+                </label>
+                <div id="previewTrasera" style="margin-top: 20px;"></div>
             </div>
             <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
-                <label for="imageFile">Imagen Lateral Derech. :</label>
-                <input type="file" name="imageFile" />
+                <label for="imageFileLateralD" class="btn btn-primary">
+                    <strong>Imagen Lateral Derecha:</strong>
+                    <input type="file" name="imageFile" id="imageFileLateralD" style="display: none;" accept="image/*" onchange="previewFile('imageFileLateralD', 'previewLateralD')">
+                </label>
+                <div id="previewLateralD" style="margin-top: 20px;"></div>
             </div>
             <div class="col-sm-12 col-md-6 col-lg-4 mb-3">
-                <label for="imageFile">Imagen Lateral Izq. :</label>
-                <input type="file" name="imageFile" />
+                <label for="imageFileLateralI" class="btn btn-primary">
+                    <strong>Imagen Lateral Izquierda: </strong>
+                    <input type="file" name="imageFile" id="imageFileLateralI" style="display: none;" accept="image/*" onchange="previewFile('imageFileLateralI', 'previewLateralI')">
+                </label>
+                <div id="previewLateralI" style="margin-top: 20px;"></div>
             </div>
     </div>
 
     
     <!-- Repeat the above pattern for the remaining fields -->
-    <div id="btnCrear"><input class="btn btn-primary" type="submit" value="Crear" />
+    <div id="btnCrear"><input class="btn btn-primary mb-4" type="submit" value="Crear" />
 
 
 </div>
 
     </form>
 </div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Todo tu código JavaScript que interactúa con el DOM
+        function previewFile() {
+            const preview = document.getElementById('preview');
+            const file = document.getElementById('imageFile').files[0];
+            const reader = new FileReader();
+
+            reader.onloadend = function () {
+                if (preview) {
+                    preview.innerHTML = '<img src="' + reader.result + '" alt="Image Preview">';
+                }
+            }
+
+            if (file) {
+                reader.readAsDataURL(file);
+            } else {
+                if (preview) {
+                    preview.innerHTML = "";
+                }
+            }
+        }
+    });
+    function previewFile(inputId, previewId) {
+        const file = document.getElementById(inputId).files[0];
+        const preview = document.getElementById(previewId);
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = function () {
+                preview.innerHTML = '<img src="' + reader.result + '" alt="Image Preview" style="width: 100%; max-width: 200px;">';
+            };
+            reader.readAsDataURL(file);
+        } else {
+            preview.innerHTML = "";
+        }
+    }
+
+</script>
 
 
 

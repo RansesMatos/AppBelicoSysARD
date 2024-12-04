@@ -168,7 +168,7 @@ namespace BelicoSysApp.Controllers
 
 
                 byte[] content = ms.ToArray();
-                var fileName = Guid.NewGuid().ToString() + "form25" + Path.GetExtension(".pdf");
+                var fileName = Guid.NewGuid().ToString() + "Certifiacdo de tenencia" + Path.GetExtension(".pdf");
                 var imagePath = Path.Combine("wwwroot", "pdf", fileName);
 
                 using (var fileStream = new FileStream(imagePath, FileMode.Create))
@@ -293,7 +293,8 @@ namespace BelicoSysApp.Controllers
     // Add other weapon details
 };
             return View();
-        }  public ActionResult CertPos()
+        }  
+        public ActionResult CertPos()
 
         {
             ViewBag.CertifierName = "YAN LIRIOY VARGAS CAMINERO";
@@ -346,12 +347,16 @@ namespace BelicoSysApp.Controllers
             
             using (MemoryStream ms = new MemoryStream())
             {
-               
-                Rectangle rect = new Rectangle(150,200);
-                rect.BorderColor= BaseColor.BLACK;
-                rect.Border =Rectangle.BOX;
-                rect.BorderWidth = 2;
-                Document pdf = new Document(PageSize.B7);
+
+                //Rectangle rect = new Rectangle(150,200);
+                //rect.BorderColor= BaseColor.BLACK;
+                //rect.Border =Rectangle.BOX;
+                //rect.BorderWidth = 2;
+                //Document pdf = new Document(PageSize.B7);
+
+                //PdfWriter writer = PdfWriter.GetInstance(pdf, ms);
+                Rectangle halfPage = new Rectangle(PageSize.LETTER.Width / 2, PageSize.LETTER.Height);
+                Document pdf = new Document(halfPage, 36, 36, 36, 36);  // Márgenes para centrar el contenido
 
                 PdfWriter writer = PdfWriter.GetInstance(pdf, ms);
 
@@ -453,18 +458,21 @@ namespace BelicoSysApp.Controllers
                 writer.Close();
 
 
-                byte[] content = ms.ToArray();
-                var fileName = Guid.NewGuid().ToString() +"form25" + Path.GetExtension(".pdf");
-                var imagePath = Path.Combine("wwwroot", "pdf", fileName);
+                byte[] pdfContent = ms.ToArray();
+                Response.ContentType = "application/pdf";
+                Response.Headers.Add("Content-Disposition", "inline; filename=Certificado.pdf");
+                return new FileStreamResult(new MemoryStream(pdfContent), "application/pdf");
+                //var fileName = Guid.NewGuid().ToString() +"form25" + Path.GetExtension(".pdf");
+                //var imagePath = Path.Combine("wwwroot", "pdf", fileName);
 
-                using (var fileStream = new FileStream(imagePath, FileMode.Create))
-                {
-                    fileStream.Write(content, 0, content.Length);
-                  
+                //using (var fileStream = new FileStream(imagePath, FileMode.Create))
+                //{
+                //    fileStream.Write(pdfContent, 0, pdfContent.Length);
 
-                }
 
-                return View(new FileStreamResult(ms, fileName));
+                //}
+
+                //return View(new FileStreamResult(ms, fileName));
 
                 // Write out PDF from memory stream.
                 //using (FileStream fs = File.Create("C:\\Test.pdf"))
@@ -474,6 +482,75 @@ namespace BelicoSysApp.Controllers
 
                 //return null;
             }
+        }
+
+        public async Task<ActionResult> GenerateDesasignacionCertificationPdf(int selectedOption)
+        {
+            // Obtener datos necesarios del usuario y los ítems asignados
+            VPersonal userInfo = await _apiServiceAsignacion.GetVPersonaId(selectedOption);
+            IEnumerable<AsignacionArma> asignaciones = await _apiServiceAsignacion.GetAsignaciones();
+            IEnumerable<VPertrecho> pertrechosAsignados = await _apiServiceAsignacion.GetVPertrechos();
+
+            // Filtrar datos específicos para la desasignación
+            var datosDesasignados = asignaciones.Where(x => x.AsignacionNoRango == selectedOption && !x.AsignacionStatus).ToList();
+            var pertrechosDesasignados = pertrechosAsignados.Where(x => x.Id_Militar == selectedOption && !x.status).ToList();
+
+            // Crear el PDF
+            using (MemoryStream ms = new MemoryStream())
+            {
+                Document pdf = new Document(PageSize.A4);
+                PdfWriter writer = PdfWriter.GetInstance(pdf, ms);
+                pdf.Open();
+
+                // Agregar contenido al PDF
+                AddPdfHeader(pdf, "CERTIFICADO DE DESASIGNACIÓN");
+                AddPdfParagraph(pdf, $"Este certificado verifica que los siguientes ítems han sido desasignados de {userInfo.Nombres}:");
+
+                // Listar armas desasignadas
+                foreach (var item in datosDesasignados)
+                {
+                    string armaDetails = $"Arma: {item.IdArma}";
+                    AddPdfParagraph(pdf, armaDetails);
+                }
+
+                // Listar pertrechos desasignados
+                foreach (var item in pertrechosDesasignados)
+                {
+                    string pertrechoDetails = $"Pertrecho: {item.pertrechos_descripcion} - Cantidad: {item.cantidad}";
+                    AddPdfParagraph(pdf, pertrechoDetails);
+                }
+
+                // Información adicional y firma
+                AddPdfSignature(pdf, userInfo);
+
+                pdf.Close();
+                writer.Close();
+
+                // Guardar el PDF en un archivo y/o enviarlo al usuario
+                return File(ms.ToArray(), "application/pdf", $"Desasignacion-{selectedOption}.pdf");
+            }
+        }
+
+        // Métodos auxiliares para añadir contenido al PDF
+        private void AddPdfHeader(Document document, string header)
+        {
+            Paragraph headerParagraph = new Paragraph(header, new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD));
+            headerParagraph.Alignment = Element.ALIGN_CENTER;
+            document.Add(headerParagraph);
+        }
+
+        private void AddPdfParagraph(Document document, string content)
+        {
+            Paragraph paragraph = new Paragraph(content, new Font(Font.FontFamily.HELVETICA, 10));
+            paragraph.Alignment = Element.ALIGN_LEFT;
+            document.Add(paragraph);
+        }
+
+        private void AddPdfSignature(Document document, VPersonal userInfo)
+        {
+            Paragraph signature = new Paragraph($"Firmado por: {userInfo.Nombres}, {userInfo.Rangos}", new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD));
+            signature.Alignment = Element.ALIGN_RIGHT;
+            document.Add(signature);
         }
 
 

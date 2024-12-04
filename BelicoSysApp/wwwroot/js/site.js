@@ -72,6 +72,8 @@ function deleteAsignacion(id) {
             console.error('Error loading dropdown data: ' + error);
         }
     });
+    ImprimirDescargo();
+
 }
 function UpdatePertrecho() {
     let description = document.getElementById("PertrechosDescripcion").value;
@@ -548,7 +550,37 @@ function confirmarAccion({ callBackAceptar, callbackCancelar, titulo }) {
     })
 
 }
+<<<<<<< HEAD
 function borrarAsignacion(asignacion) {
+=======
+function ImprimirDescargo({ callBackAceptar, titulo }) {
+    Swal.fire({
+        title: titulo || 'Imprimir Documento de Certificacion de descargo.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        focusConfirm: true,
+    }).then((resultado) => {
+        if (resultado.isConfirmed) {
+            callBackAceptar();
+        }
+    })
+
+}
+function ImprimirCarta() {
+    ImprimirDescargo({
+        callBackAceptar: () => {
+            deleteAsignacion();
+        },
+        titulo: 'Imprimir Documento de Certificacion de descargo.'
+    })
+
+
+}
+
+
+function borrarAsignacion(asignacion,idarma) {
+>>>>>>> 7939d472c0cd643271d46dba332f577f18d26cfc
     confirmarAccion({
         callBackAceptar: () => {
             deleteAsignacion(asignacion);
@@ -556,6 +588,8 @@ function borrarAsignacion(asignacion) {
         callbackCancelar: () => { },
         titulo: 'Desea Eliminar la Asignacion?'
     })
+
+
 
 }
 

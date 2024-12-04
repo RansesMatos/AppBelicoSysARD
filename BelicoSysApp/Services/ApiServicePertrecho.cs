@@ -103,6 +103,7 @@ namespace BelicoSysApp.Services
             var json_respuesta = await response.Content.ReadAsStringAsync();
             var resultado = JsonConvert.DeserializeObject<Pertrecho>(json_respuesta);
             Pertrecho pertrcho = resultado;
+
             if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
             {
 

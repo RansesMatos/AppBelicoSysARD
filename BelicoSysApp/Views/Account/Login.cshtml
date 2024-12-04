@@ -9,6 +9,7 @@
 @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { @class = "login-form" }))
 {
     @Html.AntiForgeryToken()
+    <body class="bg-image" >
 
     <div class="form-group mb-3">
         @Html.LabelFor(m => m.Username)
@@ -21,4 +22,5 @@
     </div>
 
     <button type="submit" class="btn btn-primary">Login</button>
+    </body>
 }

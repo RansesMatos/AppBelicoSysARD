@@ -388,18 +388,22 @@ namespace BelicoSysApp.Services
         {
             AsignacionPertrecho objeto = new AsignacionPertrecho();
 
-            var client = new HttpClient();
-            client.BaseAddress = new Uri(_baseUrl);
-
-            var response = await client.GetAsync($"/api/AsignacionPertrecho/{idAsigPertrecho}");
-
-            if (response.IsSuccessStatusCode)
+            using (var client = new HttpClient())
             {
-                var json_respuesta = await response.Content.ReadAsStringAsync();
-                var resultado = JsonConvert.DeserializeObject<AsignacionPertrecho>(json_respuesta);
-                objeto = resultado;
-            }
+                client.BaseAddress = new Uri(_baseUrl);
 
+                // Construir la URL con los parámetros de consulta
+                var url = $"/api/AsignacionPertrecho/{idAsigPertrecho}";
+
+                var response = await client.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var json_respuesta = await response.Content.ReadAsStringAsync();
+                    var resultado = JsonConvert.DeserializeObject<AsignacionPertrecho>(json_respuesta);
+                    objeto = resultado;
+                }
+            }
             return objeto;
         }
 
@@ -420,7 +424,10 @@ namespace BelicoSysApp.Services
             {
                 return pertrcho;
             }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 7939d472c0cd643271d46dba332f577f18d26cfc
             return null;
         }
 
@@ -438,6 +445,7 @@ namespace BelicoSysApp.Services
             return false;
         }
 
+<<<<<<< HEAD
         public async Task<AsignacionPertrecho> UpdateAsignacionPertrecho(AsignacionPertrecho pertrecho)
         {
             var client = new HttpClient();
@@ -457,5 +465,50 @@ namespace BelicoSysApp.Services
             return null;
         }
 
+=======
+        public async Task<AsignacionPertrecho> GetAsigPertrecho(int idAsigPertrecho, int idMilitar)
+        {
+            AsignacionPertrecho objeto = new AsignacionPertrecho();
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(_baseUrl);
+
+                var url = $"/api/AsignacionPertrecho/{idAsigPertrecho}/{idMilitar}";
+
+                var response = await client.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var json_respuesta = await response.Content.ReadAsStringAsync();
+                    var resultado = JsonConvert.DeserializeObject<AsignacionPertrecho>(json_respuesta);
+                    objeto = resultado;
+                }
+            }
+            return objeto;
+        }
+
+        public async Task<AsignacionPertrecho> ActualizarPertrecho (Pertrecho pertrecho)
+        {
+            AsignacionPertrecho objeto = new AsignacionPertrecho();
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(_baseUrl);
+
+                var url = $"/api/Pertrecho/{pertrecho.IdPertrechos}";
+
+                var response = await client.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var json_respuesta = await response.Content.ReadAsStringAsync();
+                    var resultado = JsonConvert.DeserializeObject<Pertrecho>(json_respuesta);
+                    objeto.cantidad = resultado.Cantidad;
+                }
+            }
+            return objeto;
+        }
+>>>>>>> 7939d472c0cd643271d46dba332f577f18d26cfc
     }
 }

@@ -21,6 +21,7 @@
         public DateTime? FechaDevolucion { get; set; }
 
         public int? AsignacionEstado { get; set; }
+        public string? StatusARD { get; set; }
 
         public bool AsignacionStatus { get; set; }
         public List<AsignacionArma> ListaAsig { get; set; }
