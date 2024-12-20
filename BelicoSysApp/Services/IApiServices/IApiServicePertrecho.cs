@@ -4,6 +4,7 @@ namespace BelicoSysApp.Services
 {
     public interface IApiServicePertrecho
     {
+        Task<bool> UpdatePertrecho(Pertrecho pertrecho);
         Task<ICollection<Pertrecho>> GetPertrecho();
         Task<ICollection<Almacen>> GetAlmacenes();
         Task<Pertrecho> Get(int IdPertrecho);

@@ -6,6 +6,73 @@ const { drop } = require("../../../../../../node_modules/cypress/types/lodash/in
 // Write your JavaScript code.
 
 const button = document.querySelector('#Mant');
+
+function descargarPertrecho(button) {
+
+    var noM = button.getAttribute('data-no-m');
+    var idPertrechos = button.getAttribute('data-id-pertrechos');
+
+    fetch(`/Asignacion/DescargarPertrecho?NoMilitar=${noM}&IdPertrecho=${idPertrechos}`,
+        {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('Error en la respuesta del servidor');
+        })
+        .then(data => {
+            Swal.fire({
+                icon: 'success',
+                title: 'Descargado',
+                text: 'El pertrecho se ha descargado exitosamente.'
+            }).then(() => {
+                location.reload();
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Ocurrió un error al descargar el pertrecho.'
+            });
+        });
+}
+
+function ValidarPertrechoMilitar(militarNo) {
+
+    try {
+        const response = await fetch(`/Asignacion/ValidarPertrechoAsignacion?NoMilitar=${militarNo}`, {
+            method: 'POST',
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        });
+
+        if (!response.ok) throw new Error('Error en la respuesta del servidor');
+
+        const data = await response.json();
+
+        Swal.fire({
+            icon: data.success ? 'success' : 'error',
+            title: data.success ? 'Seleccionado' : 'Error',
+            text: data.message || (data.success ? 'La asignación ha sido seleccionada exitosamente.' : 'No se pudo completar la selección.')
+        });
+
+    } catch (error) {
+        console.error('Error:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Ocurrió un error al seleccionar la asignación.'
+        });
+    }
+}
+
+
 const disableButton = () => {
     console.log("va");
     button.disabled = true;
@@ -123,25 +190,23 @@ function loadDropdownData() {
     });
 }
 function loadDropdownData2() {
-    let nombrefilter = document.getElementById("searchInput").value;
-    let nombrefilter2 = document.getElementById("searchInput2").value;
+    let filterCarnet = document.getElementById("searchCarnet").value;
+    let filterCedula = document.getElementById("searchCedula").value;
+
     $.ajax({
         url: 'SearchPeople',
         type: 'GET',
         data: {
-            carnet: nombrefilter,
-            cedula: nombrefilter2
+            carnet: filterCarnet,
+            cedula: filterCedula
         },
         success: function (data) {
             let dropdown = $('#MilitarNo');
-            dropdown.empty(); // Clear existing options
+            dropdown.empty();
 
-            // Add options to the dropdown
             $.each(data, function (index, item) {
                 dropdown.append($('<option></option>').text(item.rangos + " " + item.nombres + " - ( " + item.cedula + " )").val(item.militarNo));
             });
-
-
             console.log(data)
         },
         error: function (xhr, status, error) {
@@ -149,6 +214,7 @@ function loadDropdownData2() {
         }
     });
 }
+
 function loadDropdownData3() {
     let nombrefilter = document.getElementById("searchInput").value;
     let nombrefilter2 = document.getElementById("searchInput2").value;
@@ -427,18 +493,14 @@ function loadDropdownArmaupdated() {
             let idarma = $('#IdArma1');
             let dropdown = document.getElementById('IdTipoArmaU');
             if (data.taNombre.length > 0) {
-                // Sustituye el primer valor en la lista
 
-                // dropdown.find('option').addValue(data.taNombre)
                 $('#IdTipoArmaU option:first').text(data.taNombre).val(data.taNombre);
                 $('#IdArmaMarca option:first').text(data.armaMarcaDescripcion).val(data.armaMarcaDescripcion);
                 $('#ArmaCalibre option:first').text(data.armaCalibre).val(data.armaCalibre);
 
             }
-            idarma.empty(); // Clear existing options     
-            //dropdown.append($('<option>', data.taNombre));
-            idarma.val(data.idArma)
-
+            idarma.empty();
+            idarma.val(data.idArma);
         },
         error: function (xhr, status, error) {
             console.error('Error loading dropdown data: ' + error);
@@ -460,15 +522,12 @@ function ExportPDFCertificate() {
             idarma.empty(); // Clear existing options     
             dropdown.append($('<option></option>').text('aguas').val(data.idarma));
             idarma.val(data.idArma)
-
         },
         error: function (xhr, status, error) {
             console.error('Error loading dropdown data: ' + error);
         }
     });
 }
-
-
 
 function confirmarAccion({ callBackAceptar, callbackCancelar, titulo }) {
     Swal.fire({
@@ -499,7 +558,6 @@ function ImprimirDescargo({ callBackAceptar, titulo }) {
             callBackAceptar();
         }
     })
-
 }
 function ImprimirCarta() {
     ImprimirDescargo({
@@ -508,8 +566,6 @@ function ImprimirCarta() {
         },
         titulo: 'Imprimir Documento de Certificacion de descargo.'
     })
-
-
 }
 
 
@@ -521,8 +577,6 @@ function borrarAsignacion(asignacion,idarma) {
         callbackCancelar: () => { },
         titulo: 'Desea Eliminar la Asignacion?'
     })
-
-
 
 }
 

@@ -5,6 +5,7 @@ namespace BelicoSysApp.Services
     public interface IApiServiceAsignacion
     {
         Task<ICollection<AsignacionArma>> GetAsignaciones();
+        Task<AsignacionPertrecho> UpdateAsignacionPertrecho(AsignacionPertrecho pertrecho);
         Task<ICollection<VPertrecho>> GetVPertrechos();
         Task<ICollection<AsignacionPertrecho>> GetAsignacionesPertrecho();
         Task<ICollection<VArma>> GetVArmas();

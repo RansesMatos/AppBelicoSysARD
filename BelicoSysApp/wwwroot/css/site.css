@@ -3,6 +3,7 @@
     height: auto;
     max-width: 400px; /* Establece un máximo razonable */
 }
+
 .notification {
     position: fixed;
     top: 0;
@@ -14,9 +15,47 @@
     display: none; /* Initially hidden */
     z-index: 1000; /* Ensure it's above other elements */
 }
+
+#mi-boton {
+    position: absolute; /* Cambia a fixed, relative, o sticky según el caso */
+    top: 534px; /* A 150px desde la parte superior */
+    left: 902px; /* A 200px desde la parte izquierda */
+    padding: 10px 20px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
 .notification {
     /* ... */
     animation: fadeOut 5s ease-in-out; /* Add a fade-out animation */
+}
+/* Contenedor del grid */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 columnas iguales */
+    gap: 10px; /* Espacio entre las columnas y filas */
+    margin-bottom: 20px; /* Espacio debajo del grid */
+}
+
+/* Estilo de los elementos dentro del grid */
+.grid-item {
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+    /* Encabezados de cada dato */
+    .grid-item label {
+        font-weight: bold;
+    }
+
+/* Estilos responsivos para pantallas más pequeñas */
+@media (max-width: 768px) {
+    .grid-container {
+        grid-template-columns: 1fr; /* Cambia a una columna en pantallas pequeñas */
+    }
 }
 
 @keyframes fadeOut {
@@ -28,6 +67,7 @@
         opacity: 0;
     }
 }
+
 body {
     background-color: #f3f3f3 !important;
 }
@@ -50,8 +90,9 @@ body {
     text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     position: relative;
 }
+
 .buttonMainMenu {
-    align-content:center;
+    align-content: center;
     display: inline-block;
     width: 485px;
     height: 132px;
@@ -65,7 +106,7 @@ body {
     line-height: 50px;
     text-align: center;
     color: #FFFFFF;
-    margin:50px;
+    margin: 50px;
     text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
 
@@ -85,6 +126,7 @@ body {
     margin: 50px;
     text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
+
 .buttonMainManteinece {
     align-content: center;
     display: inline-block;
@@ -103,6 +145,7 @@ body {
     color: #FFFFFF;
     text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
+
 .tbl {
     border-collapse: collapse;
     width: 1000px;
@@ -129,17 +172,17 @@ body {
     padding: 20px;
 }
 
-#html{
+#html {
     min-height: 100%;
     position: relative;
 }
 
-#body{
+#body {
     margin: 0;
     margin-bottom: 40px;
 }
 
-#footer{
+#footer {
     position: absolute;
     bottom: 0;
     width: 100%;

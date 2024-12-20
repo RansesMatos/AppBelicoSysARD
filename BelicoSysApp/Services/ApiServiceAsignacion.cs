@@ -13,6 +13,25 @@ namespace BelicoSysApp.Services
             var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json").Build();
             _baseUrl = builder.GetSection("ApiSetting:baseUrl").Value;
         }
+
+        public async Task<AsignacionPertrecho> UpdateAsignacionPertrecho(AsignacionPertrecho pertrecho)
+        {
+            var client = new HttpClient();
+
+            client.BaseAddress = new Uri(_baseUrl);
+
+            var content = new StringContent(JsonConvert.SerializeObject(pertrecho), Encoding.UTF8, "application/json");
+            var response = await client.PutAsync($"/api/AsignacionPertrecho/UpdateAsignacionPertrecho/{pertrecho.Id_Asignacion_pertrecho}", content);
+            var json_respuesta = await response.Content.ReadAsStringAsync();
+            var resultado = JsonConvert.DeserializeObject<AsignacionPertrecho>(json_respuesta);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return resultado;
+            }
+
+            return null;
+        }
         public async Task<ICollection<AsignacionArma>> GetAsignaciones()
         {
             ICollection<AsignacionArma> armaList = new List<AsignacionArma>();
