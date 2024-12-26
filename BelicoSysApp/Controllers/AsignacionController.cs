@@ -20,7 +20,6 @@ namespace BelicoSysApp.Controllers
             _apiServiceAarma = apiServiceAarma;
             _apiPertrecho = apiPertrecho;
 
-        
         }
 
         public async Task<ActionResult> GenerateDesasignacionCertificationPdf(int selectedOption)
@@ -102,23 +101,43 @@ namespace BelicoSysApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> DescargarPertrecho(int idPertrecho , int idMilitar)
+        public async Task<IActionResult> DescargarPertrecho(int NoMilitar, int IdPertrecho)
         {
-         var pertrechosMilitar = await _apiServiceAsignacion.GetAsigPertrecho(idPertrecho, idMilitar);
+            var asignacionesPertrecho = await _apiServiceAsignacion.GetAsignacionesPertrecho();
 
-            if (pertrechosMilitar != null) {
+            var pertrechoAsignado = asignacionesPertrecho.FirstOrDefault(x => x.Id_Militar == NoMilitar && x.Id_pertrechos == IdPertrecho);
 
-               var pertrecho = await _apiPertrecho.Get(pertrechosMilitar.Id_pertrechos);
+            if (pertrechoAsignado != null)
+            {
+                var cantidadAsignada = pertrechoAsignado.cantidad;
 
-                if (pertrecho.IdPertrechos == idPertrecho)
+                if (pertrechoAsignado.status == true)
                 {
-                    await _apiServiceAsignacion.ActualizarPertrecho(pertrecho);
-                }
-            }
 
-            return View();
+                    pertrechoAsignado.status = false;
+
+                    await _apiServiceAsignacion.UpdateAsignacionPertrecho(pertrechoAsignado);
+                }
+
+                var pertrecho = await _apiPertrecho.Get(IdPertrecho);
+
+                if (pertrecho == null)
+                {
+                    return NotFound("No se encontró el pertrecho con el ID proporcionado.");
+                }
+
+                pertrecho.Cantidad += cantidadAsignada;
+
+                var pertrechoDesignar = await _apiPertrecho.UpdatePertrecho(pertrecho);
+
+                return Ok(new { success = true, message = "El pertrecho se ha descargado exitosamente." });
+            }
+            else
+            {
+                return NotFound(new { success = false, message = "Pertrecho no encontrado." });
+            }
         }
-  
+
         public async Task<IActionResult> AsignacionReport()
         {
             ICollection<AsignacionArma> lista = await _apiServiceAsignacion.GetAsignaciones();
@@ -135,13 +154,9 @@ namespace BelicoSysApp.Controllers
 
             var statARD = updatedList.Select(x => x.StatusARD).ToList().Distinct();
 
-
             // TODO: Get options from API
             // NOTE: When pagination added, filtering should be performed on the backend
             var ddRangoOptions = lista.Select(x => x.AsignacionRango).ToList().Distinct();
-
-
-            
 
             //lista = lista.Take(30).ToList();
 
@@ -149,9 +164,9 @@ namespace BelicoSysApp.Controllers
             ViewBag.ddRangoOptions = ddRangoOptions;
             ViewBag.ddRestatusOptions = statARD;
 
-
             return View(lista);
         }
+
         [HttpGet]
         public async Task<IActionResult> GetAsignaciones(int noRango)
         {
@@ -169,6 +184,7 @@ namespace BelicoSysApp.Controllers
 
             return Ok(listaDto);
         }
+
         [HttpGet]
         public async Task<IActionResult> GetVarmaAll(int idarma)
         {
@@ -191,7 +207,6 @@ namespace BelicoSysApp.Controllers
                 .Select(g => g.First())  // Seleccionar el primer elemento de cada grupo
                 .ToList();
 
-
             return Ok(listafilter);
         }
 
@@ -210,9 +225,9 @@ namespace BelicoSysApp.Controllers
             var data = new SelectList(listaDto);
             ViewBag.Pertrecho = new SelectList(listaDto, "MilitarNo", "Nombres");
 
-
             return Ok(listaDto);
         }
+         
         [HttpGet]
         public async Task<IActionResult> SearchArma(string armaSerial)
         {
@@ -281,8 +296,6 @@ namespace BelicoSysApp.Controllers
             var listaasigDto = new List<AsignacionArma>();
             int? valorarma = 0;
 
-        
-
             foreach (var asig in lisAsig)
             {
                 listaasigDto.Add(asig);
@@ -299,8 +312,6 @@ namespace BelicoSysApp.Controllers
             IEnumerable<VPertrecho> listaPer = _apiServiceAsignacion.GetVPertrechos().Result;
             listaPer = listaPer.Where(x => x.Id_Militar == obtasig && x.status == true);
 
-           
-
             ViewBag.count = listaasigDto.Count;
             ViewBag.Arma = listaDto;
             ViewBag.Pertrecho = listaPer;
@@ -311,7 +322,6 @@ namespace BelicoSysApp.Controllers
             ViewBag.Tel = listaP.num_celular;
             ViewBag.Dept = listaP.desc_departamento;
             ViewBag.noM = listaP.MilitarNo;
-
 
             ViewBag.DeleteMessage = "Registro Eliminado";
 

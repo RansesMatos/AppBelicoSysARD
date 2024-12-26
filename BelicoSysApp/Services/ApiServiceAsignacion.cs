@@ -1,7 +1,8 @@
 ﻿using BelicoSysApp.Models;
-using DocumentFormat.OpenXml.Office2010.Word;
 using Newtonsoft.Json;
+using System;
 using System.Text;
+
 
 namespace BelicoSysApp.Services
 {
@@ -12,6 +13,25 @@ namespace BelicoSysApp.Services
         {
             var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json").Build();
             _baseUrl = builder.GetSection("ApiSetting:baseUrl").Value;
+        }
+
+        public async Task<AsignacionPertrecho> UpdateAsignacionPertrecho(AsignacionPertrecho pertrecho)
+        {
+            var client = new HttpClient();
+
+            client.BaseAddress = new Uri(_baseUrl);
+
+            var content = new StringContent(JsonConvert.SerializeObject(pertrecho), Encoding.UTF8, "application/json");
+            var response = await client.PutAsync($"/api/AsignacionPertrecho/UpdateAsignacionPertrecho/{pertrecho.Id_Asignacion_pertrecho}", content);
+            var json_respuesta = await response.Content.ReadAsStringAsync();
+            var resultado = JsonConvert.DeserializeObject<AsignacionPertrecho>(json_respuesta);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return resultado;
+            }
+
+            return null;
         }
         public async Task<ICollection<AsignacionArma>> GetAsignaciones()
         {
@@ -155,7 +175,6 @@ namespace BelicoSysApp.Services
 
                 return asignacioncreada;
             }
-
 
             return null;
         }
@@ -327,7 +346,6 @@ namespace BelicoSysApp.Services
                 return orderd;
             }
 
-
             return null;
         }
 
@@ -348,7 +366,6 @@ namespace BelicoSysApp.Services
             }
 
             return objeto;
-
         }
 
         public Task<OrderDetalle> GetODetalle(int idAsig)
@@ -358,19 +375,16 @@ namespace BelicoSysApp.Services
 
         public async Task<bool> ExisteFusil(string serie, int orderId)
         {
-            
-                var client = new HttpClient();
-                client.BaseAddress = new Uri(_baseUrl);
-                var response = await client.GetAsync($"Order/detalle/Existe?serie={serie}&ordenId={orderId}");
+           var client = new HttpClient();
+           client.BaseAddress = new Uri(_baseUrl);
+           var response = await client.GetAsync($"Order/detalle/Existe?serie={serie}&ordenId={orderId}");
 
-                if (response.IsSuccessStatusCode)
-                {
-                    return true;
-                }
+           if (response.IsSuccessStatusCode)
+           {
+               return true;
+           }
 
-                return false;
-
-            
+           return false;
         }
 
         public async Task<ICollection<AsignacionPertrecho>> GetAsignacionesPertrecho()
@@ -381,7 +395,6 @@ namespace BelicoSysApp.Services
             var response = await client.GetAsync("api/AsignacionPertrecho");
             if (response != null && response.IsSuccessStatusCode)
             {
-
                 var json_respuesta = await response.Content.ReadAsStringAsync();
                 ICollection<AsignacionPertrecho> resultado = JsonConvert.DeserializeObject<ICollection<AsignacionPertrecho>>(json_respuesta);
                 orderList = resultado;
@@ -415,7 +428,6 @@ namespace BelicoSysApp.Services
 
         public async Task<AsignacionPertrecho> SaveAsigPertrecho(AsignacionPertrecho objeto)
         {
-            _ = new AsignacionPertrecho();
             var client = new HttpClient();
             client.BaseAddress = new Uri(_baseUrl);
 
@@ -424,12 +436,17 @@ namespace BelicoSysApp.Services
             var response = await client.PostAsync("api/AsignacionPertrecho", content);
             var json_respuesta = await response.Content.ReadAsStringAsync();
             var resultado = JsonConvert.DeserializeObject<AsignacionPertrecho>(json_respuesta);
+
+
             AsignacionPertrecho pertrcho = resultado;
             if (response.IsSuccessStatusCode)
             {
-
                 return pertrcho;
             }
+<<<<<<< HEAD
+
+=======
+>>>>>>> 7939d472c0cd643271d46dba332f577f18d26cfc
             return null;
         }
 
@@ -447,6 +464,27 @@ namespace BelicoSysApp.Services
             return false;
         }
 
+<<<<<<< HEAD
+        public async Task<AsignacionPertrecho> UpdateAsignacionPertrecho(AsignacionPertrecho pertrecho)
+        {
+            var client = new HttpClient();
+
+            client.BaseAddress = new Uri(_baseUrl);
+
+            var content = new StringContent(JsonConvert.SerializeObject(pertrecho), Encoding.UTF8, "application/json");
+            var response = await client.PutAsync($"/api/AsignacionPertrecho/UpdateAsignacionPertrecho/{pertrecho.Id_Asignacion_pertrecho}", content);
+            var json_respuesta = await response.Content.ReadAsStringAsync();
+            var resultado = JsonConvert.DeserializeObject<AsignacionPertrecho>(json_respuesta);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return resultado;
+            }
+
+            return null;
+        }
+
+=======
         public async Task<AsignacionPertrecho> GetAsigPertrecho(int idAsigPertrecho, int idMilitar)
         {
             AsignacionPertrecho objeto = new AsignacionPertrecho();
@@ -490,5 +528,6 @@ namespace BelicoSysApp.Services
             }
             return objeto;
         }
+>>>>>>> 7939d472c0cd643271d46dba332f577f18d26cfc
     }
 }

@@ -1,5 +1,6 @@
 ﻿using BelicoSysApp.Models;
 using Newtonsoft.Json;
+using System.Net;
 using System.Text;
 
 namespace BelicoSysApp.Services
@@ -11,6 +12,29 @@ namespace BelicoSysApp.Services
         {
             var builder = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json").Build();
             _baseUrl = builder.GetSection("ApiSetting:baseUrl").Value;
+        }
+
+        public async Task<bool> UpdatePertrecho(Pertrecho pertrecho)
+        {
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(_baseUrl);
+                var json = JsonConvert.SerializeObject(pertrecho);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                // Llamada PUT al servicio de pertrechos para actualizar la cantidad
+                var response = await client.PatchAsync($"api/Pertrecho/{pertrecho.IdPertrechos}", content);
+
+                if (response.StatusCode == HttpStatusCode.NoContent)
+                {
+                    // Éxito, el pertrecho se ha actualizado correctamente
+                    return true;
+                }
+                else
+                {
+                    throw new Exception("Error al actualizar el pertrecho.");
+                }
+            }
         }
         public async Task<ICollection<Pertrecho>> GetPertrecho()
         {
