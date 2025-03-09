@@ -8,6 +8,5 @@
         public int cantidad { get; set; }
         public string pertrechos_descripcion { get; set; } = null!;
         public bool status { get; set; }
-
     }
 }

@@ -1,584 +1,659 @@
-﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿const button = document.querySelector('#Mant');
 
-const { drop } = require("../../../../../../node_modules/cypress/types/lodash/index");
+let valuesTemps = {};
 
-// Write your JavaScript code.
+function updateValueTemp(input, cantidad) {
+    console.log("este es el valor del llegado input: ", cantidad);
 
-const button = document.querySelector('#Mant');
+    console.log("este es el valor del input: ", valuesTemps[cantidad] = input.value);
+}
 
-function descargarPertrecho(button) {
+function descargarPertrecho(button, cantidadTest) {
+    //este es el que viene al hacer click, y el que necesito para comparar 
+    console.log("este es el ipertrecho:", cantidadTest)
 
-    var noM = button.getAttribute('data-no-m');
-    var idPertrechos = button.getAttribute('data-id-pertrechos');
+    //console.log("este es el combinado ipertrecho:", valuesTemps[cantidadTest] )
+    const cantidad = valuesTemps[cantidadTest];
 
-    fetch(`/Asignacion/DescargarPertrecho?NoMilitar=${noM}&IdPertrecho=${idPertrechos}`,
-        {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(response => {
-            if (response.ok) {
-                return response.json();
-            }
-            throw new Error('Error en la respuesta del servidor');
-        })
-        .then(data => {
-            Swal.fire({
-                icon: 'success',
-                title: 'Descargado',
-                text: 'El pertrecho se ha descargado exitosamente.'
-            }).then(() => {
-                location.reload();
+    if (isNaN(cantidad) || cantidad < 0 || cantidad == 0) {
+        alert("La cantidad debe ser un numero, no debe ser igual a 0 y no debe ser negativa");
+        return;
+    }
+
+    //este es el otro valor que necesito para comparar
+    console.log("Este es el ultimo valor almacenado: ",cantidad);
+
+    if (cantidad == cantidadTest) {
+        alert("No se realizo ningun cambio en en la cantidad");
+    }
+
+    if (cantidad > cantidadTest) {
+
+        alert("el valor de la cantidad no puede ser mayor al valor con el que inicio la aplicacion");
+    }
+
+    if (cantidad < cantidadTest) { 
+
+        var noM = button.getAttribute('data-no-m');
+        var idPertrechos = button.getAttribute('data-id-pertrechos');
+
+        console.log("gloria: ", noM,idPertrechos)
+
+        fetch(`/Asignacion/DescargarPertrecho?NoMilitar=${noM}&IdPertrecho=${idPertrechos}`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error('Error en la respuesta del servidor');
+            })
+            .then(data => {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Descargado',
+                    text: 'El pertrecho se ha descargado exitosamente.'
+                }).then(() => {
+                    location.reload();
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Ocurrió un error al descargar el pertrecho.'
+                });
             });
+    }
+
+}
+
+function updateCantidadPertrecho(input, Id_pertrechos, Id_Militar) {
+
+    const cantidad = input.value;
+
+    if (isNaN(cantidad) || cantidad < 0) {
+        alert("La cantidad debe ser un numero y no debe ser negativa");
+        return;
+    }
+
+    const data = {
+        Id_pertrechos: Id_pertrechos,
+        Id_Militar: Id_Militar,
+        cantidad: cantidad
+    };
+
+    console.log("Esta es la data primera", data);
+
+    fetch('/Asignacion/updateCantidadPertrecho', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    })
+        .then(response => {
+            console.log("Servidor: ", response);
+            return response.json();
+})
+        .then(data => {
+
+            console.log("Esta es la data que viene del fetch", data);
+            if (data.success) {
+                showNotification('Cantidad actualizada correctamente.');
+            } else {
+                showNotification('Error en el momento de actualizar la cantidad de los pertrechos.');
+            }
         })
-        .catch(error => {
+        .catch((error) => {
+            console.error('Error:', error);
+            showNotification('Error al conectar con el servidor.');
+        });
+}
+
+   async function ValidarPertrechoMilitar(militarNo) {
+
+        try {
+            const response = await fetch(`/Asignacion/ValidarPertrechoAsignacion?NoMilitar=${militarNo}`, {
+                method: 'POST',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            });
+
+            if (!response.ok) throw new Error('Error en la respuesta del servidor');
+
+            const data = await response.json();
+
+            Swal.fire({
+                icon: data.success ? 'success' : 'error',
+                title: data.success ? 'Seleccionado' : 'Error',
+                text: data.message || (data.success ? 'La asignación ha sido seleccionada exitosamente.' : 'No se pudo completar la selección.')
+            });
+
+        } catch (error) {
             console.error('Error:', error);
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: 'Ocurrió un error al descargar el pertrecho.'
+                text: 'Ocurrió un error al seleccionar la asignación.'
             });
+        }
+    }
+
+
+    const disableButton = () => {
+        console.log("va");
+        button.disabled = true;
+    };
+    button.addEventListener('click', disableButton);
+    const button2 = document.querySelector('#Mant2');
+    const disableButton2 = () => {
+        console.log("va");
+        button2.disabled = true;
+    };
+
+    button2.addEventListener('click', disableButton2);
+    const button3 = document.querySelector('#Mant3');
+    const disableButton3 = () => {
+        console.log("va");
+        button3.disabled = true;
+    };
+
+    button3.addEventListener('click', disableButton3);
+
+    $(document).ready(function () {
+        $('#IdArma').on('change', function () {
+            let selectedItem = $(this).find(':selected');
+            let selectedItemName = selectedItem.text();
+            $('#IdArma').val(selectedItemName);
+            $(this).attr('data-placeholder', selectedItemName);
         });
-}
+    })
 
-function ValidarPertrechoMilitar(militarNo) {
+    function searchName() {
+        let name = document.getElementById("searchInput").value;
 
-    try {
-        const response = await fetch(`/Asignacion/ValidarPertrechoAsignacion?NoMilitar=${militarNo}`, {
-            method: 'POST',
-            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        // Update the field in the main view with the selected name
+        document.getElementById("nameField").value = name;
+
+        // Close the modal
+        let modal = new bootstrap.Modal(document.getElementById("searchModal"));
+        modal.hide();
+    }
+    function deleteAsignacion(id) {
+
+        $.ajax({
+            url: 'Delete',
+            type: 'delete',
+            data: {
+                id: id
+            },
+            success: function (data) {
+                let dropdown = $('#MilitarNo');
+                dropdown.empty(); // Clear existing options
+
+                // Add options to the dropdown
+                $.each(data, function (index, item) {
+                    dropdown.append($('<option></option>').text(item.rangos + " " + item.nombres + " " + item.cedula).val(item.militarNo));
+                });
+
+
+                console.log(data)
+            },
+            error: function (xhr, status, error) {
+                console.error('Error loading dropdown data: ' + error);
+            }
         });
+        ImprimirDescargo();
 
-        if (!response.ok) throw new Error('Error en la respuesta del servidor');
+    }
+    function UpdatePertrecho() {
+        let description = document.getElementById("PertrechosDescripcion").value;
+        //let description = document.getElementById("PertrechosDescripcion").;
+        let cantidad = document.getElementById("Cantidad").value;
+        let almacen = document.getElementById("IdAlmacen").value;
 
-        const data = await response.json();
-
-        Swal.fire({
-            icon: data.success ? 'success' : 'error',
-            title: data.success ? 'Seleccionado' : 'Error',
-            text: data.message || (data.success ? 'La asignación ha sido seleccionada exitosamente.' : 'No se pudo completar la selección.')
-        });
-
-    } catch (error) {
-        console.error('Error:', error);
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Ocurrió un error al seleccionar la asignación.'
+        $.ajax({
+            url: 'PertrechoUpdate',
+            type: 'PATCH',
+            data: {
+                idPertrechos: description,
+                pertrechosDescripcion: description,
+                cantidad: cantidad,
+                idAlmacen: almacen
+            },
+            success: function (data) {
+                console.log(data)
+            },
+            error: function (xhr, status, error) {
+                console.error('Error loading dropdown data: ' + error);
+            }
         });
     }
-}
+    function loadDropdownData() {
+        let nombrefilter = document.getElementById("searchInput").value;
+        let nombrefilter2 = document.getElementById("searchInput2").value;
+        $.ajax({
+            url: 'SearchPeople',
+            type: 'GET',
+            data: {
+                carnet: nombrefilter,
+                cedula: nombrefilter2
+            },
+            success: function (data) {
+                let dropdown = $('#MilitarNo');
+                dropdown.empty(); // Clear existing options
+
+                // Add options to the dropdown
+                $.each(data, function (index, item) {
+                    dropdown.append($('<option></option>').text(item.rangos + "  " + item.nombres + " - ( " + item.cedula + " )").val(item.militarNo));
+                });
 
 
-const disableButton = () => {
-    console.log("va");
-    button.disabled = true;
-};
-button.addEventListener('click', disableButton);
-const button2 = document.querySelector('#Mant2');
-const disableButton2 = () => {
-    console.log("va");
-    button2.disabled = true;
-};
+                console.log(data)
+            },
+            error: function (xhr, status, error) {
+                console.error('Error loading dropdown data: ' + error);
+            }
+        });
+    }
 
-button2.addEventListener('click', disableButton2);
-const button3 = document.querySelector('#Mant3');
-const disableButton3 = () => {
-    console.log("va");
-    button3.disabled = true;
-};
+    function loadDropdownData2() {
+        let filterCarnet = document.getElementById("searchCarnet").value;
+        let filterCedula = document.getElementById("searchCedula").value;
 
-button3.addEventListener('click', disableButton3);
+        $.ajax({
+            url: 'SearchPeople',
+            type: 'GET',
+            data: {
+                carnet: filterCarnet,
+                cedula: filterCedula
+            },
+            success: function (data) {
+                let dropdown = $('#cedula');
+                dropdown.empty();
 
-$(document).ready(function () {
-    $('#IdArma').on('change', function () {
-        let selectedItem = $(this).find(':selected');
-        let selectedItemName = selectedItem.text();
-        $('#IdArma').val(selectedItemName);
-        $(this).attr('data-placeholder', selectedItemName);
-    });
-})
+                $.each(data, function (index, item) {
+                    dropdown.append($('<option></option>').text(item.rangos + " " + item.nombres + " - ( " + item.cedula + " )").val(item.cedula));
+                });
+                console.log(data)
+            },
+            error: function (xhr, status, error) {
+                console.error('Error loading dropdown data: ' + error);
+            }
+        });
+    }
 
-function searchName() {
-    let name = document.getElementById("searchInput").value;
+    function loadDropdownData3() {
+        let nombrefilter = document.getElementById("searchInput").value;
+        let nombrefilter2 = document.getElementById("searchInput2").value;
+        $.ajax({
+            url: 'SearchPeople',
+            type: 'GET',
+            data: {
+                carnet: nombrefilter,
+                cedula: nombrefilter2
+            },
+            success: function (data) {
+                let dropdown = $('#AsignacionNombreCert');
+                dropdown.empty(); // Clear existing options
 
-    // Update the field in the main view with the selected name
-    document.getElementById("nameField").value = name;
-
-    // Close the modal
-    let modal = new bootstrap.Modal(document.getElementById("searchModal"));
-    modal.hide();
-}
-function deleteAsignacion(id) {
-
-    $.ajax({
-        url: 'Delete',
-        type: 'delete',
-        data: {
-            id: id
-        },
-        success: function (data) {
-            let dropdown = $('#MilitarNo');
-            dropdown.empty(); // Clear existing options
-
-            // Add options to the dropdown
-            $.each(data, function (index, item) {
-                dropdown.append($('<option></option>').text(item.rangos + " " + item.nombres + " " + item.cedula).val(item.militarNo));
-            });
+                // Add options to the dropdown
+                $.each(data, function (index, item) {
+                    dropdown.append($('<option></option>').text(item.rangos + " " + item.nombres + " - ( " + item.cedula + " )").val(item.militarNo));
+                });
 
 
-            console.log(data)
-        },
-        error: function (xhr, status, error) {
-            console.error('Error loading dropdown data: ' + error);
-        }
-    });
-    ImprimirDescargo();
+                console.log(data)
+            },
+            error: function (xhr, status, error) {
+                console.error('Error loading dropdown data: ' + error);
+            }
+        });
+    }
 
-}
-function UpdatePertrecho() {
-    let description = document.getElementById("PertrechosDescripcion").value;
-    //let description = document.getElementById("PertrechosDescripcion").;
-    let cantidad = document.getElementById("Cantidad").value;
-    let almacen = document.getElementById("IdAlmacen").value;
+    function loadDropdownData4() {
+        let nombrefilter = document.getElementById("searchInput").value;
+        let nombrefilter2 = document.getElementById("searchInput2").value;
+        $.ajax({
+            url: 'SearchPeople',
+            type: 'GET',
+            data: {
+                carnet: nombrefilter,
+                cedula: nombrefilter2
+            },
+            success: function (data) {
+                let dropdown = $('#MilitarNo');
+                dropdown.empty(); // Clear existing options
 
-    $.ajax({
-        url: 'PertrechoUpdate',
-        type: 'PATCH',
-        data: {
-            idPertrechos: description,
-            pertrechosDescripcion: description,
-            cantidad: cantidad,
-            idAlmacen: almacen
-        },
-        success: function (data) {
-            console.log(data)
-        },
-        error: function (xhr, status, error) {
-            console.error('Error loading dropdown data: ' + error);
-        }
-    });
-}
-function loadDropdownData() {
-    let nombrefilter = document.getElementById("searchInput").value;
-    let nombrefilter2 = document.getElementById("searchInput2").value;
-    $.ajax({
-        url: 'SearchPeople',
-        type: 'GET',
-        data: {
-            carnet: nombrefilter,
-            cedula: nombrefilter2
-        },
-        success: function (data) {
-            let dropdown = $('#MilitarNo');
-            dropdown.empty(); // Clear existing options
-
-            // Add options to the dropdown
-            $.each(data, function (index, item) {
-                dropdown.append($('<option></option>').text(item.rangos + "  " + item.nombres + " - ( " + item.cedula + " )").val(item.militarNo));
-            });
+                // Add options to the dropdown
+                $.each(data, function (index, item) {
+                    dropdown.append($('<option></option>').text(item.rangos + " " + item.nombres + " - ( " + item.cedula + " )").val(item.militarNo));
+                });
 
 
-            console.log(data)
-        },
-        error: function (xhr, status, error) {
-            console.error('Error loading dropdown data: ' + error);
-        }
-    });
-}
-function loadDropdownData2() {
-    let filterCarnet = document.getElementById("searchCarnet").value;
-    let filterCedula = document.getElementById("searchCedula").value;
+                console.log(data)
+            },
+            error: function (xhr, status, error) {
+                console.error('Error loading dropdown data: ' + error);
+            }
+        });
+    }
+    function loadDocData() {
+        let idfilter = document.getElementById("MilitarNo").value;
+        $.ajax({
+            url: 'PeronaId',
+            type: 'GET',
+            data: {
+                id: idfilter
+            },
+            success: function (data) {
+                console.log("datos" + data)
+                let documentId = $('#AsignacionDocumento');
+                // Clear existing options
+                document.getElementById("AsignacionDocumento1").textContent = 'Documento: ' + data;
+                document.getElementById("AsignacionDocumento").textContent = data;
+                documentId.val(data)
+            },
+            error: function (xhr, status, error) {
+                console.error('Error Cargando Cedula data: ' + error);
+            }
+        });
+        $.ajax({
+            url: 'PeronaIdrango',
+            type: 'GET',
+            data: {
+                id: idfilter
+            },
+            success: function (datar) {
+                console.log(datar)
+                let rango = $('#Asignacionrango');
+                rango.empty(); // Clear existing options
+                document.getElementById("Asignacionrango1").textContent = 'Rango: ' + datar;
+                document.getElementById("Asignacionrango").textContent = datar;
+                rango.val(datar)
+            },
+            error: function (xhr, status, error) {
+                console.error('Error Cargando Cedula data: ' + error);
+            }
+        });
+        $.ajax({
+            url: 'PeronaIdNoMilitar',
+            type: 'GET',
+            data: {
+                id: idfilter
+            },
+            success: function (datan) {
+                console.log(datan)
+                let noMilitar = $('#AsignacionNoRango');
+                let mNombre = $('#AsignacionNombre');
+                document.getElementById("AsignacionNoRango1").textContent = 'NoMilitar: ' + datan.militarNo;
+                document.getElementById("AsignacionNombre").textContent = datan.nombres;
+                document.getElementById("AsignacionNoRango").textContent = datan.militarNo;
+                mNombre.val(datan.nombres)
+                noMilitar.val(datan.militarNo)
+            },
+            error: function (xhr, status, error) {
+                console.error('Error Cargando Cedula data: ' + error);
+            }
+        });
 
-    $.ajax({
-        url: 'SearchPeople',
-        type: 'GET',
-        data: {
-            carnet: filterCarnet,
-            cedula: filterCedula
-        },
-        success: function (data) {
-            let dropdown = $('#MilitarNo');
-            dropdown.empty();
+    }
+    function loadDocDataOrden() {
+        let idfilter = document.getElementById("AsignacionNombre").value;
+        $.ajax({
+            url: 'PeronaId',
+            type: 'GET',
+            data: {
+                id: idfilter
+            },
+            success: function (data) {
+                console.log(data)
+                let documentId = $('#AsignacionDocumento1');
+                documentId.empty(); // Clear existing options
+                document.getElementById("AsignacionDocumento").textContent = 'Documento: ' + data;
+            },
+            error: function (xhr, status, error) {
+                console.error('Error Cargando Cedula data: ' + error);
+            }
+        });
+        $.ajax({
+            url: 'PeronaIdrango',
+            type: 'GET',
+            data: {
+                id: idfilter
+            },
+            success: function (datar) {
+                console.log(datar)
+                let rango = $('#Asignacionrango1');
+                rango.empty(); // Clear existing options
+                document.getElementById("Asignacionrango").textContent = 'Rango: ' + datar;
+                rango.val(datar)
+            },
+            error: function (xhr, status, error) {
+                console.error('Error Cargando Cedula data: ' + error);
+            }
+        });
+        $.ajax({
+            url: 'PeronaIdNoMilitar',
+            type: 'GET',
+            data: {
+                id: idfilter
+            },
+            success: function (datan) {
+                console.log(datan)
+                let noMilitar = $('#AsignacionNoRango1');
+                noMilitar.empty(); // Clear existing options
+                document.getElementById("AsignacionNoRango").textContent = 'NoMilitar: ' + datan.militarNo;
+                noMilitar.val(datan.nombres)
+            },
+            error: function (xhr, status, error) {
+                console.error('Error Cargando Cedula data: ' + error);
+            }
+        });
 
-            $.each(data, function (index, item) {
-                dropdown.append($('<option></option>').text(item.rangos + " " + item.nombres + " - ( " + item.cedula + " )").val(item.militarNo));
-            });
-            console.log(data)
-        },
-        error: function (xhr, status, error) {
-            console.error('Error loading dropdown data: ' + error);
-        }
-    });
-}
+    }
+    function loadDocDataAsigCert() {
+        let idfilter = document.getElementById("AsignacionNombreCert").value;
+        $.ajax({
+            url: 'PeronaId',
+            type: 'GET',
+            data: {
+                id: idfilter
+            },
+            success: function (data) {
+                console.log(data)
+                let documentId = $('#AsignacionNombreCert');
+                documentId.empty(); // Clear existing options
+                document.getElementById("AsignacionDocumento").textContent = 'Documento: ' + data;
+            },
+            error: function (xhr, status, error) {
+                console.error('Error Cargando Cedula data: ' + error);
+            }
+        });
+        $.ajax({
+            url: 'PeronaIdrango',
+            type: 'GET',
+            data: {
+                id: idfilter
+            },
+            success: function (datar) {
+                console.log(datar)
+                let rango = $('#Asignacionrango1');
+                rango.empty(); // Clear existing options
+                document.getElementById("Asignacionrango").textContent = 'Rango: ' + datar;
+                rango.val(datar)
+            },
+            error: function (xhr, status, error) {
+                console.error('Error Cargando Cedula data: ' + error);
+            }
+        });
+        $.ajax({
+            url: 'PeronaIdNoMilitar',
+            type: 'GET',
+            data: {
+                id: idfilter
+            },
+            success: function (datan) {
+                console.log(datan)
+                let noMilitar = $('#AsignacionNoRango1');
+                noMilitar.empty(); // Clear existing options
+                document.getElementById("AsignacionNoRango").textContent = 'NoMilitar: ' + datan.militarNo;
+                noMilitar.val(datan.nombres)
+            },
+            error: function (xhr, status, error) {
+                console.error('Error Cargando Cedula data: ' + error);
+            }
+        });
 
-function loadDropdownData3() {
-    let nombrefilter = document.getElementById("searchInput").value;
-    let nombrefilter2 = document.getElementById("searchInput2").value;
-    $.ajax({
-        url: 'SearchPeople',
-        type: 'GET',
-        data: {
-            carnet: nombrefilter,
-            cedula: nombrefilter2
-        },
-        success: function (data) {
-            let dropdown = $('#AsignacionNombreCert');
-            dropdown.empty(); // Clear existing options
+    }
+    function showNotification(message) {
+        const notification = document.getElementById('notification');
+        notification.innerHTML = message;
+        notification.style.display = 'block';
 
-            // Add options to the dropdown
-            $.each(data, function (index, item) {
-                dropdown.append($('<option></option>').text(item.rangos + " " + item.nombres + " - ( " + item.cedula + " )").val(item.militarNo));
-            });
+        // Automatically hide the notification after a few seconds (optional)
+        setTimeout(() => {
+            notification.style.display = 'none';
+        }, 5000); // Hide after 5 seconds (adjust as needed)
+    }
+    function loadDropdownArma() {
+        let nombrefilter = document.getElementById("searchArmaInput").value;
+        $.ajax({
+            url: 'SearchArma',
+            type: 'GET',
+            data: {
+                armaserial: nombrefilter
+            },
+            success: function (data) {
+                console.log(data)
+                let idarma = $('#IdArma1');
+                idarma.empty(); // Clear existing options    
+                if (data.armaCalibre == null) {
+                    document.getElementById("calibre").textContent = 'Calibre:  Arma no Existe';
+                    document.getElementById("armaTipo").textContent = 'Tipo: Arma no Existe';
+                    document.getElementById("armaMarca").textContent = 'Marca: Arma no Existe';
 
-
-            console.log(data)
-        },
-        error: function (xhr, status, error) {
-            console.error('Error loading dropdown data: ' + error);
-        }
-    });
-}
-
-function loadDropdownData4() {
-    let nombrefilter = document.getElementById("searchInput").value;
-    let nombrefilter2 = document.getElementById("searchInput2").value;
-    $.ajax({
-        url: 'SearchPeople',
-        type: 'GET',
-        data: {
-            carnet: nombrefilter,
-            cedula: nombrefilter2
-        },
-        success: function (data) {
-            let dropdown = $('#MilitarNo');
-            dropdown.empty(); // Clear existing options
-
-            // Add options to the dropdown
-            $.each(data, function (index, item) {
-                dropdown.append($('<option></option>').text(item.rangos + " " + item.nombres + " - ( " + item.cedula + " )").val(item.militarNo));
-            });
-
-
-            console.log(data)
-        },
-        error: function (xhr, status, error) {
-            console.error('Error loading dropdown data: ' + error);
-        }
-    });
-}
-function loadDocData() {
-    let idfilter = document.getElementById("MilitarNo").value;
-    $.ajax({
-        url: 'PeronaId',
-        type: 'GET',
-        data: {
-            id: idfilter
-        },
-        success: function (data) {
-            console.log("datos" + data)
-            let documentId = $('#AsignacionDocumento');
-            // Clear existing options
-            document.getElementById("AsignacionDocumento1").textContent = 'Documento: ' + data;
-            document.getElementById("AsignacionDocumento").textContent = data;
-            documentId.val(data)
-        },
-        error: function (xhr, status, error) {
-            console.error('Error Cargando Cedula data: ' + error);
-        }
-    });
-    $.ajax({
-        url: 'PeronaIdrango',
-        type: 'GET',
-        data: {
-            id: idfilter
-        },
-        success: function (datar) {
-            console.log(datar)
-            let rango = $('#Asignacionrango');
-            rango.empty(); // Clear existing options
-            document.getElementById("Asignacionrango1").textContent = 'Rango: ' + datar;
-            document.getElementById("Asignacionrango").textContent = datar;
-            rango.val(datar)
-        },
-        error: function (xhr, status, error) {
-            console.error('Error Cargando Cedula data: ' + error);
-        }
-    });
-    $.ajax({
-        url: 'PeronaIdNoMilitar',
-        type: 'GET',
-        data: {
-            id: idfilter
-        },
-        success: function (datan) {
-            console.log(datan)
-             let noMilitar = $('#AsignacionNoRango');
-            let mNombre = $('#AsignacionNombre');
-            document.getElementById("AsignacionNoRango1").textContent = 'NoMilitar: ' + datan.militarNo;            
-            document.getElementById("AsignacionNombre").textContent = datan.nombres;
-            document.getElementById("AsignacionNoRango").textContent = datan.militarNo;
-            mNombre.val(datan.nombres)
-            noMilitar.val(datan.militarNo)
-        },
-        error: function (xhr, status, error) {
-            console.error('Error Cargando Cedula data: ' + error);
-        }
-    });
-
-}
-function loadDocDataOrden() {
-    let idfilter = document.getElementById("AsignacionNombre").value;
-    $.ajax({
-        url: 'PeronaId',
-        type: 'GET',
-        data: {
-            id: idfilter
-        },
-        success: function (data) {
-            console.log(data)
-            let documentId = $('#AsignacionDocumento1');
-            documentId.empty(); // Clear existing options
-            document.getElementById("AsignacionDocumento").textContent = 'Documento: ' + data;
-        },
-        error: function (xhr, status, error) {
-            console.error('Error Cargando Cedula data: ' + error);
-        }
-    });
-    $.ajax({
-        url: 'PeronaIdrango',
-        type: 'GET',
-        data: {
-            id: idfilter
-        },
-        success: function (datar) {
-            console.log(datar)
-            let rango = $('#Asignacionrango1');
-            rango.empty(); // Clear existing options
-            document.getElementById("Asignacionrango").textContent = 'Rango: ' + datar;
-            rango.val(datar)
-        },
-        error: function (xhr, status, error) {
-            console.error('Error Cargando Cedula data: ' + error);
-        }
-    });
-    $.ajax({
-        url: 'PeronaIdNoMilitar',
-        type: 'GET',
-        data: {
-            id: idfilter
-        },
-        success: function (datan) {
-            console.log(datan)
-            let noMilitar = $('#AsignacionNoRango1');
-            noMilitar.empty(); // Clear existing options
-            document.getElementById("AsignacionNoRango").textContent = 'NoMilitar: ' + datan.militarNo;
-            noMilitar.val(datan.nombres)
-        },
-        error: function (xhr, status, error) {
-            console.error('Error Cargando Cedula data: ' + error);
-        }
-    });
-
-}
-function loadDocDataAsigCert() {
-    let idfilter = document.getElementById("AsignacionNombreCert").value;
-    $.ajax({
-        url: 'PeronaId',
-        type: 'GET',
-        data: {
-            id: idfilter
-        },
-        success: function (data) {
-            console.log(data)
-            let documentId = $('#AsignacionNombreCert');
-            documentId.empty(); // Clear existing options
-            document.getElementById("AsignacionDocumento").textContent = 'Documento: ' + data;
-        },
-        error: function (xhr, status, error) {
-            console.error('Error Cargando Cedula data: ' + error);
-        }
-    });
-    $.ajax({
-        url: 'PeronaIdrango',
-        type: 'GET',
-        data: {
-            id: idfilter
-        },
-        success: function (datar) {
-            console.log(datar)
-            let rango = $('#Asignacionrango1');
-            rango.empty(); // Clear existing options
-            document.getElementById("Asignacionrango").textContent = 'Rango: ' + datar;
-            rango.val(datar)
-        },
-        error: function (xhr, status, error) {
-            console.error('Error Cargando Cedula data: ' + error);
-        }
-    });
-    $.ajax({
-        url: 'PeronaIdNoMilitar',
-        type: 'GET',
-        data: {
-            id: idfilter
-        },
-        success: function (datan) {
-            console.log(datan)
-            let noMilitar = $('#AsignacionNoRango1');
-            noMilitar.empty(); // Clear existing options
-            document.getElementById("AsignacionNoRango").textContent = 'NoMilitar: ' + datan.militarNo;
-            noMilitar.val(datan.nombres)
-        },
-        error: function (xhr, status, error) {
-            console.error('Error Cargando Cedula data: ' + error);
-        }
-    });
-
-}
-function showNotification(message) {
-    const notification = document.getElementById('notification');
-    notification.innerHTML = message;
-    notification.style.display = 'block';
-
-    // Automatically hide the notification after a few seconds (optional)
-    setTimeout(() => {
-        notification.style.display = 'none';
-    }, 5000); // Hide after 5 seconds (adjust as needed)
-}
-function loadDropdownArma() {
-    let nombrefilter = document.getElementById("searchArmaInput").value;
-    $.ajax({
-        url: 'SearchArma',
-        type: 'GET',
-        data: {
-            armaserial: nombrefilter
-        },
-        success: function (data) {
-            console.log(data)
-            let idarma = $('#IdArma1');
-            idarma.empty(); // Clear existing options    
-            if (data.armaCalibre == null) {
+                } else {
+                    document.getElementById("calibre").textContent = 'Calibre: ' + data.armaCalibre;
+                    document.getElementById("armaTipo").textContent = 'Tipo: ' + data.taNombre;
+                    document.getElementById("armaMarca").textContent = 'Marca: ' + data.armaMarcaDescripcion;
+                    idarma.val(data.idArma)
+                }
+            },
+            error: function (xhr, status, error) {
                 document.getElementById("calibre").textContent = 'Calibre:  Arma no Existe';
                 document.getElementById("armaTipo").textContent = 'Tipo: Arma no Existe';
                 document.getElementById("armaMarca").textContent = 'Marca: Arma no Existe';
+                console.error('Error loading dropdown data: ' + error);
+            }
+        });
+    }
+    function loadDropdownArmaupdated() {
+        let nombrefilter = document.getElementById("searchArmaInput").value;
+        $.ajax({
+            url: 'SearchArma',
+            type: 'GET',
+            data: {
+                armaSerial: nombrefilter
+            },
+            success: function (data) {
+                console.log(data)
+                let idarma = $('#IdArma1');
+                let dropdown = document.getElementById('IdTipoArmaU');
+                if (data.taNombre.length > 0) {
 
-            } else {
-                document.getElementById("calibre").textContent = 'Calibre: ' + data.armaCalibre;
-                document.getElementById("armaTipo").textContent = 'Tipo: ' + data.taNombre;
-                document.getElementById("armaMarca").textContent = 'Marca: ' + data.armaMarcaDescripcion;
+                    $('#IdTipoArmaU option:first').text(data.taNombre).val(data.taNombre);
+                    $('#IdArmaMarca option:first').text(data.armaMarcaDescripcion).val(data.armaMarcaDescripcion);
+                    $('#ArmaCalibre option:first').text(data.armaCalibre).val(data.armaCalibre);
+
+                }
+                idarma.empty();
+                idarma.val(data.idArma);
+            },
+            error: function (xhr, status, error) {
+                console.error('Error loading dropdown data: ' + error);
+            }
+        });
+    }
+    function ExportPDFCertificate() {
+        let nombrefilter = document.getElementById("searchArmaInput").value;
+        $.ajax({
+            url: 'ExportPDf',
+            type: 'GET',
+            data: {
+                armaserial: nombrefilter
+            },
+            success: function (data) {
+                console.log(data)
+                let idarma = $('#IdArma1');
+                let dropdown = document.getElementById('IdTipoArmaU');
+                idarma.empty(); // Clear existing options     
+                dropdown.append($('<option></option>').text('aguas').val(data.idarma));
                 idarma.val(data.idArma)
+            },
+            error: function (xhr, status, error) {
+                console.error('Error loading dropdown data: ' + error);
             }
-        },
-        error: function (xhr, status, error) {
-            document.getElementById("calibre").textContent = 'Calibre:  Arma no Existe';
-            document.getElementById("armaTipo").textContent = 'Tipo: Arma no Existe';
-            document.getElementById("armaMarca").textContent = 'Marca: Arma no Existe';
-            console.error('Error loading dropdown data: ' + error);
-        }
-    });
-}
-function loadDropdownArmaupdated() {
-    let nombrefilter = document.getElementById("searchArmaInput").value;
-    $.ajax({
-        url: 'SearchArma',
-        type: 'GET',
-        data: {
-            armaSerial: nombrefilter
-        },
-        success: function (data) {
-            console.log(data)
-            let idarma = $('#IdArma1');
-            let dropdown = document.getElementById('IdTipoArmaU');
-            if (data.taNombre.length > 0) {
+        });
+    }
 
-                $('#IdTipoArmaU option:first').text(data.taNombre).val(data.taNombre);
-                $('#IdArmaMarca option:first').text(data.armaMarcaDescripcion).val(data.armaMarcaDescripcion);
-                $('#ArmaCalibre option:first').text(data.armaCalibre).val(data.armaCalibre);
-
+    function confirmarAccion({ callBackAceptar, callbackCancelar, titulo }) {
+        Swal.fire({
+            title: titulo || 'Confirmas que esta es la Accion que deseas Realizar.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            focusConfirm: true,
+        }).then((resultado) => {
+            if (resultado.isConfirmed) {
+                callBackAceptar();
+            } else if (callbackCancelar) {
+                callbackCancelar();
             }
-            idarma.empty();
-            idarma.val(data.idArma);
-        },
-        error: function (xhr, status, error) {
-            console.error('Error loading dropdown data: ' + error);
-        }
-    });
-}
-function ExportPDFCertificate() {
-    let nombrefilter = document.getElementById("searchArmaInput").value;
-    $.ajax({
-        url: 'ExportPDf',
-        type: 'GET',
-        data: {
-            armaserial: nombrefilter
-        },
-        success: function (data) {
-            console.log(data)
-            let idarma = $('#IdArma1');
-            let dropdown = document.getElementById('IdTipoArmaU');
-            idarma.empty(); // Clear existing options     
-            dropdown.append($('<option></option>').text('aguas').val(data.idarma));
-            idarma.val(data.idArma)
-        },
-        error: function (xhr, status, error) {
-            console.error('Error loading dropdown data: ' + error);
-        }
-    });
-}
+        })
 
-function confirmarAccion({ callBackAceptar, callbackCancelar, titulo }) {
-    Swal.fire({
-        title: titulo || 'Confirmas que esta es la Accion que deseas Realizar.',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        focusConfirm: true,
-    }).then((resultado) => {
-        if (resultado.isConfirmed) {
-            callBackAceptar();
-        } else if (callbackCancelar) {
-            callbackCancelar();
-        }
-    })
-
-}
-function ImprimirDescargo({ callBackAceptar, titulo }) {
-    Swal.fire({
-        title: titulo || 'Imprimir Documento de Certificacion de descargo.',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        focusConfirm: true,
-    }).then((resultado) => {
-        if (resultado.isConfirmed) {
-            callBackAceptar();
-        }
-    })
-}
-function ImprimirCarta() {
-    ImprimirDescargo({
-        callBackAceptar: () => {
-            deleteAsignacion();
-        },
-        titulo: 'Imprimir Documento de Certificacion de descargo.'
-    })
-}
+    }
+    function ImprimirDescargo({ callBackAceptar, titulo }) {
+        Swal.fire({
+            title: titulo || 'Imprimir Documento de Certificacion de descargo.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            focusConfirm: true,
+        }).then((resultado) => {
+            if (resultado.isConfirmed) {
+                callBackAceptar();
+            }
+        })
+    }
+    function ImprimirCarta() {
+        ImprimirDescargo({
+            callBackAceptar: () => {
+                deleteAsignacion();
+            },
+            titulo: 'Imprimir Documento de Certificacion de descargo.'
+        })
+    }
 
 
-function borrarAsignacion(asignacion,idarma) {
-    confirmarAccion({
-        callBackAceptar: () => {
-            deleteAsignacion(asignacion);
-        },
-        callbackCancelar: () => { },
-        titulo: 'Desea Eliminar la Asignacion?'
-    })
+    function borrarAsignacion(asignacion, idarma) {
+        confirmarAccion({
+            callBackAceptar: () => {
+                deleteAsignacion(asignacion);
+            },
+            callbackCancelar: () => { },
+            titulo: 'Desea Eliminar la Asignacion?'
+        })
 
-}
+    }
+
+
 
 /**function saveOrder(){
     const btnSaveOrder = $('#btnSaveOrder');
@@ -590,12 +665,3 @@ function borrarAsignacion(asignacion,idarma) {
         $.post(url, formData, (resp) => console.log("Registro exitoso"))
     });
 }**/
-
-
-
-
-
-
-
-
-

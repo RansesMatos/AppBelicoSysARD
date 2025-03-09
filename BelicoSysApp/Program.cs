@@ -38,3 +38,8 @@ app.MapControllerRoute(
     pattern: "{controller=Account}/{action=Login}/{id?}");
 
 app.Run();
+
+app.UseCors(options =>
+    options.AllowAnyOrigin()
+           .AllowAnyMethod()
+           .AllowAnyHeader());

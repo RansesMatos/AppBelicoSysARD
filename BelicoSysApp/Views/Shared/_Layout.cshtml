@@ -8,25 +8,30 @@
     <link rel="stylesheet" href="~/css/bootstrap.min.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/BelicoSysApp.styles.css" asp-append-version="true" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script  src="~/js/site.js" asp-append-version="true" defer></script>
 </head>
 
 <body id="body">
+
     <div style="width: 100%; height: auto; text-align: center;"> 
         <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
         <img src="~/img/logo.png" width="100" />
         </a>
     </div>
+
     <div style="width: 100%; height: auto; text-align: center;">
         <h4>ARMADA DE REPÚBLICA DOMINICANA</h4>
         <h6>UNA PROFESIÓN HONORABLE</h6>
         <h6>INTENDENCIA DEL MATERIAL BÉLICO</h6>
         <h6>Sistema de Inventario, Cargo y Descargo de Armas</h6>
     </div>
+
      <nav class="navbar  navbar-expand-lg bg-body-tertiary">
         <div class="container">
-            <!--
-                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ARD</a>
-            -->
+           
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -40,7 +45,6 @@
                             <li><a class="dropdown-item" href="@Url.Action("ArmaCreate","Arma")">Registro de Arma</a></li>
                             <li><a class="dropdown-item" href="@Url.Action("ArmaReport","Arma")">Reportes</a></li>
                             <li><a class="dropdown-item" href="@Url.Action("ArmaReport","Arma")">Historial de Arma Aignada</a></li>
-                            @* <li><a style="dropdown-item" class="dropdown-item" href="@Url.Action("ArmaUpdate","Arma")">Actualizacion</a></li> *@
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
@@ -51,7 +55,6 @@
                             <li><a class="dropdown-item" href="@Url.Action("PertrechoCreate","Pertrecho")">Registro de Pertrecho</a></li>
                             <li><a class="dropdown-item" href="@Url.Action("PertrechoReport","Pertrecho")">Reportes</a></li>
                             <li><a style="dropdown-item" class="dropdown-item" href="@Url.Action("PertrechoUpdate","Pertrecho")">Actualizacion</a></li>
-                           @*  <li><a style="color:gray" class="dropdown-item" href="#">Petrechos para Descargo</a></li> *@
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
@@ -61,8 +64,6 @@
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="@Url.Action("DescargoArma","Asignacion")">Consulta Arma Militar</a></li>
                             <li><a class="dropdown-item" href="@Url.Action("AsignacionCreate","Asignacion")">Asignar Arma</a></li>
-                            @* <li><a style="color:gray"  class="dropdown-item" href="#">Asignar Arma a Departamentos</a></li>
-                            <li><a style="color:gray"  class="dropdown-item" href="@Url.Action("DescargoArma","Asignacion")">Consulta Arma Civiles</a></li> *@
                             <li><a class="dropdown-item" href="@Url.Action("AsignacionReport","Asignacion")">Reportes</a></li>
                             <li><a  class="dropdown-item" href="@Url.Action("AsignacionOrden","Asignacion")">Ordenes</a></li>
                             <li><a  class="dropdown-item" href="@Url.Action("AsignacionOLista","Asignacion")">Consultar Orden</a></li>
@@ -73,8 +74,6 @@
                             Certificaciones
                         </a>
                         <ul class="dropdown-menu">
-                            @* <li><a class="dropdown-item" href="@Url.Action("CertificationS","Certification")">Certificacion Posesion de Arma</a></li> *@
-                            @* <li ><a class="dropdown-item" href="@Url.Action("xCert","Certification")">Certificacion No Arma</a></li> *@
                             <li><a class="dropdown-item" href="@Url.Action("CertPos","Certification")">Form.25</a></li>
                         </ul>
                     </li>
@@ -85,6 +84,7 @@
             </div>
         </div>
     </nav> 
+
     @if (!string.IsNullOrEmpty(ViewBag.SuccessMessage))
     {
         <div class="alert alert-success">
@@ -101,9 +101,7 @@
             &copy; 2023 - Dirreción de Tecnología (TIC), ARD.
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+
+      @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

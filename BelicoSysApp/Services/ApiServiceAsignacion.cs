@@ -1,5 +1,6 @@
 ﻿using BelicoSysApp.Models;
 using Newtonsoft.Json;
+using Org.BouncyCastle.Utilities;
 using System;
 using System.Text;
 
@@ -21,8 +22,9 @@ namespace BelicoSysApp.Services
 
             client.BaseAddress = new Uri(_baseUrl);
 
+            //Pasar pertrecho
             var content = new StringContent(JsonConvert.SerializeObject(pertrecho), Encoding.UTF8, "application/json");
-            var response = await client.PutAsync($"/api/AsignacionPertrecho/UpdateAsignacionPertrecho/{pertrecho.Id_Asignacion_pertrecho}", content);
+            var response = await client.PutAsync($"/api/AsignacionPertrecho/UpdateAsignacionPertrecho/{pertrecho}", content);
             var json_respuesta = await response.Content.ReadAsStringAsync();
             var resultado = JsonConvert.DeserializeObject<AsignacionPertrecho>(json_respuesta);
 
@@ -216,6 +218,7 @@ namespace BelicoSysApp.Services
             IEnumerable<VPersonal> vArmaList = new List<VPersonal>();
             var client = new HttpClient();
             client.BaseAddress = new Uri(_baseUrl);
+
             if (carnet != null)
             {
                 var response = await client.GetAsync($"/api/AsignarArma/Personal?carnet={carnet}&status={status}");
@@ -393,6 +396,7 @@ namespace BelicoSysApp.Services
             var client = new HttpClient();
             client.BaseAddress = new Uri(_baseUrl);
             var response = await client.GetAsync("api/AsignacionPertrecho");
+
             if (response != null && response.IsSuccessStatusCode)
             {
                 var json_respuesta = await response.Content.ReadAsStringAsync();
@@ -443,18 +447,16 @@ namespace BelicoSysApp.Services
             {
                 return pertrcho;
             }
-<<<<<<< HEAD
 
-=======
->>>>>>> 7939d472c0cd643271d46dba332f577f18d26cfc
             return null;
         }
 
-        public async Task<bool> DeleteAsignacionPertrecho(int idAsigPertercho)
+        public async Task<bool> DeleteAsignacionPertrecho(int idAsignacionPertrecho)
         {
             var client = new HttpClient();
             client.BaseAddress = new Uri(_baseUrl);
-            var response = await client.DeleteAsync($"api/AsignacionPertrecho/{idAsigPertercho}");
+
+            var response = await client.DeleteAsync($"api/AsignacionPertrecho/{idAsignacionPertrecho}");
 
             if (response.IsSuccessStatusCode)
             {
@@ -464,27 +466,6 @@ namespace BelicoSysApp.Services
             return false;
         }
 
-<<<<<<< HEAD
-        public async Task<AsignacionPertrecho> UpdateAsignacionPertrecho(AsignacionPertrecho pertrecho)
-        {
-            var client = new HttpClient();
-
-            client.BaseAddress = new Uri(_baseUrl);
-
-            var content = new StringContent(JsonConvert.SerializeObject(pertrecho), Encoding.UTF8, "application/json");
-            var response = await client.PutAsync($"/api/AsignacionPertrecho/UpdateAsignacionPertrecho/{pertrecho.Id_Asignacion_pertrecho}", content);
-            var json_respuesta = await response.Content.ReadAsStringAsync();
-            var resultado = JsonConvert.DeserializeObject<AsignacionPertrecho>(json_respuesta);
-
-            if (response.IsSuccessStatusCode)
-            {
-                return resultado;
-            }
-
-            return null;
-        }
-
-=======
         public async Task<AsignacionPertrecho> GetAsigPertrecho(int idAsigPertrecho, int idMilitar)
         {
             AsignacionPertrecho objeto = new AsignacionPertrecho();
@@ -528,6 +509,5 @@ namespace BelicoSysApp.Services
             }
             return objeto;
         }
->>>>>>> 7939d472c0cd643271d46dba332f577f18d26cfc
     }
 }

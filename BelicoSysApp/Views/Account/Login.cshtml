@@ -4,23 +4,43 @@
     Layout = "~/Views/Shared/_Layout1.cshtml";
 }
 
-
-
 @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { @class = "login-form" }))
 {
     @Html.AntiForgeryToken()
-    <body class="bg-image" >
+    <body class="bg-image" style="margin: 0; padding: 0; height: 100vh; display: flex; align-items: center; justify-content: center; background-color: #f5f5f5;">
+      
+            <!-- Lado izquierdo (color rojo) -->
+		<div style="flex: 1;display: flex; align-items: center; justify-content: center; color: #f5f5f5; font-size: 1.5rem; text-align: center;
+            background-image: url('images/arma.jpg'); ">
+		
+        </div>
 
-    <div class="form-group mb-3">
-        @Html.LabelFor(m => m.Username)
-        @Html.TextBoxFor(m => m.Username, new { @class = "form-control", placeholder = "Enter your username" })
-    </div>
+            <!-- Lado derecho (imagen, campos y botones) -->
+        <div style="flex: 1; background-color: #f5f5f5; padding: 50px; display: flex; flex-direction: column; justify-content: space-between; text-align: center;">
+                <!-- Logo -->
+                <div style="margin-bottom: 20px;">
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                        <img src="~/img/logo.png" width="100" />
+                    </a>
+                </div>
 
-    <div class="form-group mb-3">
-        @Html.LabelFor(m => m.Password)
-        @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Enter your password" })
-    </div>
+                <!-- Campos del formulario -->
+                <div style="flex-grow: 1; display: flex; flex-direction: column; justify-content: center;">
+                    <div class="form-group mb-4" style="width: 100%;">
+                        @Html.LabelFor(m => m.Username, "Usuario", new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.Username, new { @class = "form-control", placeholder = "Usuario" })
+                    </div>
 
-    <button type="submit" class="btn btn-primary">Login</button>
+                    <div class="form-group mb-4" style="width: 100%;">
+                        @Html.LabelFor(m => m.Password, "Contraseña", new { @class = "form-label" })
+                        @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Clave" })
+                    </div>
+                </div>
+
+                <!-- Botón -->
+                <div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Log in</button>
+                </div>
+            </div>
     </body>
 }

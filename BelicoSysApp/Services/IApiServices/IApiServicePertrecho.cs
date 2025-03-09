@@ -11,6 +11,5 @@ namespace BelicoSysApp.Services
         Task<Pertrecho> Save(Pertrecho objeto);
         Task<bool> Edit(int idpertrecho,Pertrecho objeto);
         Task<bool> Delete(int idProducto);
-        Task<bool> UpdatePertrecho(Pertrecho pertrecho);
     }
 }

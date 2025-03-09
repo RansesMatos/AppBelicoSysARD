@@ -7,35 +7,21 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/bootstrap.min.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/BelicoSysApp.styles.css" asp-append-version="true" />
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true" defer></script>
 </head>
 
 <body id="body">
-    <div style="width: 100%; height: auto; text-align: center;">
-        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-            <img src="~/img/logo.png" width="100" />
-        </a>
-    </div>
-    <div style="width: 100%; height: auto; text-align: center;">
-        <h4>ARMADA DE REPÚBLICA DOMINICANA</h4>
-        <h6>UNA PROFESIÓN HONORABLE</h6>
-        <h6>INTENDENCIA DEL MATERIAL BÉLICO</h6>
-        <h6>Sistema de Inventario, Cargo y Descargo de Armas</h6>
-    </div>
-
-    <div class="container mt-5 p-3 border rounded" style="background: white; width: auto;">
-        @RenderBody()
-    </div>
-
+       
+    @RenderBody()
+  
     <footer id="footer" class="border-top footer text-muted bg-primary">
         <div class="container text-white" style="text-align:center">
             &copy; 2023 - Dirreción de Tecnología (TIC), ARD.
         </div>
     </footer>
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js"></script>
-
-    @await RenderSectionAsync("Scripts", required: false)
+       @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
